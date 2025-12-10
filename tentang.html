@@ -4,282 +4,256 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tentang - FRESH-ID</title>
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/viewport-fit.css">
-    <link rel="stylesheet" href="css/pages.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/professional-theme.css">
 </head>
 <body>
-    <!-- Header -->
+    <!-- Top Header -->
     <header class="top-header">
-        <div class="header-left">
-            <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
-            <div class="brand">
-                <img src="images/logo.svg" alt="FRESH-ID" class="brand-logo">
-                <span class="brand-name">FRESH-ID</span>
-            </div>
-            <div class="header-title-section">
-                <h1 class="header-page-title">TENTANG</h1>
-                <p class="header-page-subtitle">About FRESH-ID system and team</p>
-            </div>
-        </div>
-        <div class="header-right">
-            <button class="icon-btn" style="position: relative;">
-                <i class="fas fa-envelope"></i>
-                <span class="notification-badge">3</span>
+        <div class="header-content">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
             </button>
-            <button class="icon-btn" style="position: relative;">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge">5</span>
-            </button>
-            <button class="icon-btn"><i class="fas fa-cog"></i></button>
-            <div class="user-menu-modern">
-                <div class="user-avatar">UA</div>
-                <div class="user-info-modern">
-                    <strong>Admin User</strong>
-                    <small>● Online</small>
+            
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="brand-info">
+                    <h1>FRESH-ID</h1>
+                    <p>Monitoring System</p>
+                </div>
+            </div>
+            
+            <div class="page-title-section">
+                <h2>Tentang</h2>
+            </div>
+            
+            <div class="header-actions">
+                <button class="header-icon-btn" onclick="window.location.href='notifikasi.html'">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                
+                <button class="header-icon-btn" onclick="window.location.href='pengaturan.html'">
+                    <i class="fas fa-cog"></i>
+                </button>
+                
+                <div class="user-menu" onclick="logout()">
+                    <div class="user-avatar">A</div>
+                    <div class="user-info">
+                        <span class="user-name">Admin</span>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <nav class="sidebar-nav">
-            <div class="nav-section">
-                <div class="nav-section-title">TOOLS</div>
-                <a href="dashboard-new.html" class="nav-item">
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchMenu" placeholder="Cari menu...">
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="dashboard.html" class="nav-item" data-menu="dashboard">
                     <i class="fas fa-home"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="data-sensor.html" class="nav-item">
-                    <i class="fas fa-microchip"></i>
+                <a href="monitoring.html" class="nav-item" data-menu="monitoring">
+                    <i class="fas fa-desktop"></i>
+                    <span>Monitoring</span>
+                </a>
+                <a href="data-sensor.html" class="nav-item" data-menu="data-sensor">
+                    <i class="fas fa-chart-line"></i>
                     <span>Data Sensor</span>
                 </a>
-                <a href="status-kesegaran.html" class="nav-item">
-                    <i class="fas fa-heartbeat"></i>
+                <a href="status-kesegaran.html" class="nav-item" data-menu="status-kesegaran">
+                    <i class="fas fa-check-circle"></i>
                     <span>Status Kesegaran</span>
                 </a>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-section-title">SAMPEL</div>
-                <div class="nav-item has-submenu">
-                    <div class="nav-link">
-                        <i class="fas fa-flask"></i>
-                        <span>Sampel Makanan</span>
-                        <i class="fas fa-chevron-down submenu-icon"></i>
-                    </div>
-                    <div class="submenu">
-                        <a href="sampel-ayam.html" class="submenu-item">
-                            <i class="fas fa-drumstick-bite"></i>
-                            <span>Ayam</span>
-                        </a>
-                        <a href="sampel-sapi.html" class="submenu-item">
-                            <i class="fas fa-burger"></i>
-                            <span>Sapi</span>
-                        </a>
-                        <a href="sampel-ikan.html" class="submenu-item">
-                            <i class="fas fa-fish"></i>
-                            <span>Ikan</span>
-                        </a>
-                        <a href="sampel-susu.html" class="submenu-item">
-                            <i class="fas fa-glass-whiskey"></i>
-                            <span>Susu</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-section-title">REPORTS</div>
-                <a href="laporan.html" class="nav-item">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Laporan Pengujian</span>
+                <a href="sampel-sapi.html" class="nav-item" data-menu="sampel-sapi">
+                    <i class="fas fa-cow"></i>
+                    <span>Sampel Daging Sapi</span>
                 </a>
-                <a href="notifikasi.html" class="nav-item">
+                <a href="sampel-ayam.html" class="nav-item" data-menu="sampel-ayam">
+                    <i class="fas fa-drumstick-bite"></i>
+                    <span>Sampel Daging Ayam</span>
+                </a>
+                <a href="sampel-ikan.html" class="nav-item" data-menu="sampel-ikan">
+                    <i class="fas fa-fish"></i>
+                    <span>Sampel Ikan</span>
+                </a>
+                <a href="sampel-susu.html" class="nav-item" data-menu="sampel-susu">
+                    <i class="fas fa-glass-whiskey"></i>
+                    <span>Sampel Susu</span>
+                </a>
+                <a href="laporan.html" class="nav-item" data-menu="laporan">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Laporan</span>
+                </a>
+                <a href="notifikasi.html" class="nav-item" data-menu="notifikasi">
                     <i class="fas fa-bell"></i>
                     <span>Notifikasi</span>
-                    <span class="badge">5</span>
                 </a>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-section-title">SYSTEM</div>
-                <a href="pengaturan.html" class="nav-item">
+                <a href="pengaturan.html" class="nav-item" data-menu="pengaturan">
                     <i class="fas fa-cog"></i>
                     <span>Pengaturan</span>
                 </a>
-                <a href="manajemen-pengguna.html" class="nav-item">
+                <a href="manajemen-pengguna.html" class="nav-item" data-menu="manajemen-pengguna">
                     <i class="fas fa-users"></i>
                     <span>Manajemen Pengguna</span>
                 </a>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-section-title">DOCS</div>
-                <a href="dokumentasi.html" class="nav-item">
+                <a href="dokumentasi.html" class="nav-item" data-menu="dokumentasi">
                     <i class="fas fa-book"></i>
-                    <span>Dokumentasi Sistem</span>
+                    <span>Dokumentasi</span>
                 </a>
-                <a href="referensi.html" class="nav-item">
-                    <i class="fas fa-bookmark"></i>
-                    <span>Referensi & Singkatan</span>
+                <a href="referensi.html" class="nav-item" data-menu="referensi">
+                    <i class="fas fa-link"></i>
+                    <span>Referensi</span>
                 </a>
-                <a href="tentang.html" class="nav-item active">
+                <a href="tentang.html" class="nav-item" data-menu="tentang">
                     <i class="fas fa-info-circle"></i>
                     <span>Tentang</span>
                 </a>
-            </div>
-        </nav>
+                <a href="#" class="nav-item" onclick="logout(); return false;">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Keluar</span>
+                </a>
+            </nav>
+        </aside>
 
-        <div class="sidebar-footer">
-            <a href="#" class="nav-item logout" onclick="logout(); return false;">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </a>
-        </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Project Info -->
-        <div class="card" style="margin-bottom: 2rem;">
-            <div class="card-header">
-                <h2><i class="fas fa-leaf"></i> Tentang Sistem</h2>
-            </div>
-            <div class="card-body">
-                <div style="display: flex; align-items: center; gap: 2rem; margin-bottom: 1.5rem;">
-                    <div style="font-size: 4rem; color: var(--primary-blue);">
-                        <i class="fas fa-leaf"></i>
-                    </div>
-                    <div>
-                        <h3 style="margin: 0 0 0.5rem 0; font-size: 1.75rem;">FRESH-ID</h3>
-                        <p style="margin: 0; color: var(--text-muted); line-height: 1.6;">
-                            Sistem monitoring kesegaran makanan berbasis gas detection (NH₃, H₂S, CH₄) dengan teknologi sensor 
-                            TGS2602, TGS2611, dan DHT22 untuk mendeteksi tingkat kesegaran sampel makanan secara real-time.
-                        </p>
-                    </div>
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1>Tentang</h1>
+                    <p>Informasi tentang FRESH-ID</p>
                 </div>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 2rem;">
-                    <div style="padding: 1rem; background: #F8F9FA; border-radius: 6px; border-left: 3px solid #3498DB;">
-                        <div style="font-size: 0.85rem; color: var(--text-muted);">Sensor Gas</div>
-                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--text-dark);">3 Tipe</div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">TGS2602, TGS2611, DHT22</div>
-                    </div>
-                    <div style="padding: 1rem; background: #F8F9FA; border-radius: 6px; border-left: 3px solid #27AE60;">
-                        <div style="font-size: 0.85rem; color: var(--text-muted);">Sampel Makanan</div>
-                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--text-dark);">4 Jenis</div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Ayam, Sapi, Ikan, Susu</div>
-                    </div>
-                    <div style="padding: 1rem; background: #F8F9FA; border-radius: 6px; border-left: 3px solid #E67E22;">
-                        <div style="font-size: 0.85rem; color: var(--text-muted);">Box Pengujian</div>
-                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--text-dark);">12 Box</div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">3 box per jenis sampel</div>
-                    </div>
-                    <div style="padding: 1rem; background: #F8F9FA; border-radius: 6px; border-left: 3px solid #E74C3C;">
-                        <div style="font-size: 0.85rem; color: var(--text-muted);">Monitoring</div>
-                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--text-dark);">Real-time</div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Update setiap 5 detik</div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Team Members -->
-        <div class="card" style="margin-bottom: 2rem;">
-            <div class="card-header">
-                <h2><i class="fas fa-users"></i> Tim Pengembang</h2>
-            </div>
-            <div class="card-body">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
-                    <!-- Member 1 -->
-                    <div class="team-card">
-                        <div class="team-avatar">
-                            <img src="https://ui-avatars.com/api/?name=Muhammad+Bintang+Pamungkas&background=3498DB&color=fff&size=80" alt="Muhammad Bintang Pamungkas">
-                        </div>
-                        <div class="team-info">
-                            <h3>Muhammad Bintang Pamungkas</h3>
-                            <div class="team-nim">NIM: 122130009</div>
-                            <div class="team-role"><i class="fas fa-code"></i> Developer</div>
-                        </div>
-                    </div>
+                <!-- Page Content -->
 
-                    <!-- Member 2 -->
-                    <div class="team-card">
-                        <div class="team-avatar">
-                            <img src="https://ui-avatars.com/api/?name=Puja+Andesta&background=27AE60&color=fff&size=80" alt="Puja Andesta">
-                        </div>
-                        <div class="team-info">
-                            <h3>Puja Andesta</h3>
-                            <div class="team-nim">NIM: 122130043</div>
-                            <div class="team-role"><i class="fas fa-code"></i> Developer</div>
-                        </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-info-circle"></i> Tentang FRESH-ID</h3>
                     </div>
-
-                    <!-- Member 3 -->
-                    <div class="team-card">
-                        <div class="team-avatar">
-                            <img src="https://ui-avatars.com/api/?name=Daffa+Zakky+Kurniawan&background=E67E22&color=fff&size=80" alt="Daffa Zakky Kurniawan">
+                    <div class="card-body">
+                        <div style="text-align: center; padding: 2rem;">
+                            <div style="width: 120px; height: 120px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 24px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; box-shadow: 0 10px 30px rgba(79, 70, 229, 0.3);">
+                                <i class="fas fa-box" style="font-size: 3rem; color: white;"></i>
+                            </div>
+                            <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">FRESH-ID</h1>
+                            <p style="font-size: 1.25rem; color: var(--gray-600); margin-bottom: 2rem;">Smart Food Freshness Monitoring System</p>
                         </div>
-                        <div class="team-info">
-                            <h3>Daffa Zakky Kurniawan</h3>
-                            <div class="team-nim">NIM: 122130044</div>
-                            <div class="team-role"><i class="fas fa-code"></i> Developer</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Supervisors -->
-        <div class="card">
-            <div class="card-header">
-                <h2><i class="fas fa-chalkboard-teacher"></i> Dosen Pembimbing</h2>
-            </div>
-            <div class="card-body">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
-                    <!-- Supervisor 1 -->
-                    <div class="supervisor-card">
-                        <div class="supervisor-avatar">
-                            <img src="https://ui-avatars.com/api/?name=Dean+Corio&background=5DADE2&color=fff&size=80" alt="Dean Corio">
-                        </div>
-                        <div class="supervisor-info">
-                            <h3>Dean Corio, S.T., M.T.</h3>
-                            <div class="supervisor-nip">NIP: 19860622 201504 1 003</div>
-                            <div class="supervisor-title"><i class="fas fa-graduation-cap"></i> Dosen Pembimbing I</div>
-                        </div>
-                    </div>
-
-                    <!-- Supervisor 2 -->
-                    <div class="supervisor-card">
-                        <div class="supervisor-avatar">
-                            <img src="https://ui-avatars.com/api/?name=Afit+Miranto&background=5DADE2&color=fff&size=80" alt="Afit Miranto">
-                        </div>
-                        <div class="supervisor-info">
-                            <h3>Afit Miranto, S.T., M.T.</h3>
-                            <div class="supervisor-nip">NIP: 19910512 202203 1 007</div>
-                            <div class="supervisor-title"><i class="fas fa-graduation-cap"></i> Dosen Pembimbing II</div>
+                        
+                        <div style="max-width: 800px; margin: 0 auto;">
+                            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Deskripsi Sistem</h3>
+                            <p style="line-height: 1.8;">
+                                FRESH-ID adalah sistem monitoring kesegaran produk makanan berbasis teknologi IoT yang menggunakan sensor gas (NH₃, H₂S, CH₄) dan sensor suhu/kelembaban (DHT22) untuk mendeteksi tingkat kesegaran produk secara real-time.
+                            </p>
+                            
+                            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Fitur Utama</h3>
+                            <ul style="line-height: 2;">
+                                <li>Real-time monitoring kesegaran produk</li>
+                                <li>Multi-sensor detection (NH₃, H₂S, CH₄, Suhu, Kelembaban)</li>
+                                <li>Alert system untuk kondisi abnormal</li>
+                                <li>Data analytics dan visualisasi</li>
+                                <li>Export data ke CSV/PDF</li>
+                                <li>User management</li>
+                                <li>Report generation</li>
+                            </ul>
+                            
+                            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Tim Pengembang</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                                <div style="padding: 1.5rem; background: var(--gray-50); border-radius: 12px; border-left: 4px solid var(--primary);">
+                                    <div style="width: 60px; height: 60px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white;">
+                                        <i class="fas fa-user" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                    <h4 style="text-align: center; margin-bottom: 0.5rem; font-size: 1.125rem;">Nama Mahasiswa 1</h4>
+                                    <p style="text-align: center; color: var(--gray-600); font-size: 0.875rem; margin-bottom: 0.25rem;">NIM: XXXXXXXXXXX</p>
+                                    <p style="text-align: center; color: var(--primary); font-weight: 600; font-size: 0.875rem;">Ketua Tim</p>
+                                </div>
+                                
+                                <div style="padding: 1.5rem; background: var(--gray-50); border-radius: 12px; border-left: 4px solid var(--primary);">
+                                    <div style="width: 60px; height: 60px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white;">
+                                        <i class="fas fa-user" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                    <h4 style="text-align: center; margin-bottom: 0.5rem; font-size: 1.125rem;">Nama Mahasiswa 2</h4>
+                                    <p style="text-align: center; color: var(--gray-600); font-size: 0.875rem; margin-bottom: 0.25rem;">NIM: XXXXXXXXXXX</p>
+                                    <p style="text-align: center; color: var(--primary); font-weight: 600; font-size: 0.875rem;">Anggota Tim</p>
+                                </div>
+                                
+                                <div style="padding: 1.5rem; background: var(--gray-50); border-radius: 12px; border-left: 4px solid var(--primary);">
+                                    <div style="width: 60px; height: 60px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white;">
+                                        <i class="fas fa-user" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                    <h4 style="text-align: center; margin-bottom: 0.5rem; font-size: 1.125rem;">Nama Mahasiswa 3</h4>
+                                    <p style="text-align: center; color: var(--gray-600); font-size: 0.875rem; margin-bottom: 0.25rem;">NIM: XXXXXXXXXXX</p>
+                                    <p style="text-align: center; color: var(--primary); font-weight: 600; font-size: 0.875rem;">Anggota Tim</p>
+                                </div>
+                            </div>
+                            
+                            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Dosen Pembimbing</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                                <div style="padding: 1.5rem; background: var(--gray-50); border-radius: 12px; border-left: 4px solid #10b981;">
+                                    <div style="width: 60px; height: 60px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white;">
+                                        <i class="fas fa-chalkboard-teacher" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                    <h4 style="text-align: center; margin-bottom: 0.5rem; font-size: 1.125rem;">Nama Dosen Pembimbing 1</h4>
+                                    <p style="text-align: center; color: var(--gray-600); font-size: 0.875rem; margin-bottom: 0.25rem;">NIP: 198501012010011001</p>
+                                    <p style="text-align: center; color: #10b981; font-weight: 600; font-size: 0.875rem;">Pembimbing 1</p>
+                                </div>
+                                
+                                <div style="padding: 1.5rem; background: var(--gray-50); border-radius: 12px; border-left: 4px solid #10b981;">
+                                    <div style="width: 60px; height: 60px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white;">
+                                        <i class="fas fa-chalkboard-teacher" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                    <h4 style="text-align: center; margin-bottom: 0.5rem; font-size: 1.125rem;">Nama Dosen Pembimbing 2</h4>
+                                    <p style="text-align: center; color: var(--gray-600); font-size: 0.875rem; margin-bottom: 0.25rem;">NIP: 198601012011011002</p>
+                                    <p style="text-align: center; color: #10b981; font-weight: 600; font-size: 0.875rem;">Pembimbing 2</p>
+                                </div>
+                            </div>
+                            
+                            <p style="line-height: 1.8; background: #eff6ff; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary);">
+                                <i class="fas fa-info-circle" style="color: var(--primary);"></i>
+                                <strong>Catatan:</strong> Sistem ini dikembangkan sebagai Tugas Akhir untuk membantu industri makanan dalam menjaga kualitas dan kesegaran produk menggunakan teknologi IoT dan sensor gas.
+                            </p>
+                            
+                            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Versi</h3>
+                            <p style="line-height: 1.8;">
+                                <strong>Version 1.0.0</strong> - Professional Edition<br>
+                                © 2025 FRESH-ID. All rights reserved.
+                            </p>
                         </div>
                     </div>
                 </div>
+        
             </div>
-        </div>
+        </main>
+    </div>
 
-        <!-- Footer -->
-        <div style="margin-top: 3rem; padding: 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border-color);">
-            <p style="margin: 0;">© 2024 FRESH-ID - Food Freshness Monitoring System</p>
-            <p style="margin: 0.5rem 0 0 0; font-size: 0.85rem;">
-                Dikembangkan untuk monitoring kesegaran makanan berbasis sensor gas
-            </p>
-        </div>
-    </main>
-
-    <script src="js/main.js"></script>
-    <script src="js/theme-loader.js"></script>
-    <script src="js/auth.js"></script>
-    <script>checkAuth();</script>
+    <!-- Common Scripts -->
+    <script src="js/professional-common.js"></script>
+    
+    <!-- Page Specific Scripts -->
+    <script>
+        setActiveMenu('tentang');
+    </script>
 </body>
 </html>

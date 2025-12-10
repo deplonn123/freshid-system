@@ -3,228 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRESH-ID - Status Kesegaran</title>
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/viewport-fit.css">
-    <link rel="stylesheet" href="css/pages.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Status Kesegaran - FRESH-ID</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/professional-theme.css">
 </head>
 <body>
     <!-- Top Header -->
     <header class="top-header">
-        <div class="header-left">
+        <div class="header-content">
             <button class="menu-toggle" onclick="toggleSidebar()">
                 <i class="fas fa-bars"></i>
             </button>
-            <div class="brand">
-                <img src="images/logo.svg" alt="FRESH-ID" class="brand-logo">
-                <span class="brand-name">FRESH-ID</span>
+            
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="brand-info">
+                    <h1>FRESH-ID</h1>
+                    <p>Monitoring System</p>
+                </div>
             </div>
-            <div class="header-title-section">
-                <h1 class="header-page-title">STATUS KESEGARAN</h1>
-                <p class="header-page-subtitle">Monitoring kesegaran sampel makanan</p>
+            
+            <div class="page-title-section">
+                <h2>Status Kesegaran</h2>
             </div>
-        </div>
-        <div class="header-right">
-            <button class="icon-btn" style="position: relative;">
-                <i class="fas fa-envelope"></i>
-                <span class="notification-badge">3</span>
-            </button>
-            <button class="icon-btn" style="position: relative;">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge">5</span>
-            </button>
-            <button class="icon-btn"><i class="fas fa-cog"></i></button>
-            <div class="user-menu-modern">
-                <div class="user-avatar">UA</div>
-                <div class="user-info-modern">
-                    <strong>Admin User</strong>
-                    <small>● Online</small>
+            
+            <div class="header-actions">
+                <button class="header-icon-btn" onclick="window.location.href='notifikasi.html'">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                
+                <button class="header-icon-btn" onclick="window.location.href='pengaturan.html'">
+                    <i class="fas fa-cog"></i>
+                </button>
+                
+                <div class="user-menu" onclick="logout()">
+                    <div class="user-avatar">A</div>
+                    <div class="user-info">
+                        <span class="user-name">Admin</span>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Sidebar Navigation -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-search">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search Menus" id="searchMenu">
-        </div>
-
-        <div class="sidebar-section">
-            <h4 class="section-title">TOOLS</h4>
-            <nav class="sidebar-nav">
-                <a href="dashboard-new.html" class="nav-item">
-                    <i class="fas fa-th-large"></i>
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchMenu" placeholder="Cari menu...">
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="dashboard.html" class="nav-item" data-menu="dashboard">
+                    <i class="fas fa-home"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="data-sensor.html" class="nav-item">
-                    <i class="fas fa-database"></i>
+                <a href="monitoring.html" class="nav-item" data-menu="monitoring">
+                    <i class="fas fa-desktop"></i>
+                    <span>Monitoring</span>
+                </a>
+                <a href="data-sensor.html" class="nav-item" data-menu="data-sensor">
+                    <i class="fas fa-chart-line"></i>
                     <span>Data Sensor</span>
                 </a>
-                <a href="status-kesegaran.html" class="nav-item active">
-                    <i class="fas fa-heartbeat"></i>
+                <a href="status-kesegaran.html" class="nav-item" data-menu="status-kesegaran">
+                    <i class="fas fa-check-circle"></i>
                     <span>Status Kesegaran</span>
                 </a>
-            </nav>
-        </div>
-
-        <div class="sidebar-section">
-            <h4 class="section-title">SAMPEL</h4>
-            <nav class="sidebar-nav">
-                <div class="nav-item has-submenu" onclick="toggleSubmenu(this)">
-                    <i class="fas fa-fish"></i>
-                    <span>Sampel Makanan</span>
-                    <i class="fas fa-chevron-down submenu-icon"></i>
-                </div>
-                <div class="submenu">
-                    <a href="sampel-sapi.html" class="submenu-item">
-                        <i class="fas fa-circle"></i>
-                        <span>Sapi</span>
-                    </a>
-                    <a href="sampel-ayam.html" class="submenu-item">
-                        <i class="fas fa-circle"></i>
-                        <span>Ayam</span>
-                    </a>
-                    <a href="sampel-ikan.html" class="submenu-item">
-                        <i class="fas fa-circle"></i>
-                        <span>Ikan</span>
-                    </a>
-                    <a href="sampel-susu.html" class="submenu-item">
-                        <i class="fas fa-circle"></i>
-                        <span>Susu</span>
-                    </a>
-                </div>
-            </nav>
-        </div>
-
-        <div class="sidebar-section">
-            <h4 class="section-title">REPORTS</h4>
-            <nav class="sidebar-nav">
-                <a href="laporan.html" class="nav-item">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Laporan Pengujian</span>
+                <a href="sampel-sapi.html" class="nav-item" data-menu="sampel-sapi">
+                    <i class="fas fa-cow"></i>
+                    <span>Sampel Daging Sapi</span>
                 </a>
-                <a href="notifikasi.html" class="nav-item">
+                <a href="sampel-ayam.html" class="nav-item" data-menu="sampel-ayam">
+                    <i class="fas fa-drumstick-bite"></i>
+                    <span>Sampel Daging Ayam</span>
+                </a>
+                <a href="sampel-ikan.html" class="nav-item" data-menu="sampel-ikan">
+                    <i class="fas fa-fish"></i>
+                    <span>Sampel Ikan</span>
+                </a>
+                <a href="sampel-susu.html" class="nav-item" data-menu="sampel-susu">
+                    <i class="fas fa-glass-whiskey"></i>
+                    <span>Sampel Susu</span>
+                </a>
+                <a href="laporan.html" class="nav-item" data-menu="laporan">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Laporan</span>
+                </a>
+                <a href="notifikasi.html" class="nav-item" data-menu="notifikasi">
                     <i class="fas fa-bell"></i>
                     <span>Notifikasi</span>
-                    <span class="badge-sm">5</span>
                 </a>
-            </nav>
-        </div>
-
-        <div class="sidebar-section">
-            <h4 class="section-title">SYSTEM</h4>
-            <nav class="sidebar-nav">
-                <a href="pengaturan.html" class="nav-item">
+                <a href="pengaturan.html" class="nav-item" data-menu="pengaturan">
                     <i class="fas fa-cog"></i>
                     <span>Pengaturan</span>
                 </a>
-                <a href="manajemen-user.html" class="nav-item">
-                    <i class="fas fa-users-cog"></i>
+                <a href="manajemen-pengguna.html" class="nav-item" data-menu="manajemen-pengguna">
+                    <i class="fas fa-users"></i>
                     <span>Manajemen Pengguna</span>
                 </a>
-            </nav>
-        </div>
-
-        <div class="sidebar-section">
-            <h4 class="section-title">DOCS</h4>
-            <nav class="sidebar-nav">
-                <a href="dokumentasi.html" class="nav-item">
+                <a href="dokumentasi.html" class="nav-item" data-menu="dokumentasi">
                     <i class="fas fa-book"></i>
-                    <span>Dokumentasi Sistem</span>
+                    <span>Dokumentasi</span>
                 </a>
-                <a href="referensi.html" class="nav-item">
+                <a href="referensi.html" class="nav-item" data-menu="referensi">
+                    <i class="fas fa-link"></i>
+                    <span>Referensi</span>
+                </a>
+                <a href="tentang.html" class="nav-item" data-menu="tentang">
                     <i class="fas fa-info-circle"></i>
-                    <span>Referensi & Singkatan</span>
-                </a>
-                <a href="tentang.html" class="nav-item">
-                    <i class="fas fa-id-card"></i>
                     <span>Tentang</span>
                 </a>
-            </nav>
-        </div>
-
-        <div class="sidebar-section">
-            <nav class="sidebar-nav">
                 <a href="#" class="nav-item" onclick="logout(); return false;">
                     <i class="fas fa-sign-out-alt"></i>
-                    <span>Logout</span>
+                    <span>Keluar</span>
                 </a>
             </nav>
-        </div>
-    </aside>
+        </aside>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="page-header">
-            <div>
-                <h2>Status Kesegaran Sampel</h2>
-                <p>Monitor kesegaran dari semua box pengujian</p>
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1>Status Kesegaran</h1>
+                    <p>Pantau status kesegaran produk</p>
+                </div>
+
+                <!-- Page Content -->
+
+                <!-- Summary Stats -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                    <div class="card" style="text-align: center; padding: 1.5rem;">
+                        <div style="font-size: 2.5rem; font-weight: 800; color: #10b981; margin-bottom: 0.5rem;" id="normalCount">0</div>
+                        <div style="color: var(--gray-600); font-weight: 600;">Status Normal</div>
+                    </div>
+                    <div class="card" style="text-align: center; padding: 1.5rem;">
+                        <div style="font-size: 2.5rem; font-weight: 800; color: #f59e0b; margin-bottom: 0.5rem;" id="warningCount">0</div>
+                        <div style="color: var(--gray-600); font-weight: 600;">Peringatan</div>
+                    </div>
+                    <div class="card" style="text-align: center; padding: 1.5rem;">
+                        <div style="font-size: 2.5rem; font-weight: 800; color: #ef4444; margin-bottom: 0.5rem;" id="dangerCount">0</div>
+                        <div style="color: var(--gray-600); font-weight: 600;">Bahaya</div>
+                    </div>
+                    <div class="card" style="text-align: center; padding: 1.5rem;">
+                        <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary); margin-bottom: 0.5rem;" id="totalCount">0</div>
+                        <div style="color: var(--gray-600); font-weight: 600;">Total Box</div>
+                    </div>
+                </div>
+
+                <!-- Status Grid -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-check-circle"></i> Status Kesegaran Per Box</h3>
+                        <div>
+                            <button class="btn btn-secondary" onclick="filterStatus('all')">Semua</button>
+                            <button class="btn btn-success" onclick="filterStatus('normal')">Normal</button>
+                            <button class="btn" style="background: #f59e0b; color: white;" onclick="filterStatus('warning')">Peringatan</button>
+                            <button class="btn btn-danger" onclick="filterStatus('danger')">Bahaya</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="statusGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;">
+                            <!-- Status boxes will be generated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    const productTypes = ['Daging Sapi', 'Daging Ayam', 'Ikan', 'Susu'];
+                    let statusBoxes = [];
+                    
+                    function generateStatusBoxes() {
+                        statusBoxes = [];
+                        let boxId = 1;
+                        
+                        productTypes.forEach(type => {
+                            for (let i = 1; i <= 3; i++) {
+                                const nh3 = 10 + Math.random() * 30;
+                                const status = nh3 > 30 ? 'danger' : nh3 > 20 ? 'warning' : 'normal';
+                                const statusText = status === 'normal' ? 'Normal' : status === 'warning' ? 'Peringatan' : 'Bahaya';
+                                
+                                statusBoxes.push({
+                                    id: boxId,
+                                    type: type,
+                                    number: i,
+                                    nh3: nh3.toFixed(2),
+                                    h2s: (5 + Math.random() * 20).toFixed(2),
+                                    ch4: (20 + Math.random() * 70).toFixed(2),
+                                    temp: (24 + Math.random() * 12).toFixed(1),
+                                    humidity: Math.floor(50 + Math.random() * 35),
+                                    status: status,
+                                    statusText: statusText
+                                });
+                                boxId++;
+                            }
+                        });
+                        
+                        renderStatusBoxes();
+                        updateSummary();
+                    }
+                    
+                    function renderStatusBoxes(filter = 'all') {
+                        const grid = document.getElementById('statusGrid');
+                        const filtered = filter === 'all' ? statusBoxes : statusBoxes.filter(b => b.status === filter);
+                        
+                        grid.innerHTML = filtered.map(box => {
+                            const bgColor = box.status === 'normal' ? '#d1fae5' : box.status === 'warning' ? '#fef3c7' : '#fee2e2';
+                            const textColor = box.status === 'normal' ? '#065f46' : box.status === 'warning' ? '#92400e' : '#991b1b';
+                            
+                            return `
+                                <div class="card" style="border-left: 4px solid ${box.status === 'normal' ? '#10b981' : box.status === 'warning' ? '#f59e0b' : '#ef4444'};">
+                                    <div style="padding: 1rem;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                            <h4 style="font-size: 1rem; font-weight: 700;">${box.type} - Box ${box.number}</h4>
+                                            <span class="badge" style="background: ${bgColor}; color: ${textColor};">${box.statusText}</span>
+                                        </div>
+                                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; font-size: 0.875rem;">
+                                            <div><strong>NH₃:</strong> ${box.nh3} ppm</div>
+                                            <div><strong>H₂S:</strong> ${box.h2s} ppm</div>
+                                            <div><strong>CH₄:</strong> ${box.ch4} ppm</div>
+                                            <div><strong>Suhu:</strong> ${box.temp}°C</div>
+                                            <div><strong>Kelembaban:</strong> ${box.humidity}%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                    
+                    function updateSummary() {
+                        const normal = statusBoxes.filter(b => b.status === 'normal').length;
+                        const warning = statusBoxes.filter(b => b.status === 'warning').length;
+                        const danger = statusBoxes.filter(b => b.status === 'danger').length;
+                        
+                        document.getElementById('normalCount').textContent = normal;
+                        document.getElementById('warningCount').textContent = warning;
+                        document.getElementById('dangerCount').textContent = danger;
+                        document.getElementById('totalCount').textContent = statusBoxes.length;
+                    }
+                    
+                    function filterStatus(status) {
+                        renderStatusBoxes(status);
+                    }
+                    
+                    generateStatusBoxes();
+                    setInterval(generateStatusBoxes, 10000); // Update every 10 seconds
+                </script>
+        
             </div>
-            <div class="page-actions">
-                <button class="btn btn-secondary" onclick="refreshAll()">
-                    <i class="fas fa-sync-alt"></i> Refresh All
-                </button>
-            </div>
-        </div>
+        </main>
+    </div>
 
-        <!-- Summary Cards -->
-        <div class="stats-grid">
-            <div class="stat-card green">
-                <div class="stat-icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="stat-content">
-                    <h3>SAMPEL SEGAR</h3>
-                    <div class="stat-value" id="freshCount">0</div>
-                </div>
-            </div>
-
-            <div class="stat-card orange">
-                <div class="stat-icon">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <div class="stat-content">
-                    <h3>KURANG SEGAR</h3>
-                    <div class="stat-value" id="mediumCount">0</div>
-                </div>
-            </div>
-
-            <div class="stat-card red">
-                <div class="stat-icon">
-                    <i class="fas fa-times-circle"></i>
-                </div>
-                <div class="stat-content">
-                    <h3>TIDAK SEGAR</h3>
-                    <div class="stat-value" id="badCount">0</div>
-                </div>
-            </div>
-
-            <div class="stat-card blue">
-                <div class="stat-icon">
-                    <i class="fas fa-box"></i>
-                </div>
-                <div class="stat-content">
-                    <h3>TOTAL BOX</h3>
-                    <div class="stat-value" id="totalBoxes">12</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Box Grid -->
-        <div class="box-grid" id="boxGrid">
-            <!-- Boxes will be generated by JavaScript -->
-        </div>
-    </main>
-
-    <script src="js/main.js"></script>
-    <script src="js/status-kesegaran.js"></script>
-    <script src="js/theme-loader.js"></script>
-    <script src="js/auth.js"></script>
-    <script>checkAuth();</script>
+    <!-- Common Scripts -->
+    <script src="js/professional-common.js"></script>
+    
+    <!-- Page Specific Scripts -->
+    <script>
+        setActiveMenu('status-kesegaran');
+    </script>
 </body>
 </html>

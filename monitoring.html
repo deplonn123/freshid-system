@@ -3,167 +3,676 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRESH-ID - Monitoring Real-Time</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body class="monitoring-page">
-    <!-- Sidebar Navigation -->
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <img src="images/logo.svg" alt="FRESH-ID Logo" class="sidebar-logo" onerror="this.style.display='none'">
-            <h2>FRESH-ID</h2>
-        </div>
-        
-        <nav class="sidebar-nav">
-            <a href="dashboard-new.html" class="nav-item">
-                <i class="fas fa-home"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="monitoring.html" class="nav-item active">
-                <i class="fas fa-chart-line"></i>
-                <span>Monitoring</span>
-            </a>
-            <a href="team.html" class="nav-item">
-                <i class="fas fa-users"></i>
-                <span>Tim Kami</span>
-            </a>
-            <a href="#" class="nav-item" onclick="logout()">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Keluar</span>
-            </a>
-        </nav>
-        
-        <div class="sidebar-footer">
-            <p>© 2025 FRESH-ID</p>
-        </div>
-    </aside>
+    <title>Monitoring Real-Time - FRESH-ID</title>
     
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Top Header -->
-        <header class="top-header">
-            <div class="header-left">
-                <button class="menu-toggle" onclick="toggleSidebar()">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <h1>Monitoring Real-Time</h1>
-            </div>
-            <div class="header-right">
-                <div class="status-indicator">
-                    <span class="status-dot"></span>
-                    <span>Live</span>
-                </div>
-                <div class="user-info">
-                    <i class="fas fa-user-circle"></i>
-                    <span id="userEmail">user@email.com</span>
-                </div>
-            </div>
-        </header>
-        
-        <!-- Monitoring Content -->
-        <div class="monitoring-content">
-            <!-- Current Values -->
-            <section class="current-values">
-                <div class="value-card">
-                    <div class="value-header">
-                        <i class="fas fa-vial" style="color: #6366f1"></i>
-                        <h3>NH₃</h3>
-                    </div>
-                    <p class="value-display" id="live-nh3">0.00</p>
-                    <p class="value-label">ppm</p>
-                </div>
-                
-                <div class="value-card">
-                    <div class="value-header">
-                        <i class="fas fa-flask" style="color: #ec4899"></i>
-                        <h3>H₂S</h3>
-                    </div>
-                    <p class="value-display" id="live-h2s">0.00</p>
-                    <p class="value-label">ppm</p>
-                </div>
-                
-                <div class="value-card">
-                    <div class="value-header">
-                        <i class="fas fa-fire" style="color: #f59e0b"></i>
-                        <h3>CH₄</h3>
-                    </div>
-                    <p class="value-display" id="live-ch4">0.00</p>
-                    <p class="value-label">ppm</p>
-                </div>
-                
-                <div class="value-card">
-                    <div class="value-header">
-                        <i class="fas fa-temperature-high" style="color: #ef4444"></i>
-                        <h3>Suhu</h3>
-                    </div>
-                    <p class="value-display" id="live-temp">0.0</p>
-                    <p class="value-label">°C</p>
-                </div>
-                
-                <div class="value-card">
-                    <div class="value-header">
-                        <i class="fas fa-tint" style="color: #3b82f6"></i>
-                        <h3>Kelembaban</h3>
-                    </div>
-                    <p class="value-display" id="live-humidity">0</p>
-                    <p class="value-label">%</p>
-                </div>
-            </section>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/professional-theme.css">
+    
+    <style>
+        .monitoring-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .monitor-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--gray-200);
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .monitor-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .monitor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .monitor-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .monitor-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .monitor-info h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .monitor-info p {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+        }
+
+        .monitor-status {
+            padding: 0.375rem 0.875rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-normal {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .sensor-readings {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .sensor-item {
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: 10px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .sensor-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .sensor-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            display: flex;
+            align-items: baseline;
+            gap: 0.375rem;
+        }
+
+        .sensor-unit {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-600);
+        }
+
+        .sensor-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .trend-up {
+            color: var(--danger);
+        }
+
+        .trend-down {
+            color: var(--success);
+        }
+
+        .trend-stable {
+            color: var(--gray-500);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 250px;
+            margin-top: 1rem;
+        }
+
+        .last-update {
+            text-align: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--gray-200);
+            font-size: 0.75rem;
+            color: var(--gray-600);
+        }
+
+        @media (max-width: 768px) {
+            .monitoring-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sensor-readings {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="top-header">
+        <div class="header-content">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
             
-            <!-- Charts -->
-            <section class="charts-section">
-                <div class="chart-container">
-                    <div class="chart-header">
-                        <h3>Konsentrasi Gas (ppm)</h3>
-                        <div class="chart-controls">
-                            <button class="btn-chart-control" onclick="clearCharts()">
-                                <i class="fas fa-sync-alt"></i> Reset
-                            </button>
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="brand-info">
+                    <h1>FRESH-ID</h1>
+                    <p>Monitoring System</p>
+                </div>
+            </div>
+            
+            <div class="page-title-section">
+                <h2>Monitoring Real-Time</h2>
+            </div>
+            
+            <div class="header-actions">
+                <button class="header-icon-btn" onclick="window.location.href='notifikasi.html'">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                
+                <button class="header-icon-btn" onclick="window.location.href='pengaturan.html'">
+                    <i class="fas fa-cog"></i>
+                </button>
+                
+                <div class="user-menu" onclick="logout()">
+                    <div class="user-avatar">A</div>
+                    <div class="user-info">
+                        <span class="user-name">Admin</span>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchMenu" placeholder="Cari menu...">
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="dashboard.html" class="nav-item" data-menu="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="monitoring.html" class="nav-item" data-menu="monitoring">
+                    <i class="fas fa-desktop"></i>
+                    <span>Monitoring</span>
+                </a>
+                <a href="data-sensor.html" class="nav-item" data-menu="data-sensor">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Data Sensor</span>
+                </a>
+                <a href="status-kesegaran.html" class="nav-item" data-menu="status-kesegaran">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Status Kesegaran</span>
+                </a>
+                <a href="sampel-sapi.html" class="nav-item" data-menu="sampel-sapi">
+                    <i class="fas fa-cow"></i>
+                    <span>Sampel Daging Sapi</span>
+                </a>
+                <a href="sampel-ayam.html" class="nav-item" data-menu="sampel-ayam">
+                    <i class="fas fa-drumstick-bite"></i>
+                    <span>Sampel Daging Ayam</span>
+                </a>
+                <a href="sampel-ikan.html" class="nav-item" data-menu="sampel-ikan">
+                    <i class="fas fa-fish"></i>
+                    <span>Sampel Ikan</span>
+                </a>
+                <a href="sampel-susu.html" class="nav-item" data-menu="sampel-susu">
+                    <i class="fas fa-glass-whiskey"></i>
+                    <span>Sampel Susu</span>
+                </a>
+                <a href="laporan.html" class="nav-item" data-menu="laporan">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Laporan</span>
+                </a>
+                <a href="notifikasi.html" class="nav-item" data-menu="notifikasi">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifikasi</span>
+                </a>
+                <a href="pengaturan.html" class="nav-item" data-menu="pengaturan">
+                    <i class="fas fa-cog"></i>
+                    <span>Pengaturan</span>
+                </a>
+                <a href="manajemen-pengguna.html" class="nav-item" data-menu="manajemen-pengguna">
+                    <i class="fas fa-users"></i>
+                    <span>Manajemen Pengguna</span>
+                </a>
+                <a href="dokumentasi.html" class="nav-item" data-menu="dokumentasi">
+                    <i class="fas fa-book"></i>
+                    <span>Dokumentasi</span>
+                </a>
+                <a href="referensi.html" class="nav-item" data-menu="referensi">
+                    <i class="fas fa-link"></i>
+                    <span>Referensi</span>
+                </a>
+                <a href="tentang.html" class="nav-item" data-menu="tentang">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Tentang</span>
+                </a>
+                <a href="#" class="nav-item" onclick="logout(); return false;">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Keluar</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1>Monitoring Real-Time</h1>
+                    <p>Pantau kondisi kesegaran produk secara real-time</p>
+                </div>
+
+                <!-- Monitoring Grid -->
+                <div class="monitoring-grid" id="monitoringGrid">
+                    <!-- Cards will be generated by JavaScript -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Common Scripts -->
+    <script src="js/professional-common.js"></script>
+    
+    <!-- Page Specific Scripts -->
+    <script>
+        // Set active menu
+        setActiveMenu('monitoring');
+        
+        // Sample monitoring data
+        const monitoringData = [
+            {
+                id: 1,
+                name: 'Kotak Daging Sapi',
+                icon: 'fa-drumstick-bite',
+                iconColor: 'linear-gradient(135deg, #3b82f6, #2563eb)',
+                status: 'normal',
+                sensors: {
+                    nh3: { value: 15.2, trend: 'down', change: -2.3 },
+                    h2s: { value: 8.5, trend: 'stable', change: 0.1 },
+                    ch4: { value: 12.8, trend: 'up', change: 1.5 },
+                    temp: { value: 4.2, trend: 'stable', change: 0.0 },
+                    humidity: { value: 65, trend: 'down', change: -3 }
+                },
+                lastUpdate: new Date()
+            },
+            {
+                id: 2,
+                name: 'Kotak Daging Ayam',
+                icon: 'fa-drumstick-bite',
+                iconColor: 'linear-gradient(135deg, #10b981, #059669)',
+                status: 'warning',
+                sensors: {
+                    nh3: { value: 28.5, trend: 'up', change: 4.2 },
+                    h2s: { value: 12.3, trend: 'up', change: 2.1 },
+                    ch4: { value: 18.7, trend: 'stable', change: 0.3 },
+                    temp: { value: 5.8, trend: 'up', change: 0.8 },
+                    humidity: { value: 72, trend: 'up', change: 5 }
+                },
+                lastUpdate: new Date()
+            },
+            {
+                id: 3,
+                name: 'Kotak Ikan',
+                icon: 'fa-fish',
+                iconColor: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                status: 'normal',
+                sensors: {
+                    nh3: { value: 18.9, trend: 'down', change: -1.5 },
+                    h2s: { value: 9.2, trend: 'stable', change: -0.2 },
+                    ch4: { value: 14.5, trend: 'down', change: -2.1 },
+                    temp: { value: 2.5, trend: 'stable', change: 0.1 },
+                    humidity: { value: 78, trend: 'down', change: -2 }
+                },
+                lastUpdate: new Date()
+            },
+            {
+                id: 4,
+                name: 'Kotak Susu',
+                icon: 'fa-glass-whiskey',
+                iconColor: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
+                status: 'normal',
+                sensors: {
+                    nh3: { value: 12.3, trend: 'stable', change: 0.2 },
+                    h2s: { value: 6.8, trend: 'down', change: -1.1 },
+                    ch4: { value: 10.2, trend: 'stable', change: 0.1 },
+                    temp: { value: 3.8, trend: 'stable', change: 0.0 },
+                    humidity: { value: 60, trend: 'stable', change: 1 }
+                },
+                lastUpdate: new Date()
+            }
+        ];
+
+        // Chart instances
+        const charts = {};
+
+        // Render monitoring cards
+        function renderMonitoring() {
+            const grid = document.getElementById('monitoringGrid');
+            grid.innerHTML = monitoringData.map(box => `
+                <div class="monitor-card">
+                    <div class="monitor-header">
+                        <div class="monitor-title">
+                            <div class="monitor-icon" style="background: ${box.iconColor}">
+                                <i class="fas ${box.icon}"></i>
+                            </div>
+                            <div class="monitor-info">
+                                <h3>${box.name}</h3>
+                                <p>ID: BOX-${String(box.id).padStart(3, '0')}</p>
+                            </div>
+                        </div>
+                        <span class="monitor-status status-${box.status}">
+                            ${box.status === 'normal' ? 'Normal' : box.status === 'warning' ? 'Peringatan' : 'Bahaya'}
+                        </span>
+                    </div>
+
+                    <div class="sensor-readings">
+                        <div class="sensor-item">
+                            <div class="sensor-label">NH₃</div>
+                            <div class="sensor-value">
+                                ${box.sensors.nh3.value.toFixed(1)}
+                                <span class="sensor-unit">ppm</span>
+                            </div>
+                            <div class="sensor-trend trend-${box.sensors.nh3.trend}">
+                                <i class="fas fa-arrow-${box.sensors.nh3.trend === 'up' ? 'up' : box.sensors.nh3.trend === 'down' ? 'down' : 'right'}"></i>
+                                ${Math.abs(box.sensors.nh3.change).toFixed(1)}%
+                            </div>
+                        </div>
+
+                        <div class="sensor-item">
+                            <div class="sensor-label">H₂S</div>
+                            <div class="sensor-value">
+                                ${box.sensors.h2s.value.toFixed(1)}
+                                <span class="sensor-unit">ppm</span>
+                            </div>
+                            <div class="sensor-trend trend-${box.sensors.h2s.trend}">
+                                <i class="fas fa-arrow-${box.sensors.h2s.trend === 'up' ? 'up' : box.sensors.h2s.trend === 'down' ? 'down' : 'right'}"></i>
+                                ${Math.abs(box.sensors.h2s.change).toFixed(1)}%
+                            </div>
+                        </div>
+
+                        <div class="sensor-item">
+                            <div class="sensor-label">CH₄</div>
+                            <div class="sensor-value">
+                                ${box.sensors.ch4.value.toFixed(1)}
+                                <span class="sensor-unit">ppm</span>
+                            </div>
+                            <div class="sensor-trend trend-${box.sensors.ch4.trend}">
+                                <i class="fas fa-arrow-${box.sensors.ch4.trend === 'up' ? 'up' : box.sensors.ch4.trend === 'down' ? 'down' : 'right'}"></i>
+                                ${Math.abs(box.sensors.ch4.change).toFixed(1)}%
+                            </div>
+                        </div>
+
+                        <div class="sensor-item">
+                            <div class="sensor-label">Temperature</div>
+                            <div class="sensor-value">
+                                ${box.sensors.temp.value.toFixed(1)}
+                                <span class="sensor-unit">°C</span>
+                            </div>
+                            <div class="sensor-trend trend-${box.sensors.temp.trend}">
+                                <i class="fas fa-arrow-${box.sensors.temp.trend === 'up' ? 'up' : box.sensors.temp.trend === 'down' ? 'down' : 'right'}"></i>
+                                ${Math.abs(box.sensors.temp.change).toFixed(1)}°C
+                            </div>
+                        </div>
+
+                        <div class="sensor-item">
+                            <div class="sensor-label">Humidity</div>
+                            <div class="sensor-value">
+                                ${box.sensors.humidity.value.toFixed(0)}
+                                <span class="sensor-unit">%</span>
+                            </div>
+                            <div class="sensor-trend trend-${box.sensors.humidity.trend}">
+                                <i class="fas fa-arrow-${box.sensors.humidity.trend === 'up' ? 'up' : box.sensors.humidity.trend === 'down' ? 'down' : 'right'}"></i>
+                                ${Math.abs(box.sensors.humidity.change).toFixed(0)}%
+                            </div>
                         </div>
                     </div>
-                    <canvas id="gasChart"></canvas>
-                </div>
-                
-                <div class="chart-container">
-                    <div class="chart-header">
-                        <h3>Suhu & Kelembaban</h3>
+
+                    <div class="chart-container">
+                        <canvas id="chart-${box.id}"></canvas>
                     </div>
-                    <canvas id="environmentChart"></canvas>
+
+                    <div class="last-update">
+                        <i class="fas fa-clock"></i> Terakhir diperbarui: ${formatDate(box.lastUpdate)}
+                    </div>
                 </div>
-            </section>
+            `).join('');
+
+            // Create charts for each card
+            monitoringData.forEach(box => {
+                createMonitoringChart(box.id);
+            });
+        }
+
+        // Create monitoring chart
+        function createMonitoringChart(boxId) {
+            const canvas = document.getElementById(`chart-${boxId}`);
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
             
-            <!-- Data Table -->
-            <section class="data-table-section">
-                <div class="table-header">
-                    <h3>Data Terbaru</h3>
-                    <button class="btn-export" onclick="exportData()">
-                        <i class="fas fa-download"></i> Export Data
-                    </button>
-                </div>
-                <div class="table-wrapper">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Waktu</th>
-                                <th>NH₃ (ppm)</th>
-                                <th>H₂S (ppm)</th>
-                                <th>CH₄ (ppm)</th>
-                                <th>Suhu (°C)</th>
-                                <th>Kelembaban (%)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dataTableBody">
-                            <!-- Data will be inserted here -->
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        </div>
-    </main>
-    
-    <script src="js/monitoring.js"></script>
+            // Destroy existing chart if any
+            if (charts[boxId]) {
+                charts[boxId].destroy();
+            }
+
+            // Generate sample data for 10 time points
+            const labels = [];
+            const now = new Date();
+            for (let i = 9; i >= 0; i--) {
+                const time = new Date(now.getTime() - i * 300000); // 5 minutes intervals
+                labels.push(time.getHours().toString().padStart(2, '0') + ':' + 
+                           time.getMinutes().toString().padStart(2, '0'));
+            }
+
+            const box = monitoringData.find(b => b.id === boxId);
+
+            charts[boxId] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'NH₃',
+                            data: generateDataPoints(box.sensors.nh3.value, 10),
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'H₂S',
+                            data: generateDataPoints(box.sensors.h2s.value, 10),
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'CH₄',
+                            data: generateDataPoints(box.sensors.ch4.value, 10),
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 15,
+                                font: {
+                                    size: 11,
+                                    weight: 600
+                                }
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            bodySpacing: 5,
+                            titleFont: {
+                                size: 13,
+                                weight: 600
+                            },
+                            bodyFont: {
+                                size: 12
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    }
+                }
+            });
+        }
+
+        // Generate sample data points around a value
+        function generateDataPoints(baseValue, count) {
+            const points = [];
+            for (let i = 0; i < count; i++) {
+                const variation = (Math.random() - 0.5) * baseValue * 0.2;
+                points.push(Math.max(0, baseValue + variation));
+            }
+            return points;
+        }
+
+        // Update monitoring data (simulate real-time updates)
+        function updateMonitoringData() {
+            monitoringData.forEach(box => {
+                // Randomly update sensor values
+                Object.keys(box.sensors).forEach(sensor => {
+                    const currentValue = box.sensors[sensor].value;
+                    const change = (Math.random() - 0.5) * currentValue * 0.1;
+                    box.sensors[sensor].value = Math.max(0, currentValue + change);
+                    
+                    // Update trend
+                    if (Math.abs(change) < currentValue * 0.02) {
+                        box.sensors[sensor].trend = 'stable';
+                    } else if (change > 0) {
+                        box.sensors[sensor].trend = 'up';
+                    } else {
+                        box.sensors[sensor].trend = 'down';
+                    }
+                    
+                    box.sensors[sensor].change = Math.abs(change);
+                });
+                
+                // Update status based on NH3 levels
+                if (box.sensors.nh3.value > 25) {
+                    box.status = 'danger';
+                } else if (box.sensors.nh3.value > 20) {
+                    box.status = 'warning';
+                } else {
+                    box.status = 'normal';
+                }
+                
+                box.lastUpdate = new Date();
+            });
+
+            renderMonitoring();
+        }
+
+        // Initialize
+        function init() {
+            renderMonitoring();
+            
+            // Update every 5 seconds
+            setInterval(updateMonitoringData, 5000);
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', init);
+    </script>
 </body>
 </html>

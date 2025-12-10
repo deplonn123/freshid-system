@@ -3,282 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRESH-ID - Data Sensor</title>
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/viewport-fit.css">
-    <link rel="stylesheet" href="css/pages.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Data Sensor - FRESH-ID</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/professional-theme.css">
 </head>
 <body>
     <!-- Top Header -->
     <header class="top-header">
-        <div class="header-left">
+        <div class="header-content">
             <button class="menu-toggle" onclick="toggleSidebar()">
                 <i class="fas fa-bars"></i>
             </button>
-            <div class="brand">
-                <img src="images/logo.svg" alt="FRESH-ID" class="brand-logo">
-                <span class="brand-name">FRESH-ID</span>
+            
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="brand-info">
+                    <h1>FRESH-ID</h1>
+                    <p>Monitoring System</p>
+                </div>
             </div>
-            <div class="header-title-section">
-                <h1 class="header-page-title">DATA SENSOR</h1>
-                <p class="header-page-subtitle">Real-time sensor readings</p>
+            
+            <div class="page-title-section">
+                <h2>Data Sensor</h2>
             </div>
-        </div>
-        <div class="header-right">
-            <button class="icon-btn" style="position: relative;">
-                <i class="fas fa-envelope"></i>
-                <span class="notification-badge">3</span>
-            </button>
-            <button class="icon-btn" style="position: relative;">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge">5</span>
-            </button>
-            <button class="icon-btn"><i class="fas fa-cog"></i></button>
-            <div class="user-menu-modern">
-                <div class="user-avatar">UA</div>
-                <div class="user-info-modern">
-                    <strong>Admin User</strong>
-                    <small>● Online</small>
+            
+            <div class="header-actions">
+                <button class="header-icon-btn" onclick="window.location.href='notifikasi.html'">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                
+                <button class="header-icon-btn" onclick="window.location.href='pengaturan.html'">
+                    <i class="fas fa-cog"></i>
+                </button>
+                
+                <div class="user-menu" onclick="logout()">
+                    <div class="user-avatar">A</div>
+                    <div class="user-info">
+                        <span class="user-name">Admin</span>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Sidebar Navigation -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-search">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search Menus" id="searchMenu">
-        </div>
-
-        <div class="sidebar-section">
-            <h4 class="section-title">TOOLS</h4>
-            <nav class="sidebar-nav">
-                <a href="dashboard-new.html" class="nav-item">
-                    <i class="fas fa-th-large"></i>
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchMenu" placeholder="Cari menu...">
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="dashboard.html" class="nav-item" data-menu="dashboard">
+                    <i class="fas fa-home"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="data-sensor.html" class="nav-item active">
-                    <i class="fas fa-database"></i>
+                <a href="monitoring.html" class="nav-item" data-menu="monitoring">
+                    <i class="fas fa-desktop"></i>
+                    <span>Monitoring</span>
+                </a>
+                <a href="data-sensor.html" class="nav-item" data-menu="data-sensor">
+                    <i class="fas fa-chart-line"></i>
                     <span>Data Sensor</span>
                 </a>
-                <a href="status-kesegaran.html" class="nav-item">
-                    <i class="fas fa-heartbeat"></i>
+                <a href="status-kesegaran.html" class="nav-item" data-menu="status-kesegaran">
+                    <i class="fas fa-check-circle"></i>
                     <span>Status Kesegaran</span>
                 </a>
-            </nav>
-        </div>
-
-        <div class="sidebar-section">
-            <h4 class="section-title">SAMPEL</h4>
-            <nav class="sidebar-nav">
-                <div class="nav-item has-submenu" onclick="toggleSubmenu(this)">
-                    <i class="fas fa-fish"></i>
-                    <span>Sampel Makanan</span>
-                    <i class="fas fa-chevron-down submenu-icon"></i>
-                </div>
-                <div class="submenu">
-                    <a href="sampel-sapi.html" class="submenu-item">
-                        <i class="fas fa-circle"></i>
-                        <span>Sapi</span>
-                    </a>
-                    <a href="sampel-ayam.html" class="submenu-item">
-                        <i class="fas fa-circle"></i>
-                        <span>Ayam</span>
-                    </a>
-                    <a href="sampel-ikan.html" class="submenu-item">
-                        <i class="fas fa-circle"></i>
-                        <span>Ikan</span>
-                    </a>
-                    <a href="sampel-susu.html" class="submenu-item">
-                        <i class="fas fa-circle"></i>
-                        <span>Susu</span>
-                    </a>
-                </div>
-            </nav>
-        </div>
-
-        <div class="sidebar-section">
-            <h4 class="section-title">REPORTS</h4>
-            <nav class="sidebar-nav">
-                <a href="laporan.html" class="nav-item">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Laporan Pengujian</span>
+                <a href="sampel-sapi.html" class="nav-item" data-menu="sampel-sapi">
+                    <i class="fas fa-cow"></i>
+                    <span>Sampel Daging Sapi</span>
                 </a>
-                <a href="notifikasi.html" class="nav-item">
+                <a href="sampel-ayam.html" class="nav-item" data-menu="sampel-ayam">
+                    <i class="fas fa-drumstick-bite"></i>
+                    <span>Sampel Daging Ayam</span>
+                </a>
+                <a href="sampel-ikan.html" class="nav-item" data-menu="sampel-ikan">
+                    <i class="fas fa-fish"></i>
+                    <span>Sampel Ikan</span>
+                </a>
+                <a href="sampel-susu.html" class="nav-item" data-menu="sampel-susu">
+                    <i class="fas fa-glass-whiskey"></i>
+                    <span>Sampel Susu</span>
+                </a>
+                <a href="laporan.html" class="nav-item" data-menu="laporan">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Laporan</span>
+                </a>
+                <a href="notifikasi.html" class="nav-item" data-menu="notifikasi">
                     <i class="fas fa-bell"></i>
                     <span>Notifikasi</span>
-                    <span class="badge-sm">5</span>
                 </a>
-            </nav>
-        </div>
-
-        <div class="sidebar-section">
-            <h4 class="section-title">SYSTEM</h4>
-            <nav class="sidebar-nav">
-                <a href="pengaturan.html" class="nav-item">
+                <a href="pengaturan.html" class="nav-item" data-menu="pengaturan">
                     <i class="fas fa-cog"></i>
                     <span>Pengaturan</span>
                 </a>
-                <a href="manajemen-user.html" class="nav-item">
-                    <i class="fas fa-users-cog"></i>
+                <a href="manajemen-pengguna.html" class="nav-item" data-menu="manajemen-pengguna">
+                    <i class="fas fa-users"></i>
                     <span>Manajemen Pengguna</span>
                 </a>
-            </nav>
-        </div>
-
-        <div class="sidebar-section">
-            <h4 class="section-title">DOCS</h4>
-            <nav class="sidebar-nav">
-                <a href="dokumentasi.html" class="nav-item">
+                <a href="dokumentasi.html" class="nav-item" data-menu="dokumentasi">
                     <i class="fas fa-book"></i>
-                    <span>Dokumentasi Sistem</span>
+                    <span>Dokumentasi</span>
                 </a>
-                <a href="referensi.html" class="nav-item">
+                <a href="referensi.html" class="nav-item" data-menu="referensi">
+                    <i class="fas fa-link"></i>
+                    <span>Referensi</span>
+                </a>
+                <a href="tentang.html" class="nav-item" data-menu="tentang">
                     <i class="fas fa-info-circle"></i>
-                    <span>Referensi & Singkatan</span>
-                </a>
-                <a href="tentang.html" class="nav-item">
-                    <i class="fas fa-id-card"></i>
                     <span>Tentang</span>
                 </a>
-            </nav>
-        </div>
-
-        <div class="sidebar-section">
-            <nav class="sidebar-nav">
                 <a href="#" class="nav-item" onclick="logout(); return false;">
                     <i class="fas fa-sign-out-alt"></i>
-                    <span>Logout</span>
+                    <span>Keluar</span>
                 </a>
             </nav>
-        </div>
-    </aside>
+        </aside>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="page-header">
-            <div>
-                <h2>Data Sensor Real-Time</h2>
-                <p>Monitoring data dari semua sensor aktif</p>
-            </div>
-            <div class="page-actions">
-                <button class="btn btn-secondary" onclick="refreshData()">
-                    <i class="fas fa-sync-alt"></i> Refresh
-                </button>
-                <button class="btn btn-primary" onclick="exportData()">
-                    <i class="fas fa-download"></i> Export CSV
-                </button>
-            </div>
-        </div>
-
-        <!-- Current Sensor Values -->
-        <div class="sensor-grid">
-            <div class="sensor-card nh3">
-                <div class="sensor-header">
-                    <i class="fas fa-vial"></i>
-                    <span>NH₃ (Ammonia)</span>
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1>Data Sensor</h1>
+                    <p>Lihat data historis dari semua sensor</p>
                 </div>
-                <div class="sensor-value" id="nh3-value">0.00</div>
-                <div class="sensor-unit">ppm</div>
-                <div class="sensor-status" id="nh3-status">Normal</div>
-            </div>
 
-            <div class="sensor-card h2s">
-                <div class="sensor-header">
-                    <i class="fas fa-flask"></i>
-                    <span>H₂S (Hydrogen Sulfide)</span>
-                </div>
-                <div class="sensor-value" id="h2s-value">0.00</div>
-                <div class="sensor-unit">ppm</div>
-                <div class="sensor-status" id="h2s-status">Normal</div>
-            </div>
+                <!-- Page Content -->
 
-            <div class="sensor-card ch4">
-                <div class="sensor-header">
-                    <i class="fas fa-fire"></i>
-                    <span>CH₄ (Methane)</span>
+                <!-- Filter Section -->
+                <div class="card" style="margin-bottom: 1.5rem;">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-filter"></i> Filter Data</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Jenis Produk</label>
+                                <select class="form-control" id="productFilter">
+                                    <option value="">Semua Produk</option>
+                                    <option value="sapi">Daging Sapi</option>
+                                    <option value="ayam">Daging Ayam</option>
+                                    <option value="ikan">Ikan</option>
+                                    <option value="susu">Susu</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Jenis Sensor</label>
+                                <select class="form-control" id="sensorFilter">
+                                    <option value="">Semua Sensor</option>
+                                    <option value="nh3">NH₃ (TGS2602)</option>
+                                    <option value="h2s">H₂S (TGS2602)</option>
+                                    <option value="ch4">CH₄ (TGS2611)</option>
+                                    <option value="temp">Suhu (DHT22)</option>
+                                    <option value="humidity">Kelembaban (DHT22)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Periode</label>
+                                <select class="form-control" id="periodFilter">
+                                    <option value="today">Hari Ini</option>
+                                    <option value="week">7 Hari Terakhir</option>
+                                    <option value="month">30 Hari Terakhir</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="display: flex; align-items: flex-end;">
+                                <button class="btn btn-primary" onclick="applyFilter()">
+                                    <i class="fas fa-search"></i> Terapkan Filter
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="sensor-value" id="ch4-value">0.00</div>
-                <div class="sensor-unit">ppm</div>
-                <div class="sensor-status" id="ch4-status">Normal</div>
-            </div>
 
-            <div class="sensor-card temp">
-                <div class="sensor-header">
-                    <i class="fas fa-temperature-high"></i>
-                    <span>Suhu</span>
+                <!-- Data Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-table"></i> Data Sensor</h3>
+                        <div>
+                            <button class="btn btn-success" onclick="exportCSV()">
+                                <i class="fas fa-file-csv"></i> Export CSV
+                            </button>
+                            <button class="btn btn-primary" onclick="exportPDF()">
+                                <i class="fas fa-file-pdf"></i> Export PDF
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-container">
+                            <table id="sensorTable">
+                                <thead>
+                                    <tr>
+                                        <th>Timestamp</th>
+                                        <th>Produk</th>
+                                        <th>Box</th>
+                                        <th>NH₃ (ppm)</th>
+                                        <th>H₂S (ppm)</th>
+                                        <th>CH₄ (ppm)</th>
+                                        <th>Suhu (°C)</th>
+                                        <th>Kelembaban (%)</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sensorTableBody">
+                                    <!-- Data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <div class="sensor-value" id="temp-value">0.0</div>
-                <div class="sensor-unit">°C</div>
-                <div class="sensor-status" id="temp-status">Normal</div>
-            </div>
 
-            <div class="sensor-card humidity">
-                <div class="sensor-header">
-                    <i class="fas fa-tint"></i>
-                    <span>Kelembaban</span>
-                </div>
-                <div class="sensor-value" id="humidity-value">0</div>
-                <div class="sensor-unit">%</div>
-                <div class="sensor-status" id="humidity-status">Normal</div>
+                <script>
+                    function generateSensorData() {
+                        const products = ['Daging Sapi', 'Daging Ayam', 'Ikan', 'Susu'];
+                        const tbody = document.getElementById('sensorTableBody');
+                        tbody.innerHTML = '';
+                        
+                        for (let i = 0; i < 20; i++) {
+                            const product = products[Math.floor(Math.random() * products.length)];
+                            const box = Math.floor(Math.random() * 4) + 1;
+                            const nh3 = (10 + Math.random() * 30).toFixed(2);
+                            const h2s = (5 + Math.random() * 20).toFixed(2);
+                            const ch4 = (20 + Math.random() * 70).toFixed(2);
+                            const temp = (24 + Math.random() * 12).toFixed(1);
+                            const humidity = Math.floor(50 + Math.random() * 35);
+                            const status = parseFloat(nh3) > 30 ? 'Bahaya' : parseFloat(nh3) > 20 ? 'Peringatan' : 'Normal';
+                            const statusClass = status === 'Normal' ? 'success' : status === 'Peringatan' ? 'warning' : 'danger';
+                            
+                            const date = new Date(Date.now() - Math.random() * 86400000);
+                            const timestamp = date.toLocaleString('id-ID');
+                            
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${timestamp}</td>
+                                <td>${product}</td>
+                                <td>BOX-${String(box).padStart(3, '0')}</td>
+                                <td>${nh3}</td>
+                                <td>${h2s}</td>
+                                <td>${ch4}</td>
+                                <td>${temp}</td>
+                                <td>${humidity}</td>
+                                <td><span class="badge badge-${statusClass}">${status}</span></td>
+                            `;
+                            tbody.appendChild(row);
+                        }
+                    }
+                    
+                    function applyFilter() {
+                        showToast('Filter diterapkan', 'success');
+                        generateSensorData();
+                    }
+                    
+                    function exportCSV() {
+                        showToast('Data berhasil diexport ke CSV', 'success');
+                    }
+                    
+                    function exportPDF() {
+                        showToast('Data berhasil diexport ke PDF', 'success');
+                    }
+                    
+                    // Generate initial data
+                    generateSensorData();
+                </script>
+        
             </div>
-        </div>
+        </main>
+    </div>
 
-        <!-- Data Table -->
-        <div class="data-table-card">
-            <div class="card-header">
-                <h3>History Pembacaan Sensor</h3>
-                <div class="table-controls">
-                    <input type="text" placeholder="Cari..." class="search-input" id="searchTable">
-                    <select class="filter-select" id="filterRows">
-                        <option value="10">10 Rows</option>
-                        <option value="25">25 Rows</option>
-                        <option value="50" selected>50 Rows</option>
-                        <option value="100">100 Rows</option>
-                    </select>
-                </div>
-            </div>
-            <div class="table-responsive">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Waktu <i class="fas fa-sort"></i></th>
-                            <th>NH₃ (ppm) <i class="fas fa-sort"></i></th>
-                            <th>H₂S (ppm) <i class="fas fa-sort"></i></th>
-                            <th>CH₄ (ppm) <i class="fas fa-sort"></i></th>
-                            <th>Suhu (°C) <i class="fas fa-sort"></i></th>
-                            <th>Kelembaban (%) <i class="fas fa-sort"></i></th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="dataTableBody">
-                        <!-- Data will be inserted here by JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-            <div class="table-footer">
-                <div>Menampilkan 1-50 dari 500 data</div>
-                <div class="pagination">
-                    <button class="btn-page"><i class="fas fa-chevron-left"></i></button>
-                    <button class="btn-page active">1</button>
-                    <button class="btn-page">2</button>
-                    <button class="btn-page">3</button>
-                    <button class="btn-page">...</button>
-                    <button class="btn-page">10</button>
-                    <button class="btn-page"><i class="fas fa-chevron-right"></i></button>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <script src="js/main.js"></script>
-    <script src="js/data-sensor.js"></script>
-    <script src="js/theme-loader.js"></script>
-    <script src="js/auth.js"></script>
-    <script>checkAuth();</script>
+    <!-- Common Scripts -->
+    <script src="js/professional-common.js"></script>
+    
+    <!-- Page Specific Scripts -->
+    <script>
+        setActiveMenu('data-sensor');
+    </script>
 </body>
 </html>

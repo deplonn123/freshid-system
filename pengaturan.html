@@ -4,165 +4,270 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pengaturan - FRESH-ID</title>
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/viewport-fit.css">
-    <link rel="stylesheet" href="css/pages.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/professional-theme.css">
 </head>
 <body>
+    <!-- Top Header -->
     <header class="top-header">
-        <div class="header-left">
-            <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
-            <div class="brand">
-                <img src="images/logo.svg" alt="FRESH-ID" class="brand-logo">
-                <span class="brand-name">FRESH-ID</span>
-            </div>
-            <div class="header-title-section">
-                <h1 class="header-page-title">PENGATURAN</h1>
-                <p class="header-page-subtitle">System configuration and preferences</p>
-            </div>
-        </div>
-        <div class="header-right">
-            <button class="icon-btn" style="position: relative;">
-                <i class="fas fa-envelope"></i>
-                <span class="notification-badge">3</span>
+        <div class="header-content">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
             </button>
-            <button class="icon-btn" style="position: relative;">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge">5</span>
-            </button>
-            <button class="icon-btn"><i class="fas fa-cog"></i></button>
-            <div class="user-menu-modern">
-                <div class="user-avatar">UA</div>
-                <div class="user-info-modern">
-                    <strong>Admin User</strong>
-                    <small>● Online</small>
+            
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="brand-info">
+                    <h1>FRESH-ID</h1>
+                    <p>Monitoring System</p>
+                </div>
+            </div>
+            
+            <div class="page-title-section">
+                <h2>Pengaturan</h2>
+            </div>
+            
+            <div class="header-actions">
+                <button class="header-icon-btn" onclick="window.location.href='notifikasi.html'">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                
+                <button class="header-icon-btn" onclick="window.location.href='pengaturan.html'">
+                    <i class="fas fa-cog"></i>
+                </button>
+                
+                <div class="user-menu" onclick="logout()">
+                    <div class="user-avatar">A</div>
+                    <div class="user-info">
+                        <span class="user-name">Admin</span>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
                 </div>
             </div>
         </div>
     </header>
 
-    <aside class="sidebar" id="sidebar">
-        <nav class="sidebar-nav">
-            <div class="nav-section">
-                <div class="nav-section-title">TOOLS</div>
-                <a href="dashboard-new.html" class="nav-item"><i class="fas fa-home"></i><span>Dashboard</span></a>
-                <a href="data-sensor.html" class="nav-item"><i class="fas fa-microchip"></i><span>Data Sensor</span></a>
-                <a href="status-kesegaran.html" class="nav-item"><i class="fas fa-heartbeat"></i><span>Status Kesegaran</span></a>
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchMenu" placeholder="Cari menu...">
+                </div>
             </div>
-            <div class="nav-section">
-                <div class="nav-section-title">SAMPEL</div>
-                <div class="nav-item has-submenu">
-                    <div class="nav-link"><i class="fas fa-flask"></i><span>Sampel Makanan</span><i class="fas fa-chevron-down submenu-icon"></i></div>
-                    <div class="submenu">
-                        <a href="sampel-ayam.html" class="submenu-item"><i class="fas fa-drumstick-bite"></i><span>Ayam</span></a>
-                        <a href="sampel-sapi.html" class="submenu-item"><i class="fas fa-burger"></i><span>Sapi</span></a>
-                        <a href="sampel-ikan.html" class="submenu-item"><i class="fas fa-fish"></i><span>Ikan</span></a>
-                        <a href="sampel-susu.html" class="submenu-item"><i class="fas fa-glass-whiskey"></i><span>Susu</span></a>
+            
+            <nav class="nav-menu">
+                <a href="dashboard.html" class="nav-item" data-menu="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="monitoring.html" class="nav-item" data-menu="monitoring">
+                    <i class="fas fa-desktop"></i>
+                    <span>Monitoring</span>
+                </a>
+                <a href="data-sensor.html" class="nav-item" data-menu="data-sensor">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Data Sensor</span>
+                </a>
+                <a href="status-kesegaran.html" class="nav-item" data-menu="status-kesegaran">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Status Kesegaran</span>
+                </a>
+                <a href="sampel-sapi.html" class="nav-item" data-menu="sampel-sapi">
+                    <i class="fas fa-cow"></i>
+                    <span>Sampel Daging Sapi</span>
+                </a>
+                <a href="sampel-ayam.html" class="nav-item" data-menu="sampel-ayam">
+                    <i class="fas fa-drumstick-bite"></i>
+                    <span>Sampel Daging Ayam</span>
+                </a>
+                <a href="sampel-ikan.html" class="nav-item" data-menu="sampel-ikan">
+                    <i class="fas fa-fish"></i>
+                    <span>Sampel Ikan</span>
+                </a>
+                <a href="sampel-susu.html" class="nav-item" data-menu="sampel-susu">
+                    <i class="fas fa-glass-whiskey"></i>
+                    <span>Sampel Susu</span>
+                </a>
+                <a href="laporan.html" class="nav-item" data-menu="laporan">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Laporan</span>
+                </a>
+                <a href="notifikasi.html" class="nav-item" data-menu="notifikasi">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifikasi</span>
+                </a>
+                <a href="pengaturan.html" class="nav-item" data-menu="pengaturan">
+                    <i class="fas fa-cog"></i>
+                    <span>Pengaturan</span>
+                </a>
+                <a href="manajemen-pengguna.html" class="nav-item" data-menu="manajemen-pengguna">
+                    <i class="fas fa-users"></i>
+                    <span>Manajemen Pengguna</span>
+                </a>
+                <a href="dokumentasi.html" class="nav-item" data-menu="dokumentasi">
+                    <i class="fas fa-book"></i>
+                    <span>Dokumentasi</span>
+                </a>
+                <a href="referensi.html" class="nav-item" data-menu="referensi">
+                    <i class="fas fa-link"></i>
+                    <span>Referensi</span>
+                </a>
+                <a href="tentang.html" class="nav-item" data-menu="tentang">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Tentang</span>
+                </a>
+                <a href="#" class="nav-item" onclick="logout(); return false;">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Keluar</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1>Pengaturan</h1>
+                    <p>Kelola pengaturan sistem</p>
+                </div>
+
+                <!-- Page Content -->
+
+                <div class="card" style="margin-bottom: 1.5rem;">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-bell"></i> Pengaturan Notifikasi</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid var(--gray-200);">
+                            <div>
+                                <div style="font-weight: 600;">Email Notifikasi</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Terima notifikasi via email</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid var(--gray-200);">
+                            <div>
+                                <div style="font-weight: 600;">Notifikasi Peringatan</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Alert untuk status peringatan</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 1rem 0;">
+                            <div>
+                                <div style="font-weight: 600;">Notifikasi Bahaya</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Alert untuk status bahaya</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="nav-section">
-                <div class="nav-section-title">REPORTS</div>
-                <a href="laporan.html" class="nav-item"><i class="fas fa-file-alt"></i><span>Laporan Pengujian</span></a>
-                <a href="notifikasi.html" class="nav-item"><i class="fas fa-bell"></i><span>Notifikasi</span><span class="badge">5</span></a>
-            </div>
-            <div class="nav-section">
-                <div class="nav-section-title">SYSTEM</div>
-                <a href="pengaturan.html" class="nav-item active"><i class="fas fa-cog"></i><span>Pengaturan</span></a>
-                <a href="manajemen-pengguna.html" class="nav-item"><i class="fas fa-users"></i><span>Manajemen Pengguna</span></a>
-            </div>
-            <div class="nav-section">
-                <div class="nav-section-title">DOCS</div>
-                <a href="dokumentasi.html" class="nav-item"><i class="fas fa-book"></i><span>Dokumentasi Sistem</span></a>
-                <a href="referensi.html" class="nav-item"><i class="fas fa-bookmark"></i><span>Referensi & Singkatan</span></a>
-                <a href="tentang.html" class="nav-item"><i class="fas fa-info-circle"></i><span>Tentang</span></a>
-            </div>
-        </nav>
-        <div class="sidebar-footer">
-            <a href="#" class="nav-item logout" onclick="logout(); return false;"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
-        </div>
-    </aside>
 
-    <main class="main-content">
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem;">
-            <button class="btn btn-primary" onclick="saveSettings()"><i class="fas fa-save"></i> Simpan Pengaturan</button>
-        </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-sliders-h"></i> Pengaturan Threshold</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="form-label">Batas Peringatan NH₃ (ppm)</label>
+                            <input type="number" class="form-control" value="20">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Batas Bahaya NH₃ (ppm)</label>
+                            <input type="number" class="form-control" value="30">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Interval Update (detik)</label>
+                            <input type="number" class="form-control" value="3">
+                        </div>
+                        <button class="btn btn-primary" onclick="saveSettings()">
+                            <i class="fas fa-save"></i> Simpan Pengaturan
+                        </button>
+                    </div>
+                </div>
 
-        <div class="card" style="margin-bottom: 1.5rem;">
-            <div class="card-header"><h2><i class="fas fa-sliders-h"></i> Pengaturan Sensor</h2></div>
-            <div class="card-body">
-                <div class="setting-group">
-                    <label>Interval Pembacaan Sensor (detik)</label>
-                    <input type="number" class="form-input" value="5" min="1" max="60">
-                    <small>Waktu jeda antar pembacaan sensor (1-60 detik)</small>
-                </div>
-                <div class="setting-group">
-                    <label>Batas Aman NH₃ (ppm)</label>
-                    <input type="number" class="form-input" value="35" step="0.1">
-                </div>
-                <div class="setting-group">
-                    <label>Batas Aman H₂S (ppm)</label>
-                    <input type="number" class="form-input" value="20" step="0.1">
-                </div>
-                <div class="setting-group">
-                    <label>Batas Aman CH₄ (ppm)</label>
-                    <input type="number" class="form-input" value="80" step="0.1">
-                </div>
+                <style>
+                    .switch {
+                        position: relative;
+                        display: inline-block;
+                        width: 50px;
+                        height: 28px;
+                    }
+                    .switch input {
+                        opacity: 0;
+                        width: 0;
+                        height: 0;
+                    }
+                    .slider {
+                        position: absolute;
+                        cursor: pointer;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background-color: #ccc;
+                        transition: .4s;
+                        border-radius: 28px;
+                    }
+                    .slider:before {
+                        position: absolute;
+                        content: "";
+                        height: 20px;
+                        width: 20px;
+                        left: 4px;
+                        bottom: 4px;
+                        background-color: white;
+                        transition: .4s;
+                        border-radius: 50%;
+                    }
+                    input:checked + .slider {
+                        background-color: var(--primary);
+                    }
+                    input:checked + .slider:before {
+                        transform: translateX(22px);
+                    }
+                </style>
+
+                <script>
+                    function saveSettings() {
+                        showToast('Pengaturan berhasil disimpan', 'success');
+                    }
+                </script>
+        
             </div>
-        </div>
+        </main>
+    </div>
 
-        <div class="card" style="margin-bottom: 1.5rem;">
-            <div class="card-header"><h2><i class="fas fa-bell"></i> Pengaturan Notifikasi</h2></div>
-            <div class="card-body">
-                <div class="setting-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" checked> Notifikasi Email
-                        <small>Kirim notifikasi ke email saat ada peringatan</small>
-                    </label>
-                </div>
-                <div class="setting-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" checked> Notifikasi Browser
-                        <small>Tampilkan notifikasi di browser</small>
-                    </label>
-                </div>
-                <div class="setting-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox"> Notifikasi Suara
-                        <small>Aktifkan alarm suara untuk peringatan kritis</small>
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header"><h2><i class="fas fa-palette"></i> Tampilan</h2></div>
-            <div class="card-body">
-                <div class="setting-group">
-                    <label>Tema Warna</label>
-                    <select class="form-input" id="themeColor" onchange="changeThemeColor(this.value)">
-                        <option value="blue" selected>Biru (Default)</option>
-                        <option value="green">Hijau</option>
-                        <option value="purple">Ungu</option>
-                        <option value="red">Merah</option>
-                    </select>
-                </div>
-                <div class="setting-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode(this.checked)"> Mode Gelap
-                        <small>Aktifkan mode gelap untuk tampilan malam</small>
-                    </label>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <script src="js/auth.js"></script>
-    <script src="js/theme-loader.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/pengaturan.js"></script>
-    <script>checkAuth();</script>
+    <!-- Common Scripts -->
+    <script src="js/professional-common.js"></script>
+    
+    <!-- Page Specific Scripts -->
+    <script>
+        setActiveMenu('pengaturan');
+    </script>
 </body>
 </html>
