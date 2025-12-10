@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRESH-ID - Monitoring Real-Time</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="monitoring-page">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="images/logo.svg" alt="FRESH-ID Logo" class="sidebar-logo" onerror="this.style.display='none'">
+            <h2>FRESH-ID</h2>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="dashboard-new.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="monitoring.html" class="nav-item active">
+                <i class="fas fa-chart-line"></i>
+                <span>Monitoring</span>
+            </a>
+            <a href="team.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Tim Kami</span>
+            </a>
+            <a href="#" class="nav-item" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Keluar</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <p>© 2025 FRESH-ID</p>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button class="menu-toggle" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1>Monitoring Real-Time</h1>
+            </div>
+            <div class="header-right">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>Live</span>
+                </div>
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="userEmail">user@email.com</span>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Monitoring Content -->
+        <div class="monitoring-content">
+            <!-- Current Values -->
+            <section class="current-values">
+                <div class="value-card">
+                    <div class="value-header">
+                        <i class="fas fa-vial" style="color: #6366f1"></i>
+                        <h3>NH₃</h3>
+                    </div>
+                    <p class="value-display" id="live-nh3">0.00</p>
+                    <p class="value-label">ppm</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-header">
+                        <i class="fas fa-flask" style="color: #ec4899"></i>
+                        <h3>H₂S</h3>
+                    </div>
+                    <p class="value-display" id="live-h2s">0.00</p>
+                    <p class="value-label">ppm</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-header">
+                        <i class="fas fa-fire" style="color: #f59e0b"></i>
+                        <h3>CH₄</h3>
+                    </div>
+                    <p class="value-display" id="live-ch4">0.00</p>
+                    <p class="value-label">ppm</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-header">
+                        <i class="fas fa-temperature-high" style="color: #ef4444"></i>
+                        <h3>Suhu</h3>
+                    </div>
+                    <p class="value-display" id="live-temp">0.0</p>
+                    <p class="value-label">°C</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-header">
+                        <i class="fas fa-tint" style="color: #3b82f6"></i>
+                        <h3>Kelembaban</h3>
+                    </div>
+                    <p class="value-display" id="live-humidity">0</p>
+                    <p class="value-label">%</p>
+                </div>
+            </section>
+            
+            <!-- Charts -->
+            <section class="charts-section">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Konsentrasi Gas (ppm)</h3>
+                        <div class="chart-controls">
+                            <button class="btn-chart-control" onclick="clearCharts()">
+                                <i class="fas fa-sync-alt"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+                    <canvas id="gasChart"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Suhu & Kelembaban</h3>
+                    </div>
+                    <canvas id="environmentChart"></canvas>
+                </div>
+            </section>
+            
+            <!-- Data Table -->
+            <section class="data-table-section">
+                <div class="table-header">
+                    <h3>Data Terbaru</h3>
+                    <button class="btn-export" onclick="exportData()">
+                        <i class="fas fa-download"></i> Export Data
+                    </button>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Waktu</th>
+                                <th>NH₃ (ppm)</th>
+                                <th>H₂S (ppm)</th>
+                                <th>CH₄ (ppm)</th>
+                                <th>Suhu (°C)</th>
+                                <th>Kelembaban (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dataTableBody">
+                            <!-- Data will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <script src="js/monitoring.js"></script>
+</body>
+</html>

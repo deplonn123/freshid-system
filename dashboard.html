@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRESH-ID - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-page">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="images/logo.svg" alt="FRESH-ID Logo" class="sidebar-logo" onerror="this.style.display='none'">
+            <h2>FRESH-ID</h2>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="monitoring.html" class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Monitoring</span>
+            </a>
+            <a href="team.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Tim Kami</span>
+            </a>
+            <a href="#" class="nav-item" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Keluar</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <p>© 2025 FRESH-ID</p>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button class="menu-toggle" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1>Dashboard</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="userEmail">user@email.com</span>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-card">
+                    <div class="welcome-text">
+                        <h2>Selamat Datang di FRESH-ID</h2>
+                        <p>Sistem Monitoring Gas Real-Time untuk Lingkungan yang Lebih Sehat</p>
+                    </div>
+                    <div class="welcome-icon">
+                        <i class="fas fa-wind"></i>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Stats Cards -->
+            <section class="stats-grid">
+                <div class="stat-card card-nh3">
+                    <div class="stat-icon">
+                        <i class="fas fa-vial"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>NH₃</h3>
+                        <p class="stat-value" id="nh3-value">--</p>
+                        <p class="stat-unit">ppm</p>
+                    </div>
+                    <div class="stat-status" id="nh3-status">Normal</div>
+                </div>
+                
+                <div class="stat-card card-h2s">
+                    <div class="stat-icon">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>H₂S</h3>
+                        <p class="stat-value" id="h2s-value">--</p>
+                        <p class="stat-unit">ppm</p>
+                    </div>
+                    <div class="stat-status" id="h2s-status">Normal</div>
+                </div>
+                
+                <div class="stat-card card-ch4">
+                    <div class="stat-icon">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>CH₄</h3>
+                        <p class="stat-value" id="ch4-value">--</p>
+                        <p class="stat-unit">ppm</p>
+                    </div>
+                    <div class="stat-status" id="ch4-status">Normal</div>
+                </div>
+                
+                <div class="stat-card card-temp">
+                    <div class="stat-icon">
+                        <i class="fas fa-temperature-high"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Suhu</h3>
+                        <p class="stat-value" id="temp-value">--</p>
+                        <p class="stat-unit">°C</p>
+                    </div>
+                    <div class="stat-status" id="temp-status">Normal</div>
+                </div>
+                
+                <div class="stat-card card-humidity">
+                    <div class="stat-icon">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Kelembaban</h3>
+                        <p class="stat-value" id="humidity-value">--</p>
+                        <p class="stat-unit">%</p>
+                    </div>
+                    <div class="stat-status" id="humidity-status">Normal</div>
+                </div>
+            </section>
+            
+            <!-- Quick Access -->
+            <section class="quick-access">
+                <h2>Akses Cepat</h2>
+                <div class="quick-access-grid">
+                    <a href="monitoring.html" class="quick-card">
+                        <i class="fas fa-chart-area"></i>
+                        <h3>Monitoring Real-Time</h3>
+                        <p>Lihat grafik monitoring langsung</p>
+                    </a>
+                    <a href="team.html" class="quick-card">
+                        <i class="fas fa-id-card"></i>
+                        <h3>Informasi Tim</h3>
+                        <p>Kenali tim FRESH-ID</p>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,693 @@
+/* =============================================
+   COMPACT LAYOUT - Fit Everything in 1 Screen
+   Ukuran lebih kecil tanpa mengubah struktur
+   ============================================= */
+
+/* Body & HTML Setup */
+html, body {
+    height: 100vh;
+    overflow: hidden;
+    font-size: 14px;
+}
+
+/* Header - Compact & Rapi */
+.top-header {
+    height: 55px !important;
+    padding: 0 1.5rem !important;
+}
+
+:root {
+    --header-height: 55px !important;
+}
+
+.brand {
+    padding-right: 1.25rem !important;
+    margin-right: 1.25rem !important;
+}
+
+.brand-logo {
+    width: 36px !important;
+    height: 36px !important;
+}
+
+.brand-name {
+    font-size: 1.2rem !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.3px !important;
+}
+
+.header-title-section {
+    gap: 0.2rem !important;
+    margin-left: 0.25rem !important;
+}
+
+.header-page-title {
+    font-size: 1.15rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.3px !important;
+    line-height: 1.2 !important;
+    margin: 0 !important;
+}
+
+.header-page-subtitle {
+    font-size: 0.78rem !important;
+    opacity: 0.85 !important;
+    line-height: 1.2 !important;
+    margin: 0 !important;
+    font-weight: 400 !important;
+}
+
+.icon-btn, .header-btn {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.9rem !important;
+}
+
+.user-avatar {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.8rem !important;
+}
+
+.user-info-modern strong {
+    font-size: 0.8rem !important;
+}
+
+.user-info-modern small {
+    font-size: 0.7rem !important;
+}
+
+/* Sidebar - Rapi & Terstruktur */
+.sidebar {
+    width: 200px !important;
+    height: calc(100vh - 55px) !important;
+    overflow-y: auto;
+    padding-top: 0.4rem !important;
+}
+
+:root {
+    --sidebar-width: 200px !important;
+}
+
+.nav-item {
+    padding: 0.28rem 1.2rem !important;
+    font-size: 0.78rem !important;
+    font-weight: 500 !important;
+    line-height: 1.1 !important;
+}
+
+.nav-item i {
+    font-size: 0.85rem !important;
+    width: 16px !important;
+    text-align: center !important;
+    margin-right: 0.45rem !important;
+}
+
+.nav-item span {
+    letter-spacing: 0.05px !important;
+}
+
+.section-title {
+    font-size: 0.62rem !important;
+    padding: 0 1.2rem !important;
+    margin-top: 0 !important;
+    margin-bottom: 0.1rem !important;
+    letter-spacing: 0.3px !important;
+    font-weight: 600 !important;
+}
+
+.sidebar-search {
+    padding: 0.35rem 0.85rem !important;
+    margin: 0 0.65rem 0.5rem !important;
+}
+
+.sidebar-search input {
+    font-size: 0.75rem !important;
+    padding: 0.35rem !important;
+}
+
+/* Main Content Area */
+.main-content {
+    height: calc(100vh - 55px) !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 1rem !important;
+    line-height: 1.5 !important;
+    box-sizing: border-box !important;
+}
+
+/* Prevent horizontal overflow */
+.main-content > * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Notification Badge di Sidebar - Lebih Kecil */
+.notification-badge {
+    font-size: 0.65rem !important;
+    padding: 0.15rem 0.4rem !important;
+    min-width: 18px !important;
+}
+
+/* Dashboard Cards & Stats - Typography Rapi */
+.dashboard-header {
+    margin-bottom: 0.75rem !important;
+    padding-bottom: 0.65rem !important;
+    border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.dashboard-header h1 {
+    font-size: 1.5rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.4px !important;
+    line-height: 1.25 !important;
+    margin-bottom: 0.2rem !important;
+}
+
+.dashboard-header p {
+    font-size: 0.85rem !important;
+    line-height: 1.35 !important;
+    margin-top: 0 !important;
+    opacity: 0.9 !important;
+}
+
+.stats-grid {
+    gap: 0.65rem !important;
+    margin-bottom: 0.75rem !important;
+}
+
+.stat-card {
+    padding: 0.65rem !important;
+}
+
+.stat-icon {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 1.3rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.stat-value {
+    font-size: 1.25rem !important;
+    margin: 0.25rem 0 !important;
+    font-weight: 700 !important;
+    line-height: 1.1 !important;
+}
+
+.stat-label {
+    font-size: 0.75rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.1px !important;
+    line-height: 1.2 !important;
+}
+
+.stat-change {
+    font-size: 0.75rem !important;
+    font-weight: 500 !important;
+    line-height: 1.2 !important;
+}
+
+/* Charts - Rapi dengan Typography Jelas */
+.chart-card,
+.card {
+    margin-bottom: 0.875rem !important;
+    padding: 0.875rem !important;
+}
+
+.card h3 {
+    font-size: 1.05rem !important;
+    margin-bottom: 0.6rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.2px !important;
+    line-height: 1.3 !important;
+}
+
+.card p,
+.card-description {
+    font-size: 0.85rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.chart-container {
+    height: 190px !important;
+    max-height: 190px !important;
+}
+
+canvas {
+    max-height: 190px !important;
+}
+
+/* Tables - Rapi & Mudah Dibaca */
+.table-container {
+    max-height: 280px !important;
+    overflow-y: auto;
+}
+
+.data-table {
+    font-size: 0.85rem !important;
+    line-height: 1.4 !important;
+}
+
+.data-table th {
+    padding: 0.6rem 0.75rem !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.2px !important;
+    line-height: 1.3 !important;
+}
+
+.data-table td {
+    padding: 0.6rem 0.75rem !important;
+    line-height: 1.4 !important;
+}
+
+/* Dashboard Bottom Cards - Typography Konsisten */
+.dashboard-cards,
+.bottom-grid {
+    gap: 0.65rem !important;
+    margin-bottom: 0 !important;
+}
+
+.info-card,
+.bottom-card {
+    padding: 0.65rem !important;
+}
+
+.info-content h3,
+.bottom-title {
+    font-size: 0.75rem !important;
+    margin-bottom: 0.3rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.2px !important;
+    line-height: 1.2 !important;
+}
+
+.info-value,
+.bottom-value {
+    font-size: 1.2rem !important;
+    margin: 0.25rem 0 !important;
+    font-weight: 700 !important;
+    line-height: 1.1 !important;
+}
+
+.info-subtitle,
+.bottom-change {
+    font-size: 0.7rem !important;
+    line-height: 1.2 !important;
+    font-weight: 500 !important;
+}
+
+/* Sensor Cards - Rapi & Proporsional */
+.sensor-grid,
+.status-grid {
+    gap: 0.875rem !important;
+    margin-bottom: 0.875rem !important;
+}
+
+.sensor-card,
+.status-card {
+    padding: 0.875rem !important;
+}
+
+.sensor-card h3,
+.status-card h3 {
+    font-size: 0.95rem !important;
+    margin-bottom: 0.5rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.1px !important;
+    line-height: 1.3 !important;
+}
+
+.sensor-value {
+    font-size: 1.9rem !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+}
+
+.sensor-status,
+.status-badge {
+    font-size: 0.75rem !important;
+    padding: 0.25rem 0.6rem !important;
+    font-weight: 500 !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0.1px !important;
+}
+
+/* Forms & Settings - Typography Jelas */
+.settings-section {
+    margin-bottom: 0.875rem !important;
+}
+
+.settings-section h3 {
+    font-size: 1.05rem !important;
+    margin-bottom: 0.6rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.2px !important;
+    line-height: 1.3 !important;
+}
+
+.form-group {
+    margin-bottom: 0.875rem !important;
+}
+
+.form-group label {
+    font-size: 0.85rem !important;
+    margin-bottom: 0.4rem !important;
+    font-weight: 500 !important;
+    line-height: 1.3 !important;
+    letter-spacing: 0.1px !important;
+    display: block !important;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    font-size: 0.875rem !important;
+    padding: 0.6rem !important;
+    line-height: 1.4 !important;
+}
+
+/* Notifications - Typography Jelas */
+.notification-item {
+    padding: 0.65rem !important;
+    margin-bottom: 0.6rem !important;
+}
+
+.notification-title {
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    line-height: 1.3 !important;
+    letter-spacing: -0.1px !important;
+    margin-bottom: 0.3rem !important;
+}
+
+.notification-text {
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+    font-weight: 400 !important;
+}
+
+.notification-time {
+    font-size: 0.72rem !important;
+    opacity: 0.8 !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0.1px !important;
+}
+
+/* Reports & Filters - Typography Jelas */
+.report-filters {
+    margin-bottom: 0.875rem !important;
+    padding: 0.875rem !important;
+}
+
+.filter-group {
+    margin-bottom: 0.6rem !important;
+}
+
+.report-filters label {
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.1px !important;
+}
+
+.report-filters select,
+.report-filters input {
+    font-size: 0.875rem !important;
+    line-height: 1.4 !important;
+}
+
+/* Page Headers - Typography Jelas & Presisi */
+.page-header {
+    padding: 0.875rem 1rem !important;
+    margin-bottom: 0.875rem !important;
+    padding-bottom: 0.875rem !important;
+    border-bottom: 1px solid rgba(0,0,0,0.08) !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    flex-wrap: wrap !important;
+    gap: 0.75rem !important;
+}
+
+.page-header > div:first-child {
+    flex: 1 1 auto !important;
+    min-width: 200px !important;
+}
+
+.page-header h1,
+.page-header h2 {
+    font-size: 1.5rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.4px !important;
+    line-height: 1.25 !important;
+    margin-bottom: 0.3rem !important;
+    margin-top: 0 !important;
+}
+
+.page-header p {
+    font-size: 0.85rem !important;
+    line-height: 1.35 !important;
+    letter-spacing: 0.05px !important;
+    opacity: 0.9 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.page-actions {
+    display: flex !important;
+    gap: 0.5rem !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+}
+
+/* Buttons - Typography Jelas */
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-outline {
+    padding: 0.6rem 1rem !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.1px !important;
+    line-height: 1.3 !important;
+    border-radius: 6px !important;
+    white-space: nowrap !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.4rem !important;
+    border: 1px solid transparent !important;
+    transition: all 0.2s ease !important;
+}
+
+.btn-primary {
+    background: #3498db !important;
+    color: white !important;
+}
+
+.btn-primary:hover {
+    background: #2980b9 !important;
+    transform: translateY(-1px) !important;
+}
+
+.btn-secondary {
+    background: #95a5a6 !important;
+    color: white !important;
+}
+
+.btn-secondary:hover {
+    background: #7f8c8d !important;
+}
+
+.btn-outline {
+    background: transparent !important;
+    border-color: #3498db !important;
+    color: #3498db !important;
+}
+
+.btn-outline:hover {
+    background: #3498db !important;
+    color: white !important;
+}
+
+/* Badges & Labels - Typography Jelas */
+.badge {
+    font-size: 0.75rem !important;
+    padding: 0.3rem 0.5rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.2px !important;
+    line-height: 1.2 !important;
+}
+
+.status-badge {
+    font-size: 0.75rem !important;
+    padding: 0.3rem 0.6rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.2px !important;
+}
+
+/* Notification Animation */
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Scrollbar Styling */
+.main-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.main-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Grid Layouts - No Overflow */
+.stats-grid,
+.dashboard-cards,
+.sensor-grid,
+.status-grid,
+.bottom-grid,
+.sample-boxes {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+}
+
+/* Grid items responsive */
+.stats-grid,
+.sensor-grid,
+.status-grid,
+.bottom-grid {
+    display: grid !important;
+    gap: 0.65rem !important;
+}
+
+/* Prevent box overflow */
+.stat-card,
+.sensor-card,
+.info-card,
+.bottom-card,
+.sample-box {
+    min-width: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Global Typography - Konsisten & Rapih */
+h1 { 
+    font-size: 1.5rem !important; 
+    margin-bottom: 0.5rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.4px !important;
+    line-height: 1.25 !important;
+}
+
+.page-header h1 i,
+.dashboard-header h1 i {
+    font-size: 1.3rem !important;
+    margin-right: 0.5rem !important;
+    vertical-align: middle !important;
+}
+
+h2 { 
+    font-size: 1.3rem !important; 
+    margin-bottom: 0.45rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.3px !important;
+    line-height: 1.25 !important;
+}
+
+h3 { 
+    font-size: 1.1rem !important; 
+    margin-bottom: 0.4rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.2px !important;
+    line-height: 1.25 !important;
+}
+
+h4 { 
+    font-size: 1rem !important; 
+    margin-bottom: 0.35rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.1px !important;
+    line-height: 1.25 !important;
+}
+
+p { 
+    margin-bottom: 0.5rem !important; 
+    font-size: 0.85rem !important;
+    line-height: 1.4 !important;
+    letter-spacing: 0 !important;
+}
+
+.text-muted,
+.page-header p,
+.dashboard-header p {
+    opacity: 0.85 !important;
+    font-size: 0.85rem !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1400px) {
+    .page-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+    
+    .page-actions {
+        width: 100% !important;
+        justify-content: flex-start !important;
+    }
+}
+
+@media (max-width: 1200px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    .bottom-grid,
+    .sensor-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 180px !important;
+    }
+    
+    :root {
+        --sidebar-width: 180px !important;
+    }
+    
+    .page-header {
+        padding: 0.75rem !important;
+    }
+    
+    .btn,
+    .btn-primary,
+    .btn-secondary {
+        padding: 0.5rem 0.8rem !important;
+        font-size: 0.8rem !important;
+    }
+}

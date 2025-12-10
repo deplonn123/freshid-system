@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRESH-ID - Panduan Penggunaan</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .guide-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+        .guide-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid #334155;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .guide-card h2 {
+            color: #6366f1;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .guide-card h2 i {
+            font-size: 1.5rem;
+        }
+        .guide-card p, .guide-card li {
+            color: #cbd5e1;
+            line-height: 1.8;
+            margin-bottom: 0.5rem;
+        }
+        .guide-card ul {
+            margin-left: 2rem;
+        }
+        .highlight {
+            background: rgba(99, 102, 241, 0.2);
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.3rem;
+            color: #818cf8;
+            font-family: 'Courier New', monospace;
+        }
+        .btn-start {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .feature-item {
+            padding: 1rem;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid #6366f1;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+        .feature-item i {
+            font-size: 2rem;
+            color: #6366f1;
+            margin-bottom: 0.5rem;
+        }
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid #f59e0b;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0.5rem;
+        }
+        .warning-box p {
+            color: #fbbf24;
+            margin: 0;
+        }
+        .success-box {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid #10b981;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0.5rem;
+        }
+        .success-box p {
+            color: #34d399;
+            margin: 0;
+        }
+    </style>
+</head>
+<body class="login-page">
+    <div class="guide-container">
+        <div class="guide-card">
+            <h2><i class="fas fa-info-circle"></i> Selamat Datang di FRESH-ID</h2>
+            <p>
+                FRESH-ID adalah sistem monitoring gas real-time yang dirancang untuk memantau konsentrasi 
+                <span class="highlight">NH₃</span>, <span class="highlight">H₂S</span>, dan 
+                <span class="highlight">CH₄</span> beserta parameter suhu dan kelembaban.
+            </p>
+            
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <i class="fas fa-chart-line"></i>
+                    <p>Real-Time Monitoring</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-mobile-alt"></i>
+                    <p>Responsive Design</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-download"></i>
+                    <p>Export Data</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <p>Secure Login</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="guide-card">
+            <h2><i class="fas fa-rocket"></i> Cara Memulai</h2>
+            <ol>
+                <li>Buka file <span class="highlight">index.html</span> di browser Anda</li>
+                <li>Masukkan email Anda (contoh: <span class="highlight">user@email.com</span>)</li>
+                <li>Masukkan password (bebas untuk demo)</li>
+                <li>Klik tombol "Masuk" untuk mengakses dashboard</li>
+            </ol>
+            
+            <div class="success-box">
+                <p><i class="fas fa-check-circle"></i> Tip: Centang "Ingat saya" agar email Anda tersimpan</p>
+            </div>
+        </div>
+
+        <div class="guide-card">
+            <h2><i class="fas fa-compass"></i> Menu Navigasi</h2>
+            <ul>
+                <li><strong>Dashboard:</strong> Tampilan ringkasan nilai sensor terkini dengan status real-time</li>
+                <li><strong>Monitoring:</strong> Grafik interaktif dengan data history dan fitur export</li>
+                <li><strong>Tim Kami:</strong> Informasi lengkap anggota tim dan dosen pembimbing</li>
+                <li><strong>Keluar:</strong> Logout dari sistem</li>
+            </ul>
+        </div>
+
+        <div class="guide-card">
+            <h2><i class="fas fa-cog"></i> Kustomisasi Website</h2>
+            <p><strong>1. Edit Informasi Tim</strong></p>
+            <p>Buka file <span class="highlight">team.html</span> dan ubah:</p>
+            <ul>
+                <li>Nama anggota dan NIM (3 orang)</li>
+                <li>Nama dosen pembimbing dan NIP (2 orang)</li>
+                <li>Role/posisi masing-masing anggota</li>
+            </ul>
+
+            <p><strong>2. Membuat Logo</strong></p>
+            <ul>
+                <li>Buka file <span class="highlight">images/create-logo.html</span></li>
+                <li>Klik tombol "Download Logo PNG"</li>
+                <li>Simpan sebagai <span class="highlight">logo.png</span> di folder images</li>
+            </ul>
+
+            <p><strong>3. Ubah Warna Theme</strong></p>
+            <p>Edit file <span class="highlight">css/style.css</span> bagian <span class="highlight">:root</span></p>
+        </div>
+
+        <div class="guide-card">
+            <h2><i class="fas fa-chart-area"></i> Fitur Monitoring</h2>
+            <p><strong>Grafik Real-Time:</strong></p>
+            <ul>
+                <li>Data ter-update otomatis setiap 2 detik</li>
+                <li>Menampilkan maksimal 20 data point terakhir</li>
+                <li>Hover pada grafik untuk melihat nilai detail</li>
+            </ul>
+
+            <p><strong>Status Monitoring:</strong></p>
+            <ul>
+                <li><span style="color: #10b981;">🟢 Normal:</span> Nilai di bawah threshold aman</li>
+                <li><span style="color: #f59e0b;">🟡 Perhatian:</span> Nilai mendekati batas (70-100%)</li>
+                <li><span style="color: #ef4444;">🔴 Tinggi:</span> Nilai melebihi threshold</li>
+            </ul>
+
+            <p><strong>Export Data:</strong></p>
+            <ul>
+                <li>Klik tombol "Export Data" di halaman Monitoring</li>
+                <li>Data akan terdownload dalam format CSV</li>
+                <li>Dapat dibuka dengan Excel atau aplikasi spreadsheet lainnya</li>
+            </ul>
+        </div>
+
+        <div class="guide-card">
+            <h2><i class="fas fa-plug"></i> Integrasi Hardware</h2>
+            <div class="warning-box">
+                <p><i class="fas fa-exclamation-triangle"></i> Saat ini website menggunakan data simulasi (random)</p>
+            </div>
+            
+            <p>Untuk menghubungkan dengan sensor real:</p>
+            <ul>
+                <li>Setup backend server (Node.js, Python, dll)</li>
+                <li>Hubungkan sensor ke microcontroller (Arduino/ESP32)</li>
+                <li>Kirim data via HTTP REST API atau WebSocket</li>
+                <li>Edit fungsi <span class="highlight">generateSensorData()</span> di file <span class="highlight">js/monitoring.js</span></li>
+            </ul>
+        </div>
+
+        <div class="guide-card">
+            <h2><i class="fas fa-question-circle"></i> Troubleshooting</h2>
+            <p><strong>Logo tidak muncul?</strong></p>
+            <ul>
+                <li>Pastikan file logo.svg ada di folder images</li>
+                <li>Atau generate logo PNG dari create-logo.html</li>
+            </ul>
+
+            <p><strong>Grafik tidak muncul?</strong></p>
+            <ul>
+                <li>Pastikan koneksi internet aktif (untuk Chart.js CDN)</li>
+                <li>Buka Console browser (F12) untuk cek error</li>
+            </ul>
+
+            <p><strong>Website tidak responsive?</strong></p>
+            <ul>
+                <li>Clear cache browser (Ctrl+Shift+Del)</li>
+                <li>Pastikan viewport meta tag ada di HTML</li>
+            </ul>
+        </div>
+
+        <div class="guide-card" style="text-align: center;">
+            <h2><i class="fas fa-flag-checkered"></i> Siap Memulai?</h2>
+            <p>Klik tombol di bawah untuk masuk ke halaman login</p>
+            <a href="index.html" class="btn-start">
+                <i class="fas fa-sign-in-alt"></i> Mulai Sekarang
+            </a>
+        </div>
+
+        <div class="guide-card" style="text-align: center; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1));">
+            <h2 style="color: #fff;">FRESH-ID</h2>
+            <p style="color: #cbd5e1;">Gas Monitoring System for Better Air Quality</p>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 1rem;">© 2025 Tim FRESH-ID. All rights reserved.</p>
+        </div>
+    </div>
+
+    <div class="login-background">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+    </div>
+</body>
+</html>

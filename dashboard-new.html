@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRESH-ID Dashboard</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/viewport-fit.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="top-header">
+        <div class="header-left">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="brand">
+                <img src="images/logo.svg" alt="FRESH-ID" class="brand-logo">
+                <span class="brand-name">FRESH-ID</span>
+            </div>
+            <div class="header-title-section">
+                <h1 class="header-page-title">DASHBOARD</h1>
+                <p class="header-page-subtitle">Overview of environment</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="icon-btn" style="position: relative;">
+                <i class="fas fa-envelope"></i>
+                <span class="notification-badge">3</span>
+            </button>
+            <button class="icon-btn" style="position: relative;">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">5</span>
+            </button>
+            <button class="icon-btn" onclick="window.location.href='pengaturan.html'"><i class="fas fa-cog"></i></button>
+            <div class="user-menu-modern">
+                <div class="user-avatar">UA</div>
+                <div class="user-info-modern">
+                    <strong>Admin User</strong>
+                    <small>● Online</small>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-search">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search Menus" id="searchMenu">
+        </div>
+
+        <div class="sidebar-section">
+            <h4 class="section-title">TOOLS</h4>
+            <nav class="sidebar-nav">
+                <a href="dashboard-new.html" class="nav-item active">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="data-sensor.html" class="nav-item">
+                    <i class="fas fa-database"></i>
+                    <span>Data Sensor</span>
+                </a>
+                <a href="status-kesegaran.html" class="nav-item">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>Status Kesegaran</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="sidebar-section">
+            <h4 class="section-title">SAMPEL</h4>
+            <nav class="sidebar-nav">
+                <div class="nav-item has-submenu" onclick="toggleSubmenu(this)">
+                    <i class="fas fa-fish"></i>
+                    <span>Sampel Makanan</span>
+                    <i class="fas fa-chevron-down submenu-icon"></i>
+                </div>
+                <div class="submenu">
+                    <a href="sampel-sapi.html" class="submenu-item">
+                        <i class="fas fa-circle"></i>
+                        <span>Sapi</span>
+                    </a>
+                    <a href="sampel-ayam.html" class="submenu-item">
+                        <i class="fas fa-circle"></i>
+                        <span>Ayam</span>
+                    </a>
+                    <a href="sampel-ikan.html" class="submenu-item">
+                        <i class="fas fa-circle"></i>
+                        <span>Ikan</span>
+                    </a>
+                    <a href="sampel-susu.html" class="submenu-item">
+                        <i class="fas fa-circle"></i>
+                        <span>Susu</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+
+        <div class="sidebar-section">
+            <h4 class="section-title">REPORTS</h4>
+            <nav class="sidebar-nav">
+                <a href="laporan.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Laporan Pengujian</span>
+                </a>
+                <a href="notifikasi.html" class="nav-item">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifikasi</span>
+                    <span class="badge-sm">5</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="sidebar-section">
+            <h4 class="section-title">SYSTEM</h4>
+            <nav class="sidebar-nav">
+                <a href="pengaturan.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Pengaturan</span>
+                </a>
+                <a href="manajemen-user.html" class="nav-item">
+                    <i class="fas fa-users-cog"></i>
+                    <span>Manajemen Pengguna</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="sidebar-section">
+            <h4 class="section-title">DOCS</h4>
+            <nav class="sidebar-nav">
+                <a href="dokumentasi.html" class="nav-item">
+                    <i class="fas fa-book"></i>
+                    <span>Dokumentasi Sistem</span>
+                </a>
+                <a href="referensi.html" class="nav-item">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Referensi & Singkatan</span>
+                </a>
+                <a href="tentang.html" class="nav-item">
+                    <i class="fas fa-id-card"></i>
+                    <span>Tentang</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="sidebar-section">
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item" onclick="logout(); return false;">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Success Banner -->
+        <div class="alert-banner success">
+            <i class="fas fa-check-circle"></i>
+            <div>
+                <strong>FRESH-ID is open source!</strong>
+                <p>TUGAS AKHIR</p>
+            </div>
+            <a href="#" class="btn-github">
+                <i class="fab fa-github"></i>
+            </a>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card blue">
+                <div class="stat-icon">
+                    <i class="fas fa-microchip"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>SENSOR AKTIF</h3>
+                    <div class="stat-value">85%</div>
+                </div>
+            </div>
+
+            <div class="stat-card red">
+                <div class="stat-icon">
+                    <i class="fab fa-google-plus-g"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>PEMBACAAN</h3>
+                    <div class="stat-value">10</div>
+                </div>
+            </div>
+
+            <div class="stat-card green">
+                <div class="stat-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>SAMPEL SEGAR</h3>
+                    <div class="stat-value">10</div>
+                </div>
+            </div>
+
+            <div class="stat-card orange">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>PENGGUNA BARU</h3>
+                    <div class="stat-value">3</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-container">
+            <div class="chart-card">
+                <div class="card-header">
+                    <h3>Grafik Monitoring Gas</h3>
+                    <div class="chart-legend">
+                        <span class="legend-item"><span class="legend-dot blue"></span> NH₃</span>
+                        <span class="legend-item"><span class="legend-dot pink"></span> H₂S</span>
+                        <span class="legend-item"><span class="legend-dot cyan"></span> CH₄</span>
+                    </div>
+                </div>
+                <canvas id="gasChart"></canvas>
+                <div class="chart-tip">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Pro Tip: Lihat dengan teliti untuk pembacaan sensor</span>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="card-header">
+                    <h3>Status Kesegaran</h3>
+                    <div class="chart-legend">
+                        <span class="legend-item"><span class="legend-dot green"></span> Segar</span>
+                        <span class="legend-item"><span class="legend-dot orange"></span> Kurang Segar</span>
+                        <span class="legend-item"><span class="legend-dot red"></span> Tidak Segar</span>
+                    </div>
+                </div>
+                <canvas id="pieChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Bottom Stats -->
+        <div class="bottom-stats">
+            <div class="bottom-card yellow">
+                <div class="bottom-icon">
+                    <i class="fas fa-tag"></i>
+                </div>
+                <div class="bottom-content">
+                    <div class="bottom-title">INVENTORY</div>
+                    <div class="bottom-value">10</div>
+                    <div class="bottom-change positive">50% increase</div>
+                </div>
+            </div>
+
+            <div class="bottom-card green">
+                <div class="bottom-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="bottom-content">
+                    <div class="bottom-title">SAMPEL BAIK</div>
+                    <div class="bottom-value">10</div>
+                    <div class="bottom-change positive">20% increase</div>
+                </div>
+            </div>
+
+            <div class="bottom-card red">
+                <div class="bottom-icon">
+                    <i class="fas fa-cloud-download-alt"></i>
+                </div>
+                <div class="bottom-content">
+                    <div class="bottom-title">DOWNLOADS</div>
+                    <div class="bottom-value">10</div>
+                    <div class="bottom-change positive">70% increase</div>
+                </div>
+            </div>
+
+            <div class="bottom-card blue">
+                <div class="bottom-icon">
+                    <i class="fas fa-comment"></i>
+                </div>
+                <div class="bottom-content">
+                    <div class="bottom-title">DIRECT MESSAGES</div>
+                    <div class="bottom-value">10</div>
+                    <div class="bottom-change positive">40% increase</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Check authentication once DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', checkAuth);
+        } else {
+            checkAuth();
+        }
+    </script>
+</body>
+</html>
