@@ -817,7 +817,7 @@
                 </a>
                 
                 <!-- Monitoring dengan Submenu -->
-                <div class="nav-item has-submenu" data-menu="monitoring" style="display: block;">
+                <div class="nav-item has-submenu" data-menu="monitoring">
                     <a href="javascript:void(0)" onclick="toggleSubmenu(this)">
                         <div style="display: flex; align-items: center; gap: 0.75rem;">
                             <i class="fas fa-desktop"></i>
@@ -825,7 +825,7 @@
                         </div>
                         <i class="fas fa-chevron-down submenu-arrow"></i>
                     </a>
-                    <div class="submenu" style="max-height: 0; overflow: hidden;">
+                    <div class="submenu">
                         <a href="data-sensor.html" class="submenu-item" data-menu="data-sensor">
                             <i class="fas fa-database"></i>
                             <span>Data Sensor</span>
@@ -1542,14 +1542,16 @@
         }
 
         // Initialize on load
-        document.addEventListener('DOMContentLoaded', () => {
-            setActiveMenu('dashboard');
-        });
-        
         window.addEventListener('load', () => {
             init();
             setupSearch();
         });
     </script>
+    
+    <!-- Set Active Menu -->
+    <script>
+        setActiveMenu('dashboard');
+    </script>
 </body>
 </html>
+
