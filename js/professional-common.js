@@ -53,23 +53,29 @@ function checkAuth() {
 
 // Set Active Menu
 function setActiveMenu(menuId) {
-    const navItems = document.querySelectorAll('.nav-item');
+    // Select only direct menu links (not dropdown parents)
+    const navLinks = document.querySelectorAll('a.nav-item[data-menu]');
     const submenuItems = document.querySelectorAll('.submenu-item');
     const allSubmenus = document.querySelectorAll('.has-submenu');
     
-    // First, close all dropdowns
+    // First, close all dropdowns and remove all active states
     allSubmenus.forEach(item => {
         item.classList.remove('active');
     });
     
-    navItems.forEach(item => {
-        if (item.getAttribute('data-menu') === menuId) {
-            item.classList.add('active');
-        } else {
-            item.classList.remove('active');
+    // Remove active from all direct menu links
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    // Set active for direct menu links
+    navLinks.forEach(link => {
+        if (link.getAttribute('data-menu') === menuId) {
+            link.classList.add('active');
         }
     });
     
+    // Handle submenu items
     submenuItems.forEach(item => {
         if (item.getAttribute('data-menu') === menuId) {
             item.classList.add('active');
