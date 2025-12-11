@@ -200,27 +200,235 @@
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title"><i class="fas fa-sliders-h"></i> Pengaturan Threshold</h3>
+                        <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.5rem;">Atur batas peringatan dan bahaya untuk setiap jenis produk</p>
                     </div>
                     <div class="card-body">
-                        <div class="form-group">
-                            <label class="form-label">Batas Peringatan NH₃ (ppm)</label>
-                            <input type="number" class="form-control" value="20">
+                        <!-- Tabs untuk Kategori Produk -->
+                        <div class="threshold-tabs">
+                            <button class="threshold-tab active" onclick="switchThresholdTab(event, 'sapi')">
+                                <i class="fas fa-drumstick-bite"></i> Daging Sapi
+                            </button>
+                            <button class="threshold-tab" onclick="switchThresholdTab(event, 'ayam')">
+                                <i class="fas fa-egg"></i> Daging Ayam
+                            </button>
+                            <button class="threshold-tab" onclick="switchThresholdTab(event, 'ikan')">
+                                <i class="fas fa-fish"></i> Ikan
+                            </button>
+                            <button class="threshold-tab" onclick="switchThresholdTab(event, 'susu')">
+                                <i class="fas fa-glass-whiskey"></i> Susu
+                            </button>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Batas Bahaya NH₃ (ppm)</label>
-                            <input type="number" class="form-control" value="30">
+
+                        <!-- Content Sapi -->
+                        <div id="threshold-sapi" class="threshold-content active">
+                            <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: #dc2626;">
+                                <i class="fas fa-drumstick-bite"></i> Threshold Daging Sapi
+                            </h4>
+                            <div class="threshold-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Batas Peringatan NH₃ (ppm)</label>
+                                    <input type="number" class="form-control" id="sapi-nh3-warning" value="20">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Bahaya NH₃ (ppm)</label>
+                                    <input type="number" class="form-control" id="sapi-nh3-danger" value="30">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Peringatan H₂S (ppm)</label>
+                                    <input type="number" class="form-control" id="sapi-h2s-warning" value="10">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Bahaya H₂S (ppm)</label>
+                                    <input type="number" class="form-control" id="sapi-h2s-danger" value="20">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Peringatan CH₄ (ppm)</label>
+                                    <input type="number" class="form-control" id="sapi-ch4-warning" value="40">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Bahaya CH₄ (ppm)</label>
+                                    <input type="number" class="form-control" id="sapi-ch4-danger" value="60">
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Interval Update (detik)</label>
-                            <input type="number" class="form-control" value="3">
+
+                        <!-- Content Ayam -->
+                        <div id="threshold-ayam" class="threshold-content">
+                            <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: #d97706;">
+                                <i class="fas fa-egg"></i> Threshold Daging Ayam
+                            </h4>
+                            <div class="threshold-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Batas Peringatan NH₃ (ppm)</label>
+                                    <input type="number" class="form-control" id="ayam-nh3-warning" value="25">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Bahaya NH₃ (ppm)</label>
+                                    <input type="number" class="form-control" id="ayam-nh3-danger" value="35">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Peringatan H₂S (ppm)</label>
+                                    <input type="number" class="form-control" id="ayam-h2s-warning" value="12">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Bahaya H₂S (ppm)</label>
+                                    <input type="number" class="form-control" id="ayam-h2s-danger" value="22">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Peringatan CH₄ (ppm)</label>
+                                    <input type="number" class="form-control" id="ayam-ch4-warning" value="45">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Bahaya CH₄ (ppm)</label>
+                                    <input type="number" class="form-control" id="ayam-ch4-danger" value="65">
+                                </div>
+                            </div>
                         </div>
+
+                        <!-- Content Ikan -->
+                        <div id="threshold-ikan" class="threshold-content">
+                            <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: #0891b2;">
+                                <i class="fas fa-fish"></i> Threshold Ikan
+                            </h4>
+                            <div class="threshold-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Batas Peringatan NH₃ (ppm)</label>
+                                    <input type="number" class="form-control" id="ikan-nh3-warning" value="15">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Bahaya NH₃ (ppm)</label>
+                                    <input type="number" class="form-control" id="ikan-nh3-danger" value="25">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Peringatan H₂S (ppm)</label>
+                                    <input type="number" class="form-control" id="ikan-h2s-warning" value="8">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Bahaya H₂S (ppm)</label>
+                                    <input type="number" class="form-control" id="ikan-h2s-danger" value="15">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Peringatan CH₄ (ppm)</label>
+                                    <input type="number" class="form-control" id="ikan-ch4-warning" value="30">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Bahaya CH₄ (ppm)</label>
+                                    <input type="number" class="form-control" id="ikan-ch4-danger" value="50">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Content Susu -->
+                        <div id="threshold-susu" class="threshold-content">
+                            <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: #6366f1;">
+                                <i class="fas fa-glass-whiskey"></i> Threshold Susu
+                            </h4>
+                            <div class="threshold-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Batas Peringatan NH₃ (ppm)</label>
+                                    <input type="number" class="form-control" id="susu-nh3-warning" value="18">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Bahaya NH₃ (ppm)</label>
+                                    <input type="number" class="form-control" id="susu-nh3-danger" value="28">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Peringatan H₂S (ppm)</label>
+                                    <input type="number" class="form-control" id="susu-h2s-warning" value="9">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Bahaya H₂S (ppm)</label>
+                                    <input type="number" class="form-control" id="susu-h2s-danger" value="18">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Peringatan CH₄ (ppm)</label>
+                                    <input type="number" class="form-control" id="susu-ch4-warning" value="35">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Bahaya CH₄ (ppm)</label>
+                                    <input type="number" class="form-control" id="susu-ch4-danger" value="55">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
+                            <div class="form-group">
+                                <label class="form-label">Interval Update (detik)</label>
+                                <input type="number" class="form-control" id="update-interval" value="3" style="max-width: 200px;">
+                                <small style="color: #6b7280; font-size: 0.75rem;">Berlaku untuk semua produk</small>
+                            </div>
+                        </div>
+
                         <button class="btn btn-primary" onclick="saveSettings()">
-                            <i class="fas fa-save"></i> Simpan Pengaturan
+                            <i class="fas fa-save"></i> Simpan Semua Pengaturan
                         </button>
                     </div>
                 </div>
 
                 <style>
+                    .threshold-tabs {
+                        display: flex;
+                        gap: 0.5rem;
+                        margin-bottom: 1.5rem;
+                        flex-wrap: wrap;
+                    }
+
+                    .threshold-tab {
+                        flex: 1;
+                        min-width: 140px;
+                        padding: 0.75rem 1rem;
+                        border: 2px solid #e5e7eb;
+                        background: white;
+                        border-radius: 8px;
+                        font-size: 0.875rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 0.5rem;
+                    }
+
+                    .threshold-tab:hover {
+                        border-color: var(--primary);
+                        background: #f9fafb;
+                    }
+
+                    .threshold-tab.active {
+                        background: var(--primary);
+                        color: white;
+                        border-color: var(--primary);
+                    }
+
+                    .threshold-content {
+                        display: none;
+                    }
+
+                    .threshold-content.active {
+                        display: block;
+                    }
+
+                    .threshold-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                        gap: 1rem;
+                    }
+
+                    @media (max-width: 768px) {
+                        .threshold-tabs {
+                            flex-direction: column;
+                        }
+                        
+                        .threshold-tab {
+                            width: 100%;
+                        }
+
+                        .threshold-grid {
+                            grid-template-columns: 1fr;
+                        }
+                    }
+
                     .switch {
                         position: relative;
                         display: inline-block;
@@ -263,9 +471,144 @@
                 </style>
 
                 <script>
-                    function saveSettings() {
-                        showToast('Pengaturan berhasil disimpan', 'success');
+                    // Switch Threshold Tab
+                    function switchThresholdTab(event, productType) {
+                        // Remove active class from all tabs
+                        const tabs = document.querySelectorAll('.threshold-tab');
+                        tabs.forEach(tab => tab.classList.remove('active'));
+                        
+                        // Remove active class from all content
+                        const contents = document.querySelectorAll('.threshold-content');
+                        contents.forEach(content => content.classList.remove('active'));
+                        
+                        // Add active class to clicked tab
+                        event.currentTarget.classList.add('active');
+                        
+                        // Show corresponding content
+                        document.getElementById('threshold-' + productType).classList.add('active');
                     }
+
+                    function saveSettings() {
+                        // Collect all threshold data
+                        const thresholdData = {
+                            sapi: {
+                                nh3: {
+                                    warning: document.getElementById('sapi-nh3-warning').value,
+                                    danger: document.getElementById('sapi-nh3-danger').value
+                                },
+                                h2s: {
+                                    warning: document.getElementById('sapi-h2s-warning').value,
+                                    danger: document.getElementById('sapi-h2s-danger').value
+                                },
+                                ch4: {
+                                    warning: document.getElementById('sapi-ch4-warning').value,
+                                    danger: document.getElementById('sapi-ch4-danger').value
+                                }
+                            },
+                            ayam: {
+                                nh3: {
+                                    warning: document.getElementById('ayam-nh3-warning').value,
+                                    danger: document.getElementById('ayam-nh3-danger').value
+                                },
+                                h2s: {
+                                    warning: document.getElementById('ayam-h2s-warning').value,
+                                    danger: document.getElementById('ayam-h2s-danger').value
+                                },
+                                ch4: {
+                                    warning: document.getElementById('ayam-ch4-warning').value,
+                                    danger: document.getElementById('ayam-ch4-danger').value
+                                }
+                            },
+                            ikan: {
+                                nh3: {
+                                    warning: document.getElementById('ikan-nh3-warning').value,
+                                    danger: document.getElementById('ikan-nh3-danger').value
+                                },
+                                h2s: {
+                                    warning: document.getElementById('ikan-h2s-warning').value,
+                                    danger: document.getElementById('ikan-h2s-danger').value
+                                },
+                                ch4: {
+                                    warning: document.getElementById('ikan-ch4-warning').value,
+                                    danger: document.getElementById('ikan-ch4-danger').value
+                                }
+                            },
+                            susu: {
+                                nh3: {
+                                    warning: document.getElementById('susu-nh3-warning').value,
+                                    danger: document.getElementById('susu-nh3-danger').value
+                                },
+                                h2s: {
+                                    warning: document.getElementById('susu-h2s-warning').value,
+                                    danger: document.getElementById('susu-h2s-danger').value
+                                },
+                                ch4: {
+                                    warning: document.getElementById('susu-ch4-warning').value,
+                                    danger: document.getElementById('susu-ch4-danger').value
+                                }
+                            },
+                            updateInterval: document.getElementById('update-interval').value
+                        };
+                        
+                        // Save to localStorage
+                        localStorage.setItem('freshid_threshold_settings', JSON.stringify(thresholdData));
+                        
+                        console.log('Threshold settings saved:', thresholdData);
+                        showToast('Pengaturan threshold berhasil disimpan untuk semua produk', 'success');
+                    }
+
+                    // Load saved settings on page load
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const savedSettings = localStorage.getItem('freshid_threshold_settings');
+                        if (savedSettings) {
+                            const data = JSON.parse(savedSettings);
+                            
+                            // Load Sapi settings
+                            if (data.sapi) {
+                                document.getElementById('sapi-nh3-warning').value = data.sapi.nh3.warning || 20;
+                                document.getElementById('sapi-nh3-danger').value = data.sapi.nh3.danger || 30;
+                                document.getElementById('sapi-h2s-warning').value = data.sapi.h2s.warning || 10;
+                                document.getElementById('sapi-h2s-danger').value = data.sapi.h2s.danger || 20;
+                                document.getElementById('sapi-ch4-warning').value = data.sapi.ch4.warning || 40;
+                                document.getElementById('sapi-ch4-danger').value = data.sapi.ch4.danger || 60;
+                            }
+                            
+                            // Load Ayam settings
+                            if (data.ayam) {
+                                document.getElementById('ayam-nh3-warning').value = data.ayam.nh3.warning || 25;
+                                document.getElementById('ayam-nh3-danger').value = data.ayam.nh3.danger || 35;
+                                document.getElementById('ayam-h2s-warning').value = data.ayam.h2s.warning || 12;
+                                document.getElementById('ayam-h2s-danger').value = data.ayam.h2s.danger || 22;
+                                document.getElementById('ayam-ch4-warning').value = data.ayam.ch4.warning || 45;
+                                document.getElementById('ayam-ch4-danger').value = data.ayam.ch4.danger || 65;
+                            }
+                            
+                            // Load Ikan settings
+                            if (data.ikan) {
+                                document.getElementById('ikan-nh3-warning').value = data.ikan.nh3.warning || 15;
+                                document.getElementById('ikan-nh3-danger').value = data.ikan.nh3.danger || 25;
+                                document.getElementById('ikan-h2s-warning').value = data.ikan.h2s.warning || 8;
+                                document.getElementById('ikan-h2s-danger').value = data.ikan.h2s.danger || 15;
+                                document.getElementById('ikan-ch4-warning').value = data.ikan.ch4.warning || 30;
+                                document.getElementById('ikan-ch4-danger').value = data.ikan.ch4.danger || 50;
+                            }
+                            
+                            // Load Susu settings
+                            if (data.susu) {
+                                document.getElementById('susu-nh3-warning').value = data.susu.nh3.warning || 18;
+                                document.getElementById('susu-nh3-danger').value = data.susu.nh3.danger || 28;
+                                document.getElementById('susu-h2s-warning').value = data.susu.h2s.warning || 9;
+                                document.getElementById('susu-h2s-danger').value = data.susu.h2s.danger || 18;
+                                document.getElementById('susu-ch4-warning').value = data.susu.ch4.warning || 35;
+                                document.getElementById('susu-ch4-danger').value = data.susu.ch4.danger || 55;
+                            }
+                            
+                            // Load update interval
+                            if (data.updateInterval) {
+                                document.getElementById('update-interval').value = data.updateInterval;
+                            }
+                        }
+                    });
                 </script>
         
             </div>
