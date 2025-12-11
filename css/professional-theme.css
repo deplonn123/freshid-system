@@ -275,7 +275,8 @@ body {
 
 /* Submenu Dropdown Styles */
 .nav-item.has-submenu {
-    position: relative;
+    display: block;
+    width: 100%;
 }
 
 .nav-item.has-submenu > a {
@@ -288,6 +289,7 @@ body {
     transition: all 0.2s;
     font-size: 0.875rem;
     font-weight: 500;
+    width: 100%;
 }
 
 .nav-item.has-submenu > a:hover {
@@ -312,6 +314,8 @@ body {
 }
 
 .submenu {
+    display: block;
+    width: 100%;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease;
@@ -327,18 +331,32 @@ body {
 .submenu-item {
     display: flex;
     align-items: center;
+    gap: 0.75rem;
     padding: 0.75rem 1rem 0.75rem 3rem;
     color: var(--gray-700);
     text-decoration: none;
     transition: all 0.2s;
     font-size: 0.875rem;
     border-left: 3px solid transparent;
+    width: 100%;
+}
+
+.submenu-item i {
+    width: 20px;
+    text-align: center;
 }
 
 .submenu-item:hover {
     background: rgba(79, 70, 229, 0.05);
     color: var(--primary);
     border-left-color: var(--primary);
+}
+
+.submenu-item.active {
+    background: rgba(79, 70, 229, 0.1);
+    color: var(--primary);
+    border-left-color: var(--primary);
+    font-weight: 600;
 }
 
 .submenu-item.active {
