@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRESH-ID - Multi-Box Monitoring Dashboard</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Real-time food freshness monitoring system with multi-box sensor tracking">
+    <meta name="keywords" content="food monitoring, sensor, freshness, quality control">
+    <meta property="og:title" content="FRESH-ID Monitoring Dashboard">
+    <meta property="og:description" content="Professional food freshness monitoring system">
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-900: #111827;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Top Header */
+        .top-header {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .brand-info h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .brand-info p {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+        }
+
+        .menu-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: var(--gray-100);
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--gray-700);
+            font-size: 1.25rem;
+            transition: all 0.2s;
+        }
+
+        .menu-toggle:hover {
+            background: var(--gray-200);
+        }
+
+        .page-title-section {
+            flex: 1;
+            text-align: center;
+        }
+
+        .page-title-section h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .header-icon-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: var(--gray-100);
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--gray-700);
+            font-size: 1.125rem;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .header-icon-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 18px;
+            height: 18px;
+            background: var(--danger);
+            border-radius: 50%;
+            font-size: 0.625rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.75rem;
+            background: var(--gray-100);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .user-menu:hover {
+            background: var(--gray-200);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        /* Layout */
+        .main-layout {
+            display: flex;
+            min-height: calc(100vh - 65px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: white;
+            border-right: 1px solid var(--gray-200);
+            overflow-y: auto;
+            transition: all 0.3s;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.625rem 0.875rem 0.625rem 2.5rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 0.875rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-600);
+        }
+
+        .nav-menu {
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--gray-700);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: var(--gray-50);
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(to right, rgba(79, 70, 229, 0.1), transparent);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Submenu Dropdown Styles */
+        .nav-item.has-submenu {
+            display: block;
+            width: 100%;
+            padding: 0;
+        }
+
+        .nav-item.has-submenu > a {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: var(--gray-700);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+            font-weight: 500;
+            width: 100%;
+        }
+
+        .nav-item.has-submenu > a:hover {
+            background: var(--gray-50);
+            color: var(--primary);
+        }
+
+        .nav-item.has-submenu.active > a {
+            background: linear-gradient(to right, rgba(79, 70, 229, 0.1), transparent);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .submenu-arrow {
+            transition: transform 0.3s ease;
+            font-size: 0.75rem;
+            margin-left: auto;
+        }
+
+        .nav-item.has-submenu.active .submenu-arrow {
+            transform: rotate(180deg);
+        }
+
+        .submenu {
+            display: block;
+            width: 100%;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: rgba(0, 0, 0, 0.02);
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item.has-submenu.active .submenu {
+            max-height: 500px;
+        }
+
+        .submenu-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            color: var(--gray-700);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+            border-left: 3px solid transparent;
+            width: 100%;
+        }
+
+        .submenu-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        .submenu-item:hover {
+            background: rgba(79, 70, 229, 0.05);
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        .submenu-item.active {
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--primary);
+            border-left-color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Main Container */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.25rem;
+            border-radius: 12px;
+            border: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.2s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-icon.blue {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+
+        .stat-icon.green {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .stat-icon.orange {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .stat-icon.purple {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+        }
+
+        .stat-info h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--gray-600);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--gray-900);
+        }
+
+        /* Boxes Grid */
+        .boxes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .box-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .box-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+
+        .box-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to bottom, white, var(--gray-50));
+        }
+
+        .box-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .box-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .box-title h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.online {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        /* Chart Section */
+        .box-chart {
+            padding: 1.5rem;
+            height: 220px;
+            background: white;
+        }
+
+        .box-chart canvas {
+            max-height: 100%;
+        }
+
+        /* Sensors Grid */
+        .sensors-container {
+            padding: 0 1.5rem 1rem 1.5rem;
+            background: var(--gray-50);
+        }
+
+        .sensors-row-1 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .sensors-row-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        .sensor-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 2px solid var(--gray-200);
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .sensor-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .sensor-item.normal {
+            border-color: var(--success);
+            background: linear-gradient(to bottom, white, #f0fdf4);
+        }
+
+        .sensor-item.warning {
+            border-color: var(--warning);
+            background: linear-gradient(to bottom, white, #fffbeb);
+        }
+
+        .sensor-item.danger {
+            border-color: var(--danger);
+            background: linear-gradient(to bottom, white, #fef2f2);
+        }
+
+        .sensor-label {
+            display: block;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--gray-600);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .sensor-value {
+            display: block;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--gray-900);
+            line-height: 1;
+        }
+
+        .sensor-unit {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--gray-600);
+            margin-top: 0.25rem;
+            font-weight: 600;
+        }
+
+        /* Footer Actions */
+        .box-footer {
+            padding: 1rem 1.5rem;
+            display: flex;
+            gap: 0.5rem;
+            border-top: 1px solid var(--gray-100);
+            background: white;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 0.625rem 1rem;
+            border: 1.5px solid var(--gray-300);
+            background: white;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--gray-700);
+        }
+
+        .btn-action:hover {
+            background: var(--gray-50);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .btn-action.btn-danger:hover {
+            background: #fef2f2;
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .box-update-time {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            text-align: center;
+            border-top: 1px solid var(--gray-100);
+            background: var(--gray-50);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .close-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-item {
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: 10px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--gray-600);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .detail-chart {
+            height: 350px;
+            background: var(--gray-50);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        /* Social Share */
+        .social-share {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            z-index: 50;
+        }
+
+        .social-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .social-btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+
+        .social-btn.whatsapp { background: #25d366; }
+        .social-btn.telegram { background: #0088cc; }
+        .social-btn.facebook { background: #1877f2; }
+        .social-btn.twitter { background: #1da1f2; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                position: fixed;
+                left: -260px;
+                top: 65px;
+                height: calc(100vh - 65px);
+                z-index: 99;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .menu-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .user-info {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .boxes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .top-header {
+                padding: 0.75rem 1rem;
+            }
+
+            .brand-info h1 {
+                font-size: 1rem;
+            }
+
+            .brand-info p {
+                display: none;
+            }
+
+            .page-title-section {
+                display: none;
+            }
+
+            .social-share {
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="top-header">
+        <div class="header-content">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-box-open"></i>
+                </div>
+                <div class="brand-info">
+                    <h1>FRESH-ID</h1>
+                    <p>Dashboard</p>
+                </div>
+            </div>
+
+            <div class="page-title-section">
+                <h2>Multi-Box Monitoring Dashboard</h2>
+            </div>
+            
+            <div class="header-actions">
+                <button class="header-icon-btn" title="Notifications" onclick="window.location.href='notifikasi.html'">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                <button class="header-icon-btn" title="Settings" onclick="window.location.href='pengaturan.html'">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <div class="user-menu" onclick="window.location.href='pengaturan.html'">
+                    <div class="user-avatar">A</div>
+                    <div class="user-info">
+                        <span class="user-name">Admin</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchMenu" placeholder="Search menu...">
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="dashboard.html" class="nav-item" data-menu="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                
+                <!-- Monitoring dengan Submenu -->
+                <div class="nav-item has-submenu" data-menu="monitoring">
+                    <a href="javascript:void(0)" onclick="toggleSubmenu(this)">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <i class="fas fa-desktop"></i>
+                            <span>Monitoring</span>
+                        </div>
+                        <i class="fas fa-chevron-down submenu-arrow"></i>
+                    </a>
+                    <div class="submenu">
+                        <a href="data-sensor.html" class="submenu-item" data-menu="data-sensor">
+                            <i class="fas fa-database"></i>
+                            <span>Data Sensor</span>
+                        </a>
+                        <a href="status-kesegaran.html" class="submenu-item" data-menu="status-kesegaran">
+                            <i class="fas fa-heartbeat"></i>
+                            <span>Status Kesegaran</span>
+                        </a>
+                        <a href="sampel-sapi.html" class="submenu-item" data-menu="sampel-sapi">
+                            <i class="fas fa-vial"></i>
+                            <span>Sampel Daging Sapi</span>
+                        </a>
+                        <a href="sampel-ayam.html" class="submenu-item" data-menu="sampel-ayam">
+                            <i class="fas fa-vial"></i>
+                            <span>Sampel Daging Ayam</span>
+                        </a>
+                        <a href="sampel-ikan.html" class="submenu-item" data-menu="sampel-ikan">
+                            <i class="fas fa-vial"></i>
+                            <span>Sampel Ikan</span>
+                        </a>
+                        <a href="sampel-susu.html" class="submenu-item" data-menu="sampel-susu">
+                            <i class="fas fa-vial"></i>
+                            <span>Sampel Susu</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <a href="laporan.html" class="nav-item" data-menu="laporan">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Laporan</span>
+                </a>
+                <a href="notifikasi.html" class="nav-item" data-menu="notifikasi">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifikasi</span>
+                </a>
+                <a href="pengaturan.html" class="nav-item" data-menu="pengaturan">
+                    <i class="fas fa-cog"></i>
+                    <span>Pengaturan</span>
+                </a>
+                <a href="manajemen-pengguna.html" class="nav-item" data-menu="manajemen-pengguna">
+                    <i class="fas fa-users"></i>
+                    <span>Manajemen Pengguna</span>
+                </a>
+                <a href="dokumentasi.html" class="nav-item" data-menu="dokumentasi">
+                    <i class="fas fa-book"></i>
+                    <span>Dokumentasi</span>
+                </a>
+                <a href="referensi.html" class="nav-item" data-menu="referensi">
+                    <i class="fas fa-link"></i>
+                    <span>Referensi</span>
+                </a>
+                <a href="tentang.html" class="nav-item" data-menu="tentang">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Tentang</span>
+                </a>
+                <a href="#" class="nav-item" onclick="logout(); return false;">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <!-- Stats Grid -->
+                <section class="stats-grid">
+                    <article class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-boxes"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Total Boxes</h3>
+                            <div class="stat-value" id="totalBoxes">4</div>
+                        </div>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Active Sensors</h3>
+                            <div class="stat-value" id="activeBoxes">4</div>
+                        </div>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-icon orange">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Warnings</h3>
+                            <div class="stat-value" id="warningCount">0</div>
+                        </div>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-icon purple">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Last Update</h3>
+                            <div class="stat-value" style="font-size: 1.25rem;" id="lastUpdate">Just now</div>
+                        </div>
+                    </article>
+                </section>
+
+                <!-- Boxes Grid -->
+                <section class="boxes-grid" id="boxesGrid">
+                    <!-- Boxes will be rendered here by JavaScript -->
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Social Share Buttons -->
+    <div class="social-share">
+        <button class="social-btn whatsapp" onclick="shareWhatsApp()" title="Share via WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+        </button>
+        <button class="social-btn telegram" onclick="shareTelegram()" title="Share via Telegram">
+            <i class="fab fa-telegram"></i>
+        </button>
+        <button class="social-btn facebook" onclick="shareFacebook()" title="Share on Facebook">
+            <i class="fab fa-facebook"></i>
+        </button>
+        <button class="social-btn twitter" onclick="shareTwitter()" title="Share on Twitter">
+            <i class="fab fa-twitter"></i>
+        </button>
+    </div>
+
+    <!-- Modal Detail Box -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Detail Box</h2>
+                <button class="close-btn" onclick="closeDetailModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-grid" id="modalDetails">
+                    <!-- Details will be inserted here -->
+                </div>
+                <div class="detail-chart">
+                    <canvas id="modalChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/professional-common.js"></script>
+    <script>
+        // Sample Data - 4 BOXES
+        const sampleBoxes = [
+            {
+                id: 1,
+                name: 'Kotak Daging Sapi',
+                location: '',
+                sensors: { 
+                    nh3: { value: 28.5, status: 'normal' }, 
+                    h2s: { value: 14.2, status: 'normal' }, 
+                    ch4: { value: 52.1, status: 'normal' },
+                    temperature: { value: -18.5, status: 'normal' },
+                    humidity: { value: 65, status: 'normal' }
+                },
+                history: []
+            },
+            {
+                id: 2,
+                name: 'Kotak Daging Ayam',
+                location: '',
+                sensors: { 
+                    nh3: { value: 32.8, status: 'normal' }, 
+                    h2s: { value: 16.4, status: 'normal' }, 
+                    ch4: { value: 58.2, status: 'normal' },
+                    temperature: { value: 4.5, status: 'normal' },
+                    humidity: { value: 72, status: 'normal' }
+                },
+                history: []
+            },
+            {
+                id: 3,
+                name: 'Kotak Ikan',
+                location: '',
+                sensors: { 
+                    nh3: { value: 18.3, status: 'normal' }, 
+                    h2s: { value: 9.7, status: 'normal' }, 
+                    ch4: { value: 35.6, status: 'normal' },
+                    temperature: { value: 0.5, status: 'normal' },
+                    humidity: { value: 70, status: 'normal' }
+                },
+                history: []
+            },
+            {
+                id: 4,
+                name: 'Kotak Susu',
+                location: '',
+                sensors: { 
+                    nh3: { value: 22.1, status: 'normal' }, 
+                    h2s: { value: 11.5, status: 'normal' }, 
+                    ch4: { value: 44.8, status: 'normal' },
+                    temperature: { value: 3.2, status: 'normal' },
+                    humidity: { value: 68, status: 'normal' }
+                },
+                history: []
+            }
+        ];
+
+        let charts = {};
+        let detailChart = null;
+        let updateCounter = 0;
+
+        // Initialize
+        function init() {
+            sampleBoxes.forEach(box => {
+                for (let i = 0; i < 20; i++) {
+                    box.history.push({
+                        nh3: box.sensors.nh3.value + (Math.random() - 0.5) * 10,
+                        h2s: box.sensors.h2s.value + (Math.random() - 0.5) * 8,
+                        ch4: box.sensors.ch4.value + (Math.random() - 0.5) * 15,
+                        temperature: box.sensors.temperature.value + (Math.random() - 0.5) * 2,
+                        humidity: box.sensors.humidity.value + (Math.random() - 0.5) * 5
+                    });
+                }
+            });
+
+            updateStats();
+            renderBoxes();
+            startRealTimeUpdates();
+        }
+
+        function updateStats() {
+            document.getElementById('totalBoxes').textContent = sampleBoxes.length;
+            document.getElementById('activeBoxes').textContent = sampleBoxes.length;
+            
+            let warningCount = 0;
+            sampleBoxes.forEach(box => {
+                Object.values(box.sensors).forEach(sensor => {
+                    if (sensor.status === 'warning' || sensor.status === 'danger') {
+                        warningCount++;
+                    }
+                });
+            });
+            document.getElementById('warningCount').textContent = warningCount;
+        }
+
+        function renderBoxes() {
+            const grid = document.getElementById('boxesGrid');
+            grid.innerHTML = '';
+
+            sampleBoxes.forEach(box => {
+                const card = document.createElement('article');
+                card.className = 'box-card';
+                card.innerHTML = `
+                    <div class="box-header">
+                        <div class="box-title">
+                            <div class="box-icon">
+                                <i class="fas fa-cube"></i>
+                            </div>
+                            <h3>${box.name}</h3>
+                        </div>
+                        <span class="status-badge online">● ACTIVE</span>
+                    </div>
+                    <div class="box-chart">
+                        <canvas id="chart-${box.id}"></canvas>
+                    </div>
+                    <div class="sensors-container">
+                        <div class="sensors-row-1">
+                            <div class="sensor-item ${box.sensors.nh3.status}">
+                                <span class="sensor-label">NH₃</span>
+                                <span class="sensor-value">${box.sensors.nh3.value.toFixed(1)}</span>
+                                <span class="sensor-unit">ppm</span>
+                            </div>
+                            <div class="sensor-item ${box.sensors.h2s.status}">
+                                <span class="sensor-label">H₂S</span>
+                                <span class="sensor-value">${box.sensors.h2s.value.toFixed(1)}</span>
+                                <span class="sensor-unit">ppm</span>
+                            </div>
+                            <div class="sensor-item ${box.sensors.ch4.status}">
+                                <span class="sensor-label">CH₄</span>
+                                <span class="sensor-value">${box.sensors.ch4.value.toFixed(1)}</span>
+                                <span class="sensor-unit">ppm</span>
+                            </div>
+                        </div>
+                        <div class="sensors-row-2">
+                            <div class="sensor-item ${box.sensors.temperature.status}">
+                                <span class="sensor-label">Temperature</span>
+                                <span class="sensor-value">${box.sensors.temperature.value.toFixed(1)}</span>
+                                <span class="sensor-unit">°C</span>
+                            </div>
+                            <div class="sensor-item ${box.sensors.humidity.status}">
+                                <span class="sensor-label">Humidity</span>
+                                <span class="sensor-value">${box.sensors.humidity.value.toFixed(0)}</span>
+                                <span class="sensor-unit">%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <button class="btn-action" onclick="viewBoxDetail(${box.id})">
+                            <i class="fas fa-eye"></i> Detail
+                        </button>
+                        <button class="btn-action" onclick="exportBox(${box.id})">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                        <button class="btn-action btn-danger" onclick="deleteBox(${box.id})">
+                            <i class="fas fa-trash"></i> Hapus
+                        </button>
+                    </div>
+                    <div class="box-update-time">
+                        Update: <span id="update-time-${box.id}">Just now</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+                setTimeout(() => createChart(box), 100);
+            });
+        }
+
+        function createChart(box) {
+            const canvas = document.getElementById(`chart-${box.id}`);
+            if (!canvas) return;
+            if (charts[box.id]) charts[box.id].destroy();
+
+            charts[box.id] = new Chart(canvas, {
+                type: 'line',
+                data: {
+                    labels: Array(20).fill(''),
+                    datasets: [
+                        { 
+                            label: 'NH₃', 
+                            data: box.history.map(h => h.nh3), 
+                            borderColor: '#3b82f6', 
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)', 
+                            borderWidth: 2, 
+                            tension: 0.4, 
+                            fill: true, 
+                            pointRadius: 0,
+                            pointHoverRadius: 4
+                        },
+                        { 
+                            label: 'H₂S', 
+                            data: box.history.map(h => h.h2s), 
+                            borderColor: '#ef4444', 
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)', 
+                            borderWidth: 2, 
+                            tension: 0.4, 
+                            fill: true, 
+                            pointRadius: 0,
+                            pointHoverRadius: 4
+                        },
+                        { 
+                            label: 'CH₄', 
+                            data: box.history.map(h => h.ch4), 
+                            borderColor: '#10b981', 
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)', 
+                            borderWidth: 2, 
+                            tension: 0.4, 
+                            fill: true, 
+                            pointRadius: 0,
+                            pointHoverRadius: 4
+                        },
+                        { 
+                            label: 'Temp', 
+                            data: box.history.map(h => h.temperature), 
+                            borderColor: '#f59e0b', 
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)', 
+                            borderWidth: 2, 
+                            tension: 0.4, 
+                            fill: true, 
+                            pointRadius: 0,
+                            pointHoverRadius: 4
+                        },
+                        { 
+                            label: 'Hum', 
+                            data: box.history.map(h => h.humidity), 
+                            borderColor: '#8b5cf6', 
+                            backgroundColor: 'rgba(139, 92, 246, 0.1)', 
+                            borderWidth: 2, 
+                            tension: 0.4, 
+                            fill: true, 
+                            pointRadius: 0,
+                            pointHoverRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: { 
+                        legend: { 
+                            display: false 
+                        }, 
+                        tooltip: { 
+                            enabled: true,
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            padding: 12,
+                            titleFont: { size: 13, weight: 'bold' },
+                            bodyFont: { size: 12 },
+                            borderColor: 'rgba(255,255,255,0.2)',
+                            borderWidth: 1
+                        } 
+                    },
+                    scales: { 
+                        y: { 
+                            display: true,
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            ticks: {
+                                font: { size: 10 },
+                                color: '#6b7280'
+                            }
+                        }, 
+                        x: { 
+                            display: false 
+                        } 
+                    }
+                }
+            });
+        }
+
+        function startRealTimeUpdates() {
+            setInterval(() => {
+                updateCounter++;
+                sampleBoxes.forEach(box => {
+                    box.sensors.nh3.value += (Math.random() - 0.5) * 3;
+                    box.sensors.h2s.value += (Math.random() - 0.5) * 2;
+                    box.sensors.ch4.value += (Math.random() - 0.5) * 5;
+                    box.sensors.temperature.value += (Math.random() - 0.5) * 1;
+                    box.sensors.humidity.value += (Math.random() - 0.5) * 3;
+                    
+                    box.sensors.nh3.value = Math.max(0, Math.min(100, box.sensors.nh3.value));
+                    box.sensors.h2s.value = Math.max(0, Math.min(50, box.sensors.h2s.value));
+                    box.sensors.ch4.value = Math.max(0, Math.min(150, box.sensors.ch4.value));
+                    box.sensors.temperature.value = Math.max(-25, Math.min(10, box.sensors.temperature.value));
+                    box.sensors.humidity.value = Math.max(40, Math.min(95, box.sensors.humidity.value));
+                    
+                    box.sensors.nh3.status = box.sensors.nh3.value > 50 ? 'danger' : box.sensors.nh3.value > 35 ? 'warning' : 'normal';
+                    box.sensors.h2s.status = box.sensors.h2s.value > 30 ? 'danger' : box.sensors.h2s.value > 20 ? 'warning' : 'normal';
+                    box.sensors.ch4.status = box.sensors.ch4.value > 100 ? 'danger' : box.sensors.ch4.value > 70 ? 'warning' : 'normal';
+                    box.sensors.temperature.status = box.sensors.temperature.value > 7 ? 'warning' : 'normal';
+                    box.sensors.humidity.status = box.sensors.humidity.value > 80 ? 'warning' : 'normal';
+                    
+                    box.history.push({ 
+                        nh3: box.sensors.nh3.value, 
+                        h2s: box.sensors.h2s.value, 
+                        ch4: box.sensors.ch4.value,
+                        temperature: box.sensors.temperature.value,
+                        humidity: box.sensors.humidity.value
+                    });
+                    box.history = box.history.slice(-20);
+                    
+                    if (charts[box.id]) {
+                        charts[box.id].data.datasets[0].data = box.history.map(h => h.nh3);
+                        charts[box.id].data.datasets[1].data = box.history.map(h => h.h2s);
+                        charts[box.id].data.datasets[2].data = box.history.map(h => h.ch4);
+                        charts[box.id].data.datasets[3].data = box.history.map(h => h.temperature);
+                        charts[box.id].data.datasets[4].data = box.history.map(h => h.humidity);
+                        charts[box.id].update('none');
+                    }
+                    
+                    const timeEl = document.getElementById(`update-time-${box.id}`);
+                    if (timeEl) {
+                        const seconds = updateCounter * 3;
+                        timeEl.textContent = seconds < 60 ? `${seconds}s ago` : `${Math.floor(seconds/60)}m ago`;
+                    }
+                });
+                
+                updateStats();
+                const seconds = updateCounter * 3;
+                document.getElementById('lastUpdate').textContent = seconds < 60 ? `${seconds}s ago` : `${Math.floor(seconds/60)}m ago`;
+            }, 3000);
+        }
+
+        function exportBox(id) {
+            const box = sampleBoxes.find(b => b.id === id);
+            if (!box) return;
+            const csv = 'NH3,H2S,CH4,Temperature,Humidity\n' + box.history.map(h => 
+                `${h.nh3.toFixed(2)},${h.h2s.toFixed(2)},${h.ch4.toFixed(2)},${h.temperature.toFixed(2)},${h.humidity.toFixed(1)}`
+            ).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${box.name}-data-${Date.now()}.csv`;
+            a.click();
+        }
+
+        function deleteBox(id) {
+            if (!confirm('Apakah Anda yakin ingin menghapus box ini?')) return;
+            
+            const index = sampleBoxes.findIndex(b => b.id === id);
+            if (index === -1) return;
+            
+            if (charts[id]) {
+                charts[id].destroy();
+                delete charts[id];
+            }
+            
+            sampleBoxes.splice(index, 1);
+            updateStats();
+            renderBoxes();
+        }
+
+        function viewBoxDetail(id) {
+            const box = sampleBoxes.find(b => b.id === id);
+            if (!box) return;
+
+            document.getElementById('modalTitle').textContent = `Detail ${box.name}`;
+
+            const detailsHtml = `
+                <div class="detail-item">
+                    <div class="detail-label">Box Name</div>
+                    <div class="detail-value">${box.name}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value" style="color: #10b981;">ACTIVE</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">NH₃ Level</div>
+                    <div class="detail-value">${box.sensors.nh3.value.toFixed(2)} <span style="font-size: 0.875rem;">ppm</span></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">H₂S Level</div>
+                    <div class="detail-value">${box.sensors.h2s.value.toFixed(2)} <span style="font-size: 0.875rem;">ppm</span></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">CH₄ Level</div>
+                    <div class="detail-value">${box.sensors.ch4.value.toFixed(2)} <span style="font-size: 0.875rem;">ppm</span></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Temperature</div>
+                    <div class="detail-value">${box.sensors.temperature.value.toFixed(2)} <span style="font-size: 0.875rem;">°C</span></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Humidity</div>
+                    <div class="detail-value">${box.sensors.humidity.value.toFixed(1)} <span style="font-size: 0.875rem;">%</span></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Last Update</div>
+                    <div class="detail-value" style="font-size: 1rem;">Just now</div>
+                </div>
+            `;
+            document.getElementById('modalDetails').innerHTML = detailsHtml;
+
+            const canvas = document.getElementById('modalChart');
+            if (detailChart) {
+                detailChart.destroy();
+            }
+
+            detailChart = new Chart(canvas, {
+                type: 'line',
+                data: {
+                    labels: box.history.map((_, i) => `${i * 3}s`),
+                    datasets: [
+                        {
+                            label: 'NH₃ (ppm)',
+                            data: box.history.map(h => h.nh3),
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'H₂S (ppm)',
+                            data: box.history.map(h => h.h2s),
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'CH₄ (ppm)',
+                            data: box.history.map(h => h.ch4),
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Temperature (°C)',
+                            data: box.history.map(h => h.temperature),
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Humidity (%)',
+                            data: box.history.map(h => h.humidity),
+                            borderColor: '#8b5cf6',
+                            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 15,
+                                font: { size: 12, weight: '600' }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            padding: 12,
+                            titleFont: { size: 13, weight: 'bold' },
+                            bodyFont: { size: 12 }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            ticks: {
+                                font: { size: 11 }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            ticks: {
+                                font: { size: 10 }
+                            }
+                        }
+                    }
+                }
+            });
+
+            document.getElementById('detailModal').classList.add('show');
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.remove('show');
+        }
+
+        // Close modal on outside click
+        document.getElementById('detailModal').addEventListener('click', (e) => {
+            if (e.target.id === 'detailModal') {
+                closeDetailModal();
+            }
+        });
+
+        // Sidebar Functions
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function setupSearch() {
+            document.getElementById('searchMenu').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(term) ? 'flex' : 'none';
+                });
+            });
+        }
+
+        function logout() {
+            if (confirm('Apakah Anda yakin ingin keluar?')) {
+                localStorage.removeItem('freshid_current_user');
+                localStorage.removeItem('freshid_remember');
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Social Share Functions
+        function shareWhatsApp() {
+            const text = `FRESH-ID Dashboard - Real-time monitoring for food freshness`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        function shareTelegram() {
+            const text = `FRESH-ID Dashboard - Real-time monitoring`;
+            window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        function shareFacebook() {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+        }
+
+        function shareTwitter() {
+            const text = `FRESH-ID Dashboard - Professional food monitoring system`;
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`, '_blank');
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            init();
+            setupSearch();
+        });
+    </script>
+    
+    <!-- Set Active Menu -->
+    <script>
+        setActiveMenu('dashboard');
+    </script>
+</body>
+</html>
+
