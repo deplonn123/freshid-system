@@ -54,6 +54,8 @@ function checkAuth() {
 // Set Active Menu
 function setActiveMenu(menuId) {
     const navItems = document.querySelectorAll('.nav-item');
+    const submenuItems = document.querySelectorAll('.submenu-item');
+    
     navItems.forEach(item => {
         if (item.getAttribute('data-menu') === menuId) {
             item.classList.add('active');
@@ -61,6 +63,35 @@ function setActiveMenu(menuId) {
             item.classList.remove('active');
         }
     });
+    
+    submenuItems.forEach(item => {
+        if (item.getAttribute('data-menu') === menuId) {
+            item.classList.add('active');
+            // Auto-expand parent submenu
+            const parentSubmenu = item.closest('.has-submenu');
+            if (parentSubmenu) {
+                parentSubmenu.classList.add('active');
+            }
+        } else {
+            item.classList.remove('active');
+        }
+    });
+}
+
+// Toggle Submenu
+function toggleSubmenu(element) {
+    const parentItem = element.closest('.has-submenu');
+    const allSubmenus = document.querySelectorAll('.has-submenu');
+    
+    // Close other submenus
+    allSubmenus.forEach(item => {
+        if (item !== parentItem) {
+            item.classList.remove('active');
+        }
+    });
+    
+    // Toggle current submenu
+    parentItem.classList.toggle('active');
 }
 
 // Update Notification Badge

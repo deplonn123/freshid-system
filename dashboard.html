@@ -811,63 +811,73 @@
             </div>
             
             <nav class="nav-menu">
-                <a href="dashboard.html" class="nav-item active">
+                <a href="dashboard.html" class="nav-item active" data-menu="dashboard">
                     <i class="fas fa-th-large"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="monitoring.html" class="nav-item">
-                    <i class="fas fa-desktop"></i>
-                    <span>Monitoring</span>
-                </a>
-                <a href="data-sensor.html" class="nav-item">
-                    <i class="fas fa-database"></i>
-                    <span>Data Sensor</span>
-                </a>
-                <a href="status-kesegaran.html" class="nav-item">
-                    <i class="fas fa-heartbeat"></i>
-                    <span>Status Kesegaran</span>
-                </a>
-                <a href="sampel-sapi.html" class="nav-item">
-                    <i class="fas fa-vial"></i>
-                    <span>Sampel Daging Sapi</span>
-                </a>
-                <a href="sampel-ayam.html" class="nav-item">
-                    <i class="fas fa-vial"></i>
-                    <span>Sampel Daging Ayam</span>
-                </a>
-                <a href="sampel-ikan.html" class="nav-item">
-                    <i class="fas fa-vial"></i>
-                    <span>Sampel Ikan</span>
-                </a>
-                <a href="sampel-susu.html" class="nav-item">
-                    <i class="fas fa-vial"></i>
-                    <span>Sampel Susu</span>
-                </a>
-                <a href="laporan.html" class="nav-item">
+                
+                <!-- Monitoring dengan Submenu -->
+                <div class="nav-item has-submenu" data-menu="monitoring">
+                    <a href="javascript:void(0)" onclick="toggleSubmenu(this)">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <i class="fas fa-desktop"></i>
+                            <span>Monitoring</span>
+                        </div>
+                        <i class="fas fa-chevron-down submenu-arrow"></i>
+                    </a>
+                    <div class="submenu">
+                        <a href="data-sensor.html" class="submenu-item" data-menu="data-sensor">
+                            <i class="fas fa-database"></i>
+                            <span>Data Sensor</span>
+                        </a>
+                        <a href="status-kesegaran.html" class="submenu-item" data-menu="status-kesegaran">
+                            <i class="fas fa-heartbeat"></i>
+                            <span>Status Kesegaran</span>
+                        </a>
+                        <a href="sampel-sapi.html" class="submenu-item" data-menu="sampel-sapi">
+                            <i class="fas fa-vial"></i>
+                            <span>Sampel Daging Sapi</span>
+                        </a>
+                        <a href="sampel-ayam.html" class="submenu-item" data-menu="sampel-ayam">
+                            <i class="fas fa-vial"></i>
+                            <span>Sampel Daging Ayam</span>
+                        </a>
+                        <a href="sampel-ikan.html" class="submenu-item" data-menu="sampel-ikan">
+                            <i class="fas fa-vial"></i>
+                            <span>Sampel Ikan</span>
+                        </a>
+                        <a href="sampel-susu.html" class="submenu-item" data-menu="sampel-susu">
+                            <i class="fas fa-vial"></i>
+                            <span>Sampel Susu</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <a href="laporan.html" class="nav-item" data-menu="laporan">
                     <i class="fas fa-file-alt"></i>
                     <span>Laporan</span>
                 </a>
-                <a href="notifikasi.html" class="nav-item">
+                <a href="notifikasi.html" class="nav-item" data-menu="notifikasi">
                     <i class="fas fa-bell"></i>
                     <span>Notifikasi</span>
                 </a>
-                <a href="pengaturan.html" class="nav-item">
+                <a href="pengaturan.html" class="nav-item" data-menu="pengaturan">
                     <i class="fas fa-cog"></i>
                     <span>Pengaturan</span>
                 </a>
-                <a href="manajemen-pengguna.html" class="nav-item">
+                <a href="manajemen-pengguna.html" class="nav-item" data-menu="manajemen-pengguna">
                     <i class="fas fa-users"></i>
                     <span>Manajemen Pengguna</span>
                 </a>
-                <a href="dokumentasi.html" class="nav-item">
+                <a href="dokumentasi.html" class="nav-item" data-menu="dokumentasi">
                     <i class="fas fa-book"></i>
                     <span>Dokumentasi</span>
                 </a>
-                <a href="referensi.html" class="nav-item">
+                <a href="referensi.html" class="nav-item" data-menu="referensi">
                     <i class="fas fa-link"></i>
                     <span>Referensi</span>
                 </a>
-                <a href="tentang.html" class="nav-item">
+                <a href="tentang.html" class="nav-item" data-menu="tentang">
                     <i class="fas fa-info-circle"></i>
                     <span>Tentang</span>
                 </a>
