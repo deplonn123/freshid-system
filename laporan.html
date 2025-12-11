@@ -13,6 +13,10 @@
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- jsPDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    
     <!-- Styles -->
     <link rel="stylesheet" href="css/professional-theme.css">
 </head>
@@ -515,24 +519,88 @@
                         showToast('Membuat PDF...', 'info');
                         
                         setTimeout(() => {
-                            const productName = currentReportData.product === 'semua' ? 'Semua_Produk' :
-                                              currentReportData.product === 'sapi' ? 'Daging_Sapi' :
-                                              currentReportData.product === 'ayam' ? 'Daging_Ayam' :
-                                              currentReportData.product === 'ikan' ? 'Ikan' : 'Susu';
-                            
-                            const filename = `Laporan_${currentReportData.type}_${productName}_${currentReportData.startDate}_to_${currentReportData.endDate}.pdf`;
-                            
-                            // In real implementation, you would use a library like jsPDF
-                            // For now, we'll create a text representation
-                            const blob = new Blob([generateTextReport()], { type: 'application/pdf' });
-                            const url = URL.createObjectURL(blob);
-                            const a = document.createElement('a');
-                            a.href = url;
-                            a.download = filename;
-                            a.click();
-                            URL.revokeObjectURL(url);
-                            
-                            showToast('PDF berhasil diunduh!', 'success');
+                            try {
+                                const { jsPDF } = window.jspdf;
+                                const doc = new jsPDF('l', 'mm', 'a4'); // landscape, mm, A4
+                                
+                                const productName = currentReportData.product === 'semua' ? 'Semua Produk' :
+                                                  currentReportData.product === 'sapi' ? 'Daging Sapi' :
+                                                  currentReportData.product === 'ayam' ? 'Daging Ayam' :
+                                                  currentReportData.product === 'ikan' ? 'Ikan' : 'Susu';
+                                
+                                const productNameFile = currentReportData.product === 'semua' ? 'Semua_Produk' :
+                                                      currentReportData.product === 'sapi' ? 'Daging_Sapi' :
+                                                      currentReportData.product === 'ayam' ? 'Daging_Ayam' :
+                                                      currentReportData.product === 'ikan' ? 'Ikan' : 'Susu';
+                                
+                                // Title
+                                doc.setFontSize(18);
+                                doc.setFont(undefined, 'bold');
+                                doc.text('LAPORAN MONITORING FRESH-ID', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+                                
+                                doc.setFontSize(12);
+                                doc.setFont(undefined, 'normal');
+                                doc.text(`Laporan ${currentReportData.type.charAt(0).toUpperCase() + currentReportData.type.slice(1)}`, doc.internal.pageSize.getWidth() / 2, 22, { align: 'center' });
+                                doc.text(`Periode: ${new Date(currentReportData.startDate).toLocaleDateString('id-ID')} - ${new Date(currentReportData.endDate).toLocaleDateString('id-ID')}`, doc.internal.pageSize.getWidth() / 2, 28, { align: 'center' });
+                                doc.text(`Produk: ${productName}`, doc.internal.pageSize.getWidth() / 2, 34, { align: 'center' });
+                                
+                                // Summary
+                                doc.setFontSize(11);
+                                doc.setFont(undefined, 'bold');
+                                doc.text('RINGKASAN:', 14, 45);
+                                
+                                doc.setFont(undefined, 'normal');
+                                const normalCount = currentReportData.data.filter(d => d.status === 'Normal').length;
+                                const warningCount = currentReportData.data.filter(d => d.status === 'Peringatan').length;
+                                const dangerCount = currentReportData.data.filter(d => d.status === 'Bahaya').length;
+                                
+                                doc.text(`Total Data: ${currentReportData.data.length}`, 14, 52);
+                                doc.text(`Status Normal: ${normalCount}`, 14, 58);
+                                doc.text(`Status Peringatan: ${warningCount}`, 14, 64);
+                                doc.text(`Status Bahaya: ${dangerCount}`, 14, 70);
+                                
+                                // Table
+                                const tableData = currentReportData.data.map(row => [
+                                    row.tanggal,
+                                    row.waktu,
+                                    row.produk,
+                                    row.box,
+                                    row.nh3,
+                                    row.h2s,
+                                    row.ch4,
+                                    row.suhu,
+                                    row.kelembaban,
+                                    row.status
+                                ]);
+                                
+                                doc.autoTable({
+                                    startY: 78,
+                                    head: [['Tanggal', 'Waktu', 'Produk', 'Box', 'NH3', 'H2S', 'CH4', 'Suhu', 'Kelembaban', 'Status']],
+                                    body: tableData,
+                                    styles: { fontSize: 8 },
+                                    headStyles: { fillColor: [79, 70, 229], textColor: 255, fontStyle: 'bold' },
+                                    alternateRowStyles: { fillColor: [245, 247, 250] },
+                                    margin: { left: 14, right: 14 }
+                                });
+                                
+                                // Footer
+                                const pageCount = doc.internal.getNumberOfPages();
+                                for (let i = 1; i <= pageCount; i++) {
+                                    doc.setPage(i);
+                                    doc.setFontSize(8);
+                                    doc.setFont(undefined, 'normal');
+                                    doc.text(`Halaman ${i} dari ${pageCount}`, doc.internal.pageSize.getWidth() / 2, doc.internal.pageSize.getHeight() - 10, { align: 'center' });
+                                    doc.text(`Dicetak: ${new Date().toLocaleDateString('id-ID')} ${new Date().toLocaleTimeString('id-ID')}`, doc.internal.pageSize.getWidth() - 14, doc.internal.pageSize.getHeight() - 10, { align: 'right' });
+                                }
+                                
+                                const filename = `Laporan_${currentReportData.type}_${productNameFile}_${currentReportData.startDate}_to_${currentReportData.endDate}.pdf`;
+                                doc.save(filename);
+                                
+                                showToast('PDF berhasil diunduh!', 'success');
+                            } catch (error) {
+                                console.error('Error generating PDF:', error);
+                                showToast('Error membuat PDF. Silakan coba lagi.', 'error');
+                            }
                         }, 1000);
                     }
                     
