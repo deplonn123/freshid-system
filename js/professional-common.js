@@ -55,6 +55,12 @@ function checkAuth() {
 function setActiveMenu(menuId) {
     const navItems = document.querySelectorAll('.nav-item');
     const submenuItems = document.querySelectorAll('.submenu-item');
+    const allSubmenus = document.querySelectorAll('.has-submenu');
+    
+    // First, close all dropdowns
+    allSubmenus.forEach(item => {
+        item.classList.remove('active');
+    });
     
     navItems.forEach(item => {
         if (item.getAttribute('data-menu') === menuId) {
