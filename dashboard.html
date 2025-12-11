@@ -812,7 +812,7 @@
             
             <nav class="nav-menu">
                 <a href="dashboard.html" class="nav-item" data-menu="dashboard">
-                    <i class="fas fa-th-large"></i>
+                    <i class="fas fa-home"></i>
                     <span>Dashboard</span>
                 </a>
                 
@@ -980,6 +980,7 @@
 
     <!-- Scripts -->
     <script src="js/main.js"></script>
+    <script src="js/professional-common.js"></script>
     <script>
         // Sample Data - 4 BOXES
         const sampleBoxes = [
@@ -1541,8 +1542,11 @@
         }
 
         // Initialize on load
-        window.addEventListener('load', () => {
+        document.addEventListener('DOMContentLoaded', () => {
             setActiveMenu('dashboard');
+        });
+        
+        window.addEventListener('load', () => {
             init();
             setupSearch();
         });
