@@ -282,6 +282,94 @@
             text-align: center;
         }
 
+        /* Submenu Dropdown Styles */
+        .nav-item.has-submenu {
+            display: block;
+            width: 100%;
+            padding: 0;
+        }
+
+        .nav-item.has-submenu > a {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: var(--gray-700);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+            font-weight: 500;
+            width: 100%;
+        }
+
+        .nav-item.has-submenu > a:hover {
+            background: var(--gray-50);
+            color: var(--primary);
+        }
+
+        .nav-item.has-submenu.active > a {
+            background: linear-gradient(to right, rgba(79, 70, 229, 0.1), transparent);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .submenu-arrow {
+            transition: transform 0.3s ease;
+            font-size: 0.75rem;
+            margin-left: auto;
+        }
+
+        .nav-item.has-submenu.active .submenu-arrow {
+            transform: rotate(180deg);
+        }
+
+        .submenu {
+            display: block;
+            width: 100%;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: rgba(0, 0, 0, 0.02);
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item.has-submenu.active .submenu {
+            max-height: 500px;
+        }
+
+        .submenu-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            color: var(--gray-700);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+            border-left: 3px solid transparent;
+            width: 100%;
+        }
+
+        .submenu-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        .submenu-item:hover {
+            background: rgba(79, 70, 229, 0.05);
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        .submenu-item.active {
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--primary);
+            border-left-color: var(--primary);
+            font-weight: 600;
+        }
+
         /* Main Container */
         .main-content {
             flex: 1;

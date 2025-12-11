@@ -63,11 +63,18 @@ function closeSidebarOnClickOutside(e) {
 
 // Toggle submenu
 function toggleSubmenu(element) {
-    element.classList.toggle('open');
-    const submenu = element.nextElementSibling;
-    if (submenu && submenu.classList.contains('submenu')) {
-        submenu.classList.toggle('open');
-    }
+    const parentItem = element.closest('.has-submenu');
+    const allSubmenus = document.querySelectorAll('.has-submenu');
+    
+    // Close other submenus
+    allSubmenus.forEach(item => {
+        if (item !== parentItem) {
+            item.classList.remove('active');
+        }
+    });
+    
+    // Toggle current submenu
+    parentItem.classList.toggle('active');
 }
 
 // Logout function
