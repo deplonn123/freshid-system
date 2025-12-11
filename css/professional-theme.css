@@ -277,6 +277,7 @@ body {
 .nav-item.has-submenu {
     display: block;
     width: 100%;
+    padding: 0;
 }
 
 .nav-item.has-submenu > a {
