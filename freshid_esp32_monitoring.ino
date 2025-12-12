@@ -16,8 +16,8 @@
  * - Converter 5V to 3.3V
  * 
  * Communication:
- * - Protocol: HTTP/HTTPS untuk IoT communication
- * - Cloud Platform: Firebase Realtime Database
+ * - Protocol: MQTT (Message Queue Telemetry Transport)
+ * - MQTT Broker: HiveMQ Public Broker / Mosquitto
  * - Web Dashboard: Real-time monitoring dengan grafik
  * 
  * Author: Tim FRESH-ID (Muhammad Bintang Pamungkas, Puja Andesta, Daffa Zakky Kurniawan)
@@ -27,7 +27,7 @@
  */
 
 #include <WiFi.h>
-#include <HTTPClient.h>       // HTTP Library
+#include <PubSubClient.h>     // MQTT Library
 #include <DHT.h>
 #include <ArduinoJson.h>
 #include <Wire.h>
@@ -38,15 +38,22 @@
 const char* ssid = "NAMA_WIFI_ANDA";           // Ganti dengan nama WiFi Anda
 const char* password = "PASSWORD_WIFI_ANDA";   // Ganti dengan password WiFi Anda
 
-// ===== KONFIGURASI FIREBASE =====
-// Ganti dengan URL Firebase Realtime Database Anda
-// Format: https://YOUR-PROJECT-ID.firebaseio.com/
-const char* firebaseHost = "https://freshid-xxxxx.firebaseio.com";
-const char* firebasePath = "/sensors";         // Path untuk data sensor
-const char* firebaseAuth = "";                 // Database secret (kosongkan jika public)
+// ===== KONFIGURASI MQTT BROKER =====
+const char* mqtt_server = "broker.hivemq.com"; // Public MQTT broker (gratis, reliable)
+// Alternative brokers:
+// - "test.mosquitto.org" (Mosquitto public broker)
+// - "broker.emqx.io" (EMQX public broker)
+// - Atau gunakan broker lokal jika ada
 
-// Alternative: Bisa juga gunakan server sendiri
-// const char* serverURL = "http://192.168.1.100:8080/api/sensor-data";
+const int mqtt_port = 1883;                    // Port MQTT (1883 = non-SSL, 8883 = SSL)
+const char* mqtt_user = "";                    // Kosongkan jika broker tidak butuh auth
+const char* mqtt_password = "";                // Kosongkan jika broker tidak butuh auth
+
+// MQTT Topics
+const char* mqtt_topic_data = "freshid/sensor/data";       // Topic untuk data sensor
+const char* mqtt_topic_status = "freshid/sensor/status";   // Topic untuk status kesegaran
+const char* mqtt_topic_command = "freshid/command";        // Topic untuk menerima perintah
+const char* mqtt_topic_heartbeat = "freshid/heartbeat";    // Topic untuk heartbeat
 
 // ===== PIN KONFIGURASI (Sesuai Dokumen EL3) =====
 #define DHT_PIN 4           // DHT22 Temperature & Humidity
@@ -69,6 +76,10 @@ DHT dht(DHT_PIN, DHT_TYPE);
 // ===== OLED DISPLAY =====
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
+// ===== MQTT CLIENT =====
+WiFiClient espClient;
+PubSubClient mqttClient(espClient);
+
 // ===== VARIABEL GLOBAL =====
 String productType = "sapi";  // Jenis produk: sapi, ayam, ikan, susu
 String deviceID = "";         // Akan diisi dengan MAC Address ESP32
@@ -76,8 +87,8 @@ unsigned long lastSendTime = 0;
 unsigned long sendInterval = 3000;  // Kirim data setiap 3 detik (sesuai spesifikasi real-time)
 unsigned long lastDisplayUpdate = 0;
 unsigned long displayInterval = 1000; // Update OLED setiap 1 detik
-int httpRetryCount = 0;
-const int maxRetries = 3;
+unsigned long lastHeartbeat = 0;
+unsigned long heartbeatInterval = 30000; // Heartbeat setiap 30 detik
 
 // ===== STRUKTUR DATA THRESHOLD (Sesuai Dokumen EL3 & pengaturan.html) =====
 struct GasThreshold {
@@ -193,18 +204,30 @@ void setup() {
   // Koneksi WiFi
   connectWiFi();
   
+  // Setup MQTT
+  mqttClient.setServer(mqtt_server, mqtt_port);
+  mqttClient.setCallback(mqttCallback);
+  mqttClient.setKeepAlive(60);  // Keep-alive 60 detik
+  mqttClient.setSocketTimeout(10); // Socket timeout 10 detik
+  
   // Update OLED dengan status ready
   updateOLED("System Ready", "Product: " + productType, "", "");
   
   Serial.println("\n[✓] System initialization complete!");
   Serial.println("Product Type: " + productType);
-  Serial.println("Firebase URL: " + String(firebaseHost) + String(firebasePath));
+  Serial.println("MQTT Broker: " + String(mqtt_server) + ":" + String(mqtt_port));
   Serial.println("Update Interval: " + String(sendInterval) + "ms");
   Serial.println("===========================================\n");
 }
 
 // ===== FUNGSI LOOP =====
 void loop() {
+  // Maintain MQTT connection
+  if (!mqttClient.connected()) {
+    reconnectMQTT();
+  }
+  mqttClient.loop();  // Process MQTT messages
+  
   // Check WiFi connection
   if (WiFi.status() != WL_CONNECTED) {
     Serial.println("[!] WiFi disconnected. Reconnecting...");
@@ -220,10 +243,16 @@ void loop() {
   // Update LED indicators
   updateLEDIndicators();
   
-  // Kirim data ke Firebase/Server setiap interval
+  // Kirim data ke MQTT broker setiap interval
   if (millis() - lastSendTime >= sendInterval) {
-    sendDataToServer();
+    sendDataToMQTT();
     lastSendTime = millis();
+  }
+  
+  // Send heartbeat untuk memastikan connection masih hidup
+  if (millis() - lastHeartbeat >= heartbeatInterval) {
+    sendHeartbeat();
+    lastHeartbeat = millis();
   }
   
   // Update OLED Display
@@ -296,6 +325,115 @@ void connectWiFi() {
     display.println("Offline Mode");
     display.display();
     delay(2000);
+  }
+}
+
+// ===== MQTT CALLBACK (Handle incoming messages) =====
+void mqttCallback(char* topic, byte* payload, unsigned int length) {
+  Serial.print("[MQTT] Message arrived [");
+  Serial.print(topic);
+  Serial.print("]: ");
+  
+  String message = "";
+  for (int i = 0; i < length; i++) {
+    message += (char)payload[i];
+  }
+  Serial.println(message);
+  
+  // Handle commands dari dashboard
+  if (String(topic) == mqtt_topic_command) {
+    // Command: PRODUCT:sapi / PRODUCT:ayam / PRODUCT:ikan / PRODUCT:susu
+    if (message.startsWith("PRODUCT:")) {
+      String newProduct = message.substring(8);
+      newProduct.toLowerCase();
+      
+      if (newProduct == "sapi" || newProduct == "ayam" || 
+          newProduct == "ikan" || newProduct == "susu") {
+        productType = newProduct;
+        
+        if (newProduct == "sapi") currentProductIndex = 0;
+        else if (newProduct == "ayam") currentProductIndex = 1;
+        else if (newProduct == "ikan") currentProductIndex = 2;
+        else if (newProduct == "susu") currentProductIndex = 3;
+        
+        Serial.println("[✓] Product changed to: " + productType);
+        updateOLED("Product Changed", productType, "", "");
+        delay(2000);
+      }
+    }
+    
+    // Command: INTERVAL:5000 (ubah interval update dalam ms)
+    else if (message.startsWith("INTERVAL:")) {
+      int newInterval = message.substring(9).toInt();
+      if (newInterval >= 1000 && newInterval <= 60000) {
+        sendInterval = newInterval;
+        Serial.println("[✓] Update interval changed to: " + String(sendInterval) + "ms");
+      }
+    }
+    
+    // Command: RESTART (restart ESP32)
+    else if (message == "RESTART") {
+      Serial.println("[!] Restarting ESP32...");
+      ESP.restart();
+    }
+  }
+}
+
+// ===== RECONNECT MQTT =====
+void reconnectMQTT() {
+  static unsigned long lastAttempt = 0;
+  
+  // Coba reconnect setiap 5 detik
+  if (millis() - lastAttempt < 5000) {
+    return;
+  }
+  lastAttempt = millis();
+  
+  if (WiFi.status() != WL_CONNECTED) {
+    return; // Jangan coba connect MQTT jika WiFi mati
+  }
+  
+  Serial.print("[MQTT] Attempting connection to ");
+  Serial.print(mqtt_server);
+  Serial.print("...");
+  
+  // Client ID dengan device ID unik
+  String clientId = "FRESHID-" + deviceID;
+  
+  // Last Will Message (akan dikirim jika ESP32 disconnect tidak normal)
+  String willMessage = "{\"device_id\":\"" + deviceID + "\",\"status\":\"offline\"}";
+  
+  if (mqttClient.connect(clientId.c_str(), mqtt_user, mqtt_password,
+                         mqtt_topic_status, 0, true, willMessage.c_str())) {
+    Serial.println(" connected!");
+    
+    // Subscribe ke topic command untuk menerima perintah
+    mqttClient.subscribe(mqtt_topic_command);
+    Serial.println("[MQTT] Subscribed to: " + String(mqtt_topic_command));
+    
+    // Publish online status
+    String onlineMsg = "{\"device_id\":\"" + deviceID + "\",\"status\":\"online\"}";
+    mqttClient.publish(mqtt_topic_status, onlineMsg.c_str(), true);
+    
+    // Update OLED
+    updateOLED("MQTT Connected", mqtt_server, "", "");
+    delay(1000);
+  } else {
+    Serial.print(" failed, rc=");
+    Serial.print(mqttClient.state());
+    Serial.println(" will retry in 5 seconds");
+    
+    // MQTT error codes:
+    // -4 : MQTT_CONNECTION_TIMEOUT
+    // -3 : MQTT_CONNECTION_LOST
+    // -2 : MQTT_CONNECT_FAILED
+    // -1 : MQTT_DISCONNECTED
+    //  0 : MQTT_CONNECTED
+    //  1 : MQTT_CONNECT_BAD_PROTOCOL
+    //  2 : MQTT_CONNECT_BAD_CLIENT_ID
+    //  3 : MQTT_CONNECT_UNAVAILABLE
+    //  4 : MQTT_CONNECT_BAD_CREDENTIALS
+    //  5 : MQTT_CONNECT_UNAUTHORIZED
   }
 }
 
@@ -386,79 +524,62 @@ void updateLEDIndicators() {
   }
 }
 
-// ===== KIRIM DATA KE SERVER (HTTP POST) =====
-void sendDataToServer() {
-  if (WiFi.status() != WL_CONNECTED) {
-    Serial.println("[!] WiFi not connected. Skipping data send.");
+// ===== KIRIM DATA KE MQTT BROKER =====
+void sendDataToMQTT() {
+  if (!mqttClient.connected()) {
+    Serial.println("[!] MQTT not connected. Skipping data send.");
     return;
   }
-  
-  HTTPClient http;
   
   // Buat JSON payload
   StaticJsonDocument<512> doc;
   doc["device_id"] = deviceID;
   doc["product_type"] = productType;
-  doc["temperature"] = round(currentData.temperature * 10) / 10.0;  // 1 decimal
-  doc["humidity"] = round(currentData.humidity);                    // Integer
-  doc["tgs2602_ppm"] = round(currentData.tgs2602_ppm * 10) / 10.0; // VOC/NH3/H2S
-  doc["tgs2611_ppm"] = round(currentData.tgs2611_ppm * 10) / 10.0; // CH4
+  doc["temperature"] = round(currentData.temperature * 10) / 10.0;
+  doc["humidity"] = round(currentData.humidity);
+  doc["tgs2602_ppm"] = round(currentData.tgs2602_ppm * 10) / 10.0;
+  doc["tgs2611_ppm"] = round(currentData.tgs2611_ppm * 10) / 10.0;
   doc["status"] = currentData.status;
   doc["timestamp"] = currentData.timestamp;
   
   String jsonPayload;
   serializeJson(doc, jsonPayload);
   
-  // === FIREBASE REALTIME DATABASE ===
-  // Format: https://YOUR-PROJECT.firebaseio.com/sensors.json
-  String firebaseURL = String(firebaseHost) + firebasePath + ".json";
-  if (strlen(firebaseAuth) > 0) {
-    firebaseURL += "?auth=" + String(firebaseAuth);
-  }
-  
-  // === ALTERNATIVE: Gunakan server sendiri ===
-  // Uncomment jika pakai server sendiri bukan Firebase
-  // String serverURL = "http://192.168.1.100:8080/api/sensor-data";
-  
-  http.begin(firebaseURL);
-  http.addHeader("Content-Type", "application/json");
-  
-  // Firebase menggunakan PATCH untuk update data tanpa replace semua
-  // Gunakan PUT jika ingin replace semua data
-  // Gunakan POST jika ingin push data baru dengan auto-generated key
-  int httpResponseCode = http.PATCH(jsonPayload);  // Update existing data
-  // int httpResponseCode = http.POST(jsonPayload); // Untuk push data baru
-  
-  if (httpResponseCode > 0) {
-    String response = http.getString();
-    Serial.println("[✓] Data sent successfully");
-    Serial.print("    HTTP Response code: ");
-    Serial.println(httpResponseCode);
-    Serial.print("    Server response: ");
-    Serial.println(response);
-    Serial.print("    Payload size: ");
+  // Publish ke topic data dengan QoS 0 (fire and forget) atau QoS 1 (at least once)
+  if (mqttClient.publish(mqtt_topic_data, jsonPayload.c_str(), false)) {
+    Serial.println("[✓] Data sent to MQTT broker");
+    Serial.print("    Topic: ");
+    Serial.println(mqtt_topic_data);
+    Serial.print("    Payload: ");
+    Serial.println(jsonPayload);
+    Serial.print("    Size: ");
     Serial.print(jsonPayload.length());
     Serial.println(" bytes");
-    
-    httpRetryCount = 0;  // Reset retry counter on success
   } else {
-    Serial.println("[✗] Error sending data");
-    Serial.print("    HTTP Error code: ");
-    Serial.println(httpResponseCode);
-    Serial.print("    Error: ");
-    Serial.println(http.errorToString(httpResponseCode).c_str());
-    
-    httpRetryCount++;
-    if (httpRetryCount >= maxRetries) {
-      Serial.println("[!] Max retries reached. Check your network or Firebase URL.");
-      httpRetryCount = 0;
-    }
+    Serial.println("[✗] Failed to send data to MQTT");
+    Serial.println("    Check MQTT connection or message size");
   }
   
-  http.end();
+  // Publish status terpisah untuk monitoring cepat
+  String statusMessage = "{\"device_id\":\"" + deviceID + 
+                        "\",\"product\":\"" + productType + 
+                        "\",\"status\":\"" + currentData.status + "\"}";
+  mqttClient.publish(mqtt_topic_status, statusMessage.c_str(), true);  // Retained message
+}
+
+// ===== KIRIM HEARTBEAT =====
+void sendHeartbeat() {
+  if (!mqttClient.connected()) {
+    return;
+  }
   
-  // Optional: Log ke Serial Monitor untuk debugging
-  Serial.println("    JSON Payload: " + jsonPayload);
+  String heartbeat = "{\"device_id\":\"" + deviceID + 
+                    "\",\"uptime\":" + String(millis() / 1000) +
+                    ",\"rssi\":" + String(WiFi.RSSI()) + "}";
+  
+  if (mqttClient.publish(mqtt_topic_heartbeat, heartbeat.c_str())) {
+    Serial.println("[♥] Heartbeat sent - Uptime: " + String(millis() / 1000) + "s");
+  }
 }
 
 // ===== UPDATE OLED DISPLAY =====
@@ -526,9 +647,9 @@ void displayData() {
   Serial.print(WiFi.status() == WL_CONNECTED ? "Connected" : "Disconnected");
   for(int i = 0; i < (WiFi.status() == WL_CONNECTED ? 10 : 5); i++) Serial.print(" ");
   Serial.println("║");
-  Serial.print("║ HTTP Status  : ");
-  Serial.print(httpRetryCount == 0 ? "OK" : "Error (" + String(httpRetryCount) + "/" + String(maxRetries) + ")");
-  for(int i = 0; i < (httpRetryCount == 0 ? 25 : 15); i++) Serial.print(" ");
+  Serial.print("║ MQTT         : ");
+  Serial.print(mqttClient.connected() ? "Connected" : "Disconnected");
+  for(int i = 0; i < (mqttClient.connected() ? 10 : 5); i++) Serial.print(" ");
   Serial.println("║");
   Serial.println("╚════════════════════════════════════════╝\n");
 }
