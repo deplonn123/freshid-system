@@ -1,0 +1,316 @@
+\documentclass{elsinta}
+\usepackage{url}
+
+% --- Memasukkan Data Dokumen Menggunakan Perintah Baru ---
+\projectcode{EL2}
+\documentname{\LiteraturesStandardsTitle}
+\documenttitle{Teknik Elektro - Sistem Informasi Tugas Akhir}
+\capstonetitle{Teknik Elektro - Sistem Informasi Tugas Akhir}
+\shortname{  ELSINTA} 
+\documentnumber{TA2526.01.099}
+\revisionnumber{01}
+\publicationdate{15 Desember 2025}
+
+\revdatefooter{15/12/2025}
+% --- Memasukkan Data Halaman Pengesahan (Halaman 2) ---
+\currentpage{2} % Halaman yang sedang dicetak
+
+% Data Tim
+\ketuatimnama{Muhammad Bintang Pamungkas}
+\ketuatimnim{122130009}
+
+\anggotanamaI{Puja Andesta}
+\anggotanimI{122130043}
+
+\anggotanamaII{Daffa Zakky Kurniawan}
+\anggotanimII{122130044}
+
+
+% Data Dosen
+\pembimbingInama{Dean Corio, S.T, M.T.}
+\pembimbingInip{19860622 201504 1 003}
+
+\pembimbingIInama{Afit Miranto, S.T, M.T.}
+\pembimbingIInip{19910512 202203 1 007}
+
+
+% Tanggal Pengesahan
+\approvaldate{22 September 2025}
+
+\begin{document}
+
+% Panggil perintah untuk membuat halaman sampul
+\coverpage
+% Pindah ke Halaman Baru
+\newpage
+
+% Membuat Halaman Pengesahan (Halaman 2)
+\approvalpage
+
+% Lanjut ke halaman proposal
+\newpage
+
+% ======================================
+% Bagian Konten Proposal Dimulai di Sini
+% ======================================
+
+% Mengatur ulang nomor halaman dan gaya halaman
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1} 
+\pagestyle{myfooter} % Ganti dari 'plain' ke 'myfooter'
+
+% Atur margin standar (Opsional, jika Anda ingin margin isi berbeda dari sampul)
+% \newgeometry{left=4cm, right=3cm, top=3cm, bottom=3cm} 
+% Catatan: Perintah \newgeometry memerlukan paket 'geometry' yang sudah ada di cls.
+
+\tableofcontents
+\newpage
+\section*{Ringkasan Dokumen}
+
+Dokumen ini berfokus pada kajian pustaka, analisis kesenjangan, serta penetapan standar dan regulasi sebagai dasar konseptual dan teknis dalam pengembangan sistem FRESH-ID, dengan menelaah penelitian, produk, dan pendekatan terdahulu terkait pemantauan kualitas serta pembusukan pangan berbasis sensor. Pada bagian tolak ukur proyek, berbagai penelitian dan prototipe sistem deteksi pembusukan, termasuk pendekatan \textit{electronic nose} berbasis IoT dan sensor gas, dikaji melalui analisis bibliometrik untuk memetakan tren penelitian global yang menunjukkan adanya fragmentasi antara deteksi senyawa volatil, pengembangan sensor, dan platform pemantauan. Analisis kesenjangan kemudian mengidentifikasi keterbatasan solusi yang ada, seperti pemantauan pasif, penggunaan sensor gas non-spesifik, ketiadaan kompensasi suhu dan kelembapan, serta minimnya visualisasi data yang informatif dan terintegrasi, sehingga kontribusi FRESH-ID dirumuskan melalui integrasi multi-sensor gas dalam pembentukan \textit{spoilage fingerprint}, penerapan kompensasi lingkungan, dan pemantauan \textit{real-time} berbasis IoT yang menghasilkan informasi status kesegaran dan tren pembusukan. Selain itu, dokumen ini mengkaji standar teknis dan regulasi yang relevan, meliputi komunikasi nirkabel, manajemen keamanan pangan, antarmuka sensor, kualitas perangkat lunak, serta protokol IoT, disertai regulasi nasional terkait keamanan pangan, keselamatan kerja, dan sertifikasi perangkat telekomunikasi untuk memastikan kesesuaian pengembangan FRESH-ID dengan ketentuan hukum dan standar operasional yang berlaku.
+
+\newpage
+
+\section{Tolak Ukur Proyek}
+
+\subsection{Proyek / Produk Terdahulu}
+Subbab ini menguraikan berbagai sistem dan proyek terdahulu yang berkaitan dengan pemantauan kualitas makanan, baik yang dikembangkan sebagai produk komersial maupun prototipe penelitian. Tinjauan dilakukan untuk melihat fitur utama, pendekatan teknologi, kelebihan, serta keterbatasan dari solusi-solusi yang telah ada. Melalui penelusuran ini, diperoleh gambaran mengenai sejauh mana teknologi deteksi pembusukan makanan telah berkembang, sekaligus mengidentifikasi ruang perbaikan yang masih terbuka. Analisis ini kemudian dipadukan dengan hasil bibliometrik untuk memahami arah penelitian global serta menentukan celah teknologi yang menjadi dasar pengembangan FRESH-ID. 
+
+\renewcommand{\figurename}{Gambar}
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=1\linewidth]{image/doc/Screenshot 2025-12-12 234828.png}
+    \caption{Analisa Bibliometrik dengan VOSviewer}
+    \label{fig:why5}
+\end{figure}
+
+Berdasarkan pemetaan bibliometrik menggunakan VOSviewer pada \textbf{Gambar EL2.1}, penelitian terkait deteksi pembusukan pangan menunjukkan pengelompokan kata kunci ke dalam klaster yang terpisah, di mana klaster hijau berfokus pada \textit{biogenic amine}, \textit{cadaverine}, dan bahan pangan seperti ikan sebagai indikator kimia pembusukan; klaster jingga dan ungu menekankan pengembangan \textit{chemical gas sensor}, \textit{MOS gas sensor}, serta \textit{semiconductor gas sensor} sebagai perangkat utama untuk mendeteksi gas volatil; sementara klaster biru dan merah berorientasi pada \textit{spoilage detection}, \textit{detection method}, \textit{sensing platform}, dan \textit{volatile gas} yang menggambarkan pendekatan lebih luas terhadap metode pendeteksian dan rancangan platform sensor. Peta kata kunci ini memperlihatkanmasing-masing domain berkembang kuat pada jalurnya sendiri tanpa integrasi menyeluruh antara deteksi amina biogenik, teknologi sensor gas, metode analitik, dan sistem pemantauan terpadu, sehingga menghasilkan kesenjangan penelitian yang menjadi dasar pengembangan FRESH-ID sebagai solusi yang menggabungkan sensor, analisis data, dan pemantauan kualitas pangan secara \textit{real time}.
+
+\renewcommand{\figurename}{Gambar}
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=1\linewidth]{image/doc/Screenshot 2025-12-12 234511.png}
+        \caption{Hasil Pemetaan Bibliometrik Topik Spoiled Food yang Menunjukkan Pola Hubungan serta Pengelompokan Kata Kunci dalam Literatur Terkait}
+    \label{fig:why5}
+\end{figure}
+
+\textbf{Gambar EL2.2} menunjukkan hasil pemetaan bibliometrik topik \textit{spoiled food} yang menggambarkan pola keterhubungan antar kata kunci serta struktur klaster dalam literatur terkait. Kata kunci \textit{spoiled food} muncul sebagai pusat jaringan, menandakan bahwa sebagian besar penelitian berfokus pada isu pembusukan makanan secara umum. Klaster hijau didominasi oleh kata kunci seperti \textit{biogenic amine}, \textit{putrescine}, dan \textit{food spoilage indicator} yang menunjukkan bahwa banyak penelitian menekankan deteksi senyawa volatil sebagai indikator kimia pembusukan. Klaster merah muda dan ungu mengelompokkan istilah terkait teknologi sensor seperti \textit{semiconductor gas sensor}, \textit{MOS gas sensor}, dan \textit{excellent sensitivity}, yang menggambarkan perkembangan signifikan dalam material dan perangkat sensor untuk memantau kualitas pangan. Sementara itu, klaster kuning menampilkan kata kunci seperti \textit{environment} dan \textit{volatile gases}, menandakan perhatian pada aspek lingkungan dan keamanan terkait gas hasil degradasi pangan. Secara keseluruhan, struktur peta menunjukkan bahwa keterkaitan antara indikator kimia, platform sensor, dan deteksi lingkungan belum terintegrasi kuat, sehingga penelitian terdahulu cenderung berfokus pada aspek yang terpisah-pisah. Kesenjangan inilah yang menjadi dasar pengembangan FRESH-ID sebagai sistem pemantauan kualitas pangan yang mengintegrasikan deteksi senyawa pembusukan, teknologi sensor, dan analitik data secara \textit{real time}.
+
+\renewcommand{\figurename}{Gambar}
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=1\linewidth]{image/doc/Screenshot 2025-12-12 235031.png}
+    \caption{Hasil Pemetaan Bibliometrik Topik Process yang Menggambarkan Hubungan dengan Spoilage Detection}
+    \label{fig:why5}
+\end{figure}
+
+\textbf{Gambar EL2.3} memperlihatkan pemetaan bibliometrik topik \textit{process} yang menunjukkan hubungan erat dengan konsep \textit{spoilage detection}. Kata kunci \textit{process} berada pada posisi sentral dalam jaringan, menghubungkan berbagai klaster seperti \textit{sensing platform}, \textit{flexible gas sensor}, dan \textit{quality deterioration}. Klaster merah mengindikasikan fokus penelitian pada pengembangan \textit{sensing platform} dan \textit{flexible gas sensor} yang berperan dalam proses pendeteksian gas volatil dan biomarker pembusukan. Klaster hijau dan oranye memperlihatkan keterkaitan antara \textit{spoilage detection}, \textit{flexible sensor}, serta komponen sensor kimia yang digunakan untuk mengidentifikasi perubahan kualitas makanan. Sementara itu, klaster ungu dan biru mencakup kata kunci seperti \textit{ammonia gas} dan \textit{volatile gas}, menunjukkan bahwa penelitian proses deteksi banyak berkaitan dengan analisis senyawa gas hasil degradasi bahan pangan. Struktur pemetaan ini menegaskan bahwa konsep \textit{process} bertindak sebagai penghubung antardomain mulai dari teknologi sensor, deteksi kimiawi, hingga analisis penurunan kualitas meskipun integrasi komprehensif antara ketiganya masih terbatas. Hal ini memperlihatkan adanya peluang inovasi dalam membangun sistem pendeteksian pembusukan makanan yang lebih utuh, terintegrasi, dan mampu melakukan analisis secara \textit{real time}.\vspace{1\baselineskip} %
+
+Secara keseluruhan, ketiga hasil analisis bibliometrik tersebut memberikan gambaran yang jelas mengenai arah, struktur, dan kedalaman penelitian pada bidang yang dikaji, sehingga dapat menjadi landasan yang kuat untuk mengidentifikasi peluang riset baru serta memperkuat posisi studi yang sedang dikembangkan.\vspace{1\baselineskip} %
+
+\begin{enumerate}
+ \item \textbf{IoT-Enabled Electronic Nose System for Beef Quality Monitoring and Spoilage Detection} \cite{Damdam2023IoTEnoseBeef}:
+  \begin{enumerate}
+
+    \item \textbf{Fitur:} Sistem e-nose berbasis Internet of Things dikembangkan dengan menggunakan sensor CO\textsubscript{2} tipe MH-Z19C, sensor NH\textsubscript{3} tipe ZE03-NH3, dan sensor C\textsubscript{2}H\textsubscript{4} tipe ZE03-C2H4, serta sensor DHT22 untuk pengukuran suhu dan kelembapan. Sistem ini menggunakan ESP32-S3 sebagai mikrokontroler utama dan dilengkapi dengan chamber gas berkapasitas 500 mL yang dikombinasikan dengan vacuum pump dan air pump untuk mengendalikan aliran udara. Pengambilan data dilakukan secara otomatis setiap enam jam. Data hasil pengukuran dikirimkan ke cloud melalui Blynk server dengan menggunakan protokol HTTPs sehingga memungkinkan pemantauan kondisi secara real-time.
+
+    \item \textbf{Kelebihan:} Sistem ini mampu mengidentifikasi ambang batas pembusukan daging sapi berdasarkan korelasi dengan uji mikrobiologi, melakukan pemantauan jangka panjang selama tujuh hari, serta dilengkapi dengan analisis regresi linear untuk menentukan kontribusi bakteri spesifik terhadap produksi senyawa VOC. Rentang konsentrasi gas yang teridentifikasi selama proses pembusukan meliputi CO\textsubscript{2} sebesar 552 hingga 4751 ppm, NH\textsubscript{3} sebesar 6 hingga 8 ppm, serta C\textsubscript{2}H\textsubscript{4} dan H\textsubscript{2} sebesar 18{,}4 hingga 21{,}1 ppm.
+
+    \item \textbf{Kekurangan:} Sistem yang dikembangkan masih berfokus pada satu jenis komoditas yaitu daging sapi sehingga belum tervalidasi untuk komoditas lain seperti daging ayam, ikan, atau susu. Selain itu, sistem tersebut memerlukan chamber tertutup dengan kontrol vakum yang relatif kompleks sehingga kurang praktis untuk diimplementasikan pada operasional dapur skala besar. Sistem ini juga belum menyediakan klasifikasi kondisi kesegaran secara bertingkat serta belum dilengkapi dengan mekanisme antarmuka pengguna yang mudah dipahami oleh pengguna non-teknis di lapangan.
+
+    \item \textbf{Celah yang Diisi FRESH-ID:} FRESH-ID dirancang untuk multi-komoditas dengan klasifikasi bertingkat yang mencakup kategori segar, kurang segar, dan busuk guna mendukung pengambilan keputusan operasional yang lebih terperinci. Sistem FRESH-ID menggunakan desain perangkat yang lebih sederhana tanpa memerlukan chamber vakum sehingga lebih praktis untuk digunakan secara langsung di area penyimpanan dapur MBG. Selain menyediakan dashboard administrator, FRESH-ID juga dilengkapi dengan output visual lokal berupa LED atau LCD yang dapat dibaca langsung oleh pengelola dapur tanpa ketergantungan pada akses internet, serta prosedur penetapan ambang batas yang disesuaikan dengan karakteristik pembusukan masing-masing komoditas target.
+
+  \end{enumerate}
+
+\item \textbf{Prototype Sistem Final Crosscheck Pada Industri Makanan Berbasis IoT Thingspeak} \cite{aatikah2023}:
+  \begin{enumerate}
+
+    \item \textbf{Fitur:}
+    Prototipe menggunakan mikrokontroler NodeMCU ESP8266 dan platform \textit{Thingspeak} untuk pemantauan berbasis web. Sistem menggabungkan lima sensor: \textit{Load Cell} untuk berat, DHT11 untuk suhu, sensor \textit{proximity}, MQ2 untuk deteksi gas umum, dan TCS3200 untuk deteksi warna. Data dikirim ke \textit{Thingspeak} dan dapat dipantau secara jarak jauh melalui kanal yang disediakan. Hasil pengujian menunjukkan semua sensor bekerja sesuai fungsi, namun terdapat jeda waktu antar pembacaan khususnya pada sensor \textit{load cell}.
+    \item \textbf{Kelebihan:} 
+    Sistem mampu memfasilitasi pemantauan jarak jauh sehingga memudahkan kontrol kualitas produksi di \textit{home industry}. Pemilihan kombinasi sensor menyediakan data multivariabel (berat, suhu, warna, gas, \textit{proximity}) yang berguna untuk proses \textit{final crosscheck}. Implementasi menggunakan komponen murah dan perangkat lunak terbuka membuat prototipe relatif mudah direplikasi. Pengujian awal menunjukkan masing-masing sensor dapat terdeteksi dan berfungsi sesuai perancangan.
+    \item \textbf{Kekurangan:} 
+    Sensor gas MQ2 yang dipakai bersifat umum dan tidak spesifik terhadap gas pembusukan makanan, sehingga keterbatasan selektivitas dapat menurunkan keakuratan deteksi kebusukan. Pengujian dilakukan secara sederhana pada skala kecil sehingga potensi \textit{error} pada operasi nyata belum dieksplorasi penuh. Terdapat \textit{delay} pembacaan, khususnya jeda sekitar 4–7 detik pada sensor \textit{load cell} dibandingkan sensor lainnya, yang dapat mempengaruhi sinkronisasi data. Sistem juga belum memasukkan kompensasi parameter lingkungan seperti koreksi suhu/kelembapan untuk pembacaan gas. 
+    \item \textbf{Celah yang Diisi FRESH-ID:} 
+    FRESH-ID akan mengatasi keterbatasan pemantauan pasif dengan menyediakan pengiriman data otomatis dan real-time menggunakan ESP32 dengan Wi-Fi ke dashboard terpusat, sesuai kebutuhan pemantauan logistik oleh BGN. Untuk meningkatkan selektivitas, FRESH-ID akan menggunakan larik sensor spesifik gas serta menambahkan sensor suhu/kelembapan untuk kompensasi lingkungan. Sistem dirancang untuk pencatatan berkelanjutan dan analisis ambang batas sehingga dapat menampilkan status segar, kurang segar, dan busuk serta tren laju pembusukan, bukan hanya data mentah seperti pada prototipe \textit{Thingspeak}.
+  \end{enumerate}
+
+\end{enumerate}
+
+\subsection{Riset / Paten Relevan}
+Subbab ini mengulas penelitian dan paten yang relevan dengan teknologi yang digunakan dalam proyek FRESH-ID, termasuk efektivitas sensor gas, arsitektur \textit{IoT} untuk pemantauan pangan, serta metode kalibrasi dan kompensasi sensor. Tinjauan ini membantu mengidentifikasi praktik terbaik sekaligus menunjukkan ruang kontribusi ilmiah dan inovatif yang dapat diisi oleh FRESH-ID.
+
+\begin{enumerate}
+    \item \textbf{Validasi Gas Indikator dan Konsep Spoilage Fingerprint:}
+    \begin{enumerate}
+        \item \textbf{Studi:} 
+        Penelitian oleh Binson dan Thomas (2023) menunjukkan bahwa proses pembusukan daging menghasilkan berbagai senyawa volatil (\textit{VOCs}) seperti alkohol, aldehid, keton, serta gas berbasis nitrogen dan karbon. Peningkatan konsentrasi \textit{VOC} ini terbukti berkorelasi dengan kenaikan \textit{total viable count} (TVC). Sensor \textit{MOS} seperti TGS2600 dan TGS2620 pada studi tersebut juga menunjukkan perubahan resistansi yang signifikan seiring meningkatnya senyawa volatil, sehingga pola respons sensor dapat dimanfaatkan sebagai dasar pembentukan \textit{spoilage fingerprint} \cite{binson2023}.
+        
+        \item \textbf{Relevansi dengan FRESH-ID:} 
+        Hasil penelitian ini menunjukkan bahwa pola perubahan resistansi pada sensor \textit{MOS} dapat digunakan untuk mengidentifikasi tahapan pembusukan. Prinsip ini sejalan dengan pendekatan FRESH-ID yang menggunakan larik sensor TGS2602 dan TGS2611 untuk menangkap pola gas pembusukan. Dengan mengacu pada pola \textit{VOC} seperti yang diamati pada penelitian tersebut, FRESH-ID dapat membangun model \textit{spoilage fingerprint} yang lebih akurat untuk pemantauan kesegaran pangan.
+        
+        \item \textbf{Kontribusi FRESH-ID:} 
+        FRESH-ID tidak hanya mendeteksi perubahan respons sensor, tetapi juga mengirimkan data tersebut secara otomatis ke platform pemantauan berbasis website. Integrasi ini memungkinkan analisis tren \textit{VOC} dan penentuan status pembusukan secara real-time. Dengan demikian, FRESH-ID memperluas penerapan konsep \textit{electronic nose} dari pengujian laboratorium menjadi sistem pemantauan logistik pangan yang terpusat dan berkelanjutan.
+    \end{enumerate}
+    
+    \item \textbf{Kompensasi Sensor Gas terhadap Faktor Lingkungan:}
+    \begin{enumerate}
+        \item \textbf{Studi:} 
+        Penelitian oleh Li et al. (2021) menjelaskan bahwa sensor gas berbasis \textit{Metal Oxide Semiconductor} (MOS) sangat sensitif terhadap perubahan suhu dan kelembapan. Kedua faktor ini menyebabkan pergeseran resistansi dasar (\textit{baseline drift}) dan menurunkan stabilitas sinyal, sehingga pembacaan konsentrasi \textit{VOC} dapat menjadi tidak akurat. Studi tersebut juga menegaskan bahwa kelembapan tinggi menghambat proses adsorpsi dan desorpsi gas pada permukaan sensor, sehingga menghasilkan respons yang lambat dan fluktuatif. Oleh karena itu, kompensasi suhu dan kelembapan merupakan langkah penting untuk memastikan reliabilitas data sensor \textit{MOS} \cite{li2021compensation}.
+        
+        \item \textbf{Relevansi dengan FRESH-ID:} 
+        Sensor TGS2602 dan TGS2611 yang digunakan dalam FRESH-ID merupakan sensor \textit{MOS} yang mengalami karakteristik gangguan yang sama seperti yang dijelaskan Li et al. (2021). Fluktuasi suhu ruang penyimpanan atau perubahan kelembapan di dalam kontainer makanan dapat menyebabkan perubahan resistansi sensor yang tidak terkait dengan pembusukan sebenarnya. Tanpa mekanisme kompensasi, FRESH-ID berpotensi menghasilkan interpretasi yang salah terhadap kadar gas pembusukan.
+        
+        \item \textbf{Kontribusi FRESH-ID:} 
+        FRESH-ID mengintegrasikan sensor DHT22 untuk membaca suhu dan kelembapan secara bersamaan dengan sinyal gas dari Ttextsubscript{GS2602} dan TGS2611. Nilai lingkungan ini digunakan sebagai dasar untuk mengoreksi atau menormalisasi pembacaan sensor gas sehingga pola \textit{VOC} yang terdeteksi benar-benar mencerminkan proses pembusukan, bukan perubahan kondisi lingkungan. Dengan pendekatan ini, FRESH-ID memastikan bahwa data gas lebih stabil dan dapat diandalkan untuk pemantauan kualitas pangan secara berkelanjutan melalui platform berbasis web.
+    \end{enumerate}
+    
+    \item \textbf{Jurnal tentang Implementasi Arsitektur IoT untuk Smart Building:}
+    \begin{enumerate}
+        \item \textbf{Studi:} 
+        Penelitian oleh Protopappas et al. (2025) mengembangkan sistem pemantauan rantai pasok pangan berbasis \textit{IoT} menggunakan jaringan \textit{LoRaWAN} untuk melacak suhu dan kelembapan secara real-time sepanjang \textit{cold chain}. Studi ini menunjukkan bahwa pemantauan berkelanjutan dengan sensor nirkabel mampu mengurangi risiko kerusakan, meningkatkan visibilitas logistik, dan menyediakan data lingkungan yang stabil selama transportasi serta penyimpanan produk pangan \cite{protopappas2025iot}.
+        
+        \item \textbf{Relevansi dengan FRESH-ID:} 
+        Studi ini menegaskan bahwa pemantauan real-time berbasis \textit{IoT} merupakan standar modern dalam pengawasan kualitas pangan. FRESH-ID mengadopsi prinsip tersebut dengan melakukan pengumpulan data secara otomatis dan penyajian data pada platform web. Namun, FRESH-ID memperluas konteks pemantauan dari parameter lingkungan (suhu dan kelembapan) menjadi parameter biologis langsung berupa gas pembusukan (NH\textsubscript{3}, H\textsubscript{2}S, CH\textsubscript{4}).
+        
+        \item \textbf{Kontribusi FRESH-ID:} 
+        Berbeda dengan penelitian sebelumnya yang berfokus pada pemantauan \textit{cold chain} konvensional, FRESH-ID menawarkan inovasi dengan menggabungkan pemantauan lingkungan dan deteksi gas pembusukan dalam satu sistem \textit{IoT} real-time. Pendekatan ini memungkinkan identifikasi dini pembusukan meskipun suhu penyimpanan masih berada dalam batas normal, sehingga memberikan kemampuan deteksi yang lebih komprehensif dibandingkan sistem \textit{IoT cold chain} pada umumnya.
+    \end{enumerate}
+\end{enumerate}
+
+\section{Analisis Kesenjangan}
+Subbab ini menyajikan analisis kesenjangan berdasarkan hasil tinjauan proyek, produk, dan penelitian terdahulu. Setelah mengidentifikasi fitur, kelebihan, serta keterbatasan dari berbagai solusi yang telah dikembangkan, bagian ini menyoroti aspek-aspek penting yang belum terpenuhi oleh teknologi yang ada saat ini. Analisis kesenjangan ini diperlukan untuk menegaskan urgensi dan relevansi pengembangan FRESH-ID, sekaligus menunjukkan kontribusi nyata yang ditawarkan proyek melalui integrasi deteksi gas pembusukan, pemantauan lingkungan, serta konektivitas \textit{IoT} secara real-time. Dengan dasar tersebut, FRESH-ID diposisikan sebagai solusi yang mampu mengisi kekurangan pada penelitian dan sistem sebelumnya.
+
+\subsection{Keterbatasan Solusi yang Ada}
+Solusi yang dikembangkan sebelumnya menunjukkan kemajuan pada aspek pemantauan kualitas pangan, namun masih menyisakan sejumlah kekurangan teknis maupun fungsional. Keterbatasan tersebut mempengaruhi akurasi deteksi, kontinuitas pemantauan, serta kemampuan integrasi data pada skala besar. Identifikasi terhadap keterbatasan ini menjadi dasar bagi pengembangan FRESH-ID agar dapat memberikan fungsi yang lebih relevan dengan kebutuhan sistem logistik pangan seperti BGN:
+\begin{enumerate}
+    \item \textbf{Pemantauan yang Bersifat Pasif dan Tidak Berkelanjutan:} Sebagian solusi masih bergantung pada metode pembacaan manual seperti sistem kemasan berbasis \textit{NFC} yang hanya aktif ketika dipindai pengguna. Pola pemantauan seperti ini tidak menyediakan data berkelanjutan sehingga tidak mampu menggambarkan dinamika pembusukan dari waktu ke waktu.
+    \item \textbf{Keterbatasan Sensor dalam Mendeteksi Gas Pembusukan Secara Spesifik:} Beberapa prototipe terdahulu menggunakan sensor gas generik seperti MQ2 yang memberikan respons terhadap beragam gas tanpa kemampuan untuk membedakan jenis senyawa volatil pembusukan. Ketidakspesifikan ini membuat interpretasi data menjadi kurang tepat dan menyulitkan proses identifikasi tahap pembusukan.
+    \item \textbf{Tidak Tersedianya Mekanisme Kompensasi Suhu dan Kelembapan:} Sebagian besar penelitian tidak menambahkan kompensasi terhadap faktor lingkungan, padahal sensor \textit{MOS} sangat mudah terpengaruh oleh perubahan suhu dan kelembapan. Ketidakhadiran kompensasi ini berisiko menghasilkan pembacaan yang bias dan menurunkan reliabilitas pemantauan.
+    \item \textbf{Keterbatasan Cakupan Sensor pada Solusi Komersial dan Prototipe:} Produk komersial umumnya hanya memantau CO\textsubscript{2} atau parameter lingkungan tanpa mendeteksi gas pembusukan seperti amonia dan hidrogen sulfida. Prototipe akademik masih berfokus pada satu atau dua parameter sehingga belum mencakup pola \textit{VOC} yang kompleks.
+    \item \textbf{Kurangnya Visualisasi Data Real-time yang Informatif:} Sistem seperti \textit{Thingspeak} menyediakan grafik dasar namun belum memberikan klasifikasi status kesegaran, tren pembusukan, ataupun mekanisme integrasi dengan \textit{dashboard} yang dirancang khusus untuk operasional skala besar.
+\end{enumerate}
+
+\subsection{Kontribusi Proyek}
+FRESH-ID dikembangkan untuk mengisi celah yang muncul pada penelitian dan produk terdahulu dengan pendekatan pemantauan yang lebih komprehensif dan stabil.Kontribusi proyek ini dirancang untuk menjawab setiap keterbatasan yang teridentifikasi pada bagian sebelumnya:
+
+\begin{enumerate}
+    \item \textbf{Integrasi Multi-Sensor yang Menghasilkan Pola \textit{Spoilage Fingerprint}:}
+    FRESH-ID memanfaatkan kombinasi sensor TGS2602 dan TGS2611 yang bekerja pada karakteristik gas berbeda, terutama amonia, hidrogen sulfida, metana, dan senyawa organik volatil lainnya. Dengan menggabungkan dua sensor yang memiliki sensitivitas saling melengkapi, sistem mampu membentuk pola respons yang lebih kaya dan stabil sebagai \textit{spoilage fingerprint}. Pendekatan ini memberikan gambaran yang lebih jelas mengenai tahap pembusukan, sehingga tidak hanya mendeteksi keberadaan gas, tetapi juga mengidentifikasi dinamika perubahan kualitas bahan pangan secara bertahap.
+
+    \item \textbf{Penerapan Kompensasi Lingkungan agar Pembacaan Lebih Stabil:}
+    Pembacaan sensor gas berbasis \textit{metal oxide semiconductor} (MOS) sangat dipengaruhi perubahan suhu dan kelembapan. Untuk mengatasi hal ini, FRESH-ID mengintegrasikan sensor DHT22 sebagai parameter koreksi sehingga efek \textit{drift} dapat ditekan. Data suhu dan kelembapan digunakan untuk menormalkan pembacaan sensor gas, menghasilkan respons yang lebih konsisten meskipun kondisi ruang penyimpanan berubah. Dengan demikian, sistem tetap mampu memberikan interpretasi yang akurat terhadap kondisi pembusukan, bahkan pada lingkungan penyimpanan dengan fluktuasi signifikan.
+
+    \item \textbf{Pemantauan Real-time Berbasis IoT untuk Data Berkelanjutan:}
+    Sistem ini menggunakan ESP32 dengan konektivitas Wi-Fi, memungkinkan pengiriman data secara otomatis dan berkelanjutan tanpa perlu interaksi manual. Fitur ini membuka peluang pemantauan jarak jauh melalui \textit{dashboard} yang dapat diakses kapan saja. Dengan adanya data real-time, FRESH-ID mampu memberikan peringatan dini apabila terdeteksi peningkatan kadar VOC atau pola yang mengarah pada pembusukan cepat. Hal ini meningkatkan kecepatan respons sehingga penanganan pangan dapat dilakukan sebelum terjadi kerugian kualitas.
+
+    \item \textbf{Penyusunan Status Kesegaran dan Tren Pembusukan yang Lebih Informatif:}
+    FRESH-ID tidak hanya menampilkan nilai gas mentah yang sulit ditafsirkan pengguna, tetapi juga mengolahnya menjadi indikator status seperti ``SEGAR'', ``KURANG SEGAR'', atau ``BUSUK''. Selain itu, sistem menyajikan grafik tren perubahan VOC yang memperlihatkan kecepatan dan arah perubahan kualitas bahan pangan. Informasi ini memudahkan pengguna memahami tingkat urgensi suatu kondisi dan membantu pengambilan keputusan, terutama pada proses penyimpanan maupun distribusi pangan dalam jumlah besar.
+
+    \item \textbf{Kemampuan Penerapan pada Banyak Titik Pemantauan Secara Terpusat:}
+    Arsitektur IoT yang digunakan memungkinkan FRESH-ID diterapkan pada banyak titik penyimpanan secara terpusat. Setiap unit sensor dapat mengirimkan data ke satu platform yang sama, sehingga pemantauan kondisi pangan dari berbagai lokasi dapat dilakukan secara simultan. Kemampuan ini sangat sesuai dengan kebutuhan logistik pangan skala besar, seperti gudang distribusi, dapur instansi, maupun fasilitas penyimpanan terpadu. Dengan pendekatan ini, pengelola dapat melakukan pemantauan secara menyeluruh tanpa harus mengecek setiap titik secara manual.
+\end{enumerate}
+
+\section{Standar dan Regulasi}
+
+\subsection{Standar Teknis}
+Penerapan standar teknis dalam pengembangan FRESH-ID memiliki peran penting untuk memastikan sistem bekerja secara stabil, akurat, dan konsisten. Standar ini menjadi landasan dalam proses perancangan modul sensor gas, mekanisme komunikasi IoT, serta tahapan kalibrasi dan verifikasi data. Dengan berpedoman pada standar teknis yang tepat, sistem FRESH-ID dapat menghasilkan informasi kualitas pangan yang valid, dapat diuji ulang, dan sesuai dengan kebutuhan pemantauan di lingkungan logistik maupun industri pangan.
+
+\begin{enumerate}
+    \item \textbf{\text{IEEE 802.11} (WiFi):} FRESH-ID menggunakan mikrokontroler berbasis ESP32 untuk mengirimkan data sensor ke platform web. Standar \textit{IEEE 802.11} memastikan perangkat dapat terhubung secara stabil ke jaringan WiFi serta kompatibel dengan infrastruktur jaringan yang umum digunakan. Kepatuhan terhadap standar ini menjamin proses pengiriman data gas (VOC), suhu, dan kelembapan dapat dilakukan secara konsisten tanpa gangguan \cite{IEEE80211}.
+    \item \textbf{\text{ISO 22000} (Food Safety Management Framework):} Meskipun FRESH-ID merupakan prototipe sistem monitoring, prinsip-prinsip \textit{ISO 22000} yang mencakup pengendalian bahaya, pemantauan kritis, dan dokumentasi kualitas relevan sebagai dasar proses perancangan. Standar ini membantu menyelaraskan FRESH-ID sebagai alat pendukung keamanan pangan, terutama dalam konteks deteksi parameter biologis seperti gas pembusukan yang dapat memengaruhi keamanan produk \cite{ISO22000}.
+    \item \textbf{\text{IEEE 1451} (Transducer Interface Standards):} FRESH-ID menggunakan larik sensor gas MOS (TGS2602, TGS2611) serta sensor lingkungan (DHT22). \textit{IEEE 1451} menetapkan pedoman mengenai antarmuka sensor, struktur metadata sensor, kalibrasi, dan format pertukaran data. Relevansi standar ini terletak pada kemampuannya mendukung modularitas, kemudahan integrasi sensor baru, dan konsistensi pengolahan sinyal untuk sistem berbasis multi-sensor seperti FRESH-ID \cite{IEEE1451}.
+    \item \textbf{\text{ISO 25010} (Software Quality Requirements and Evaluation):} Dashboard FRESH-ID sebagai komponen perangkat lunak mengikuti prinsip kualitas berdasarkan \textit{ISO/IEC 25010}, termasuk aspek \textit{reliability}, \textit{performance efficiency}, \textit{usability}, dan \textit{security}. Penerapan konsep ini membantu memastikan dashboard dapat menampilkan data pembusukan secara stabil, mudah dipahami oleh operator, serta aman dari risiko kesalahan dan gangguan \cite{ISO25010}.
+    \item \textbf{MQTT (Message Queuing Telemetry Transport):}
+    MQTT adalah protokol komunikasi ringan pada sistem \textit{IoT} yang dirancang untuk pengiriman data secara cepat dan efisien. Protokol ini mendukung mekanisme \textit{publish--subscribe} sehingga cocok untuk pemantauan banyak sensor dalam satu jaringan. MQTT relevan bagi FRESH-ID sebagai dasar pengembangan sistem yang lebih skalabel di masa depan \cite{MQTT}.
+
+\end{enumerate}
+
+\subsection{Regulasi}
+Regulasi dan ketentuan hukum yang berlaku menjadi acuan utama dalam implementasi FRESH-ID untuk menjamin keselamatan dan kesehatan kerja, kualitas udara, serta penggunaan perangkat telekomunikasi di Indonesia sehingga sistem yang dikembangkan aman, legal, dan sesuai dengan standar lingkungan serta operasional yang berlaku.
+\begin{enumerate}
+    \item \textbf{\text{Undang-Undang Nomor 18 Tahun 2012}:}
+    Undang-undang ini mengatur prinsip keamanan dan mutu pangan mulai dari proses penyimpanan, distribusi, hingga pengawasan kualitasnya. Ketentuan tersebut relevan dengan FRESH-ID karena sistem ini digunakan untuk mendeteksi perubahan kualitas udara dan tanda pembusukan pada bahan pangan. Dengan memanfaatkan sensor gas dan pemantauan kondisi lingkungan, FRESH-ID mendukung pemenuhan standar keamanan pangan yang diwajibkan dalam undang-undang ini, khususnya dalam konteks pengendalian mutu pangan selama penyimpanan \cite{UUPangan2012}.
+
+    \item \textbf{\text{PP Nomor 50 Tahun 2012}:}
+    Peraturan ini menjelaskan penerapan Sistem Manajemen Keselamatan dan Kesehatan Kerja (SMK3) di lingkungan kerja, termasuk penggunaan peralatan elektrik, sensor, serta perangkat pemantauan. Keterkaitannya dengan FRESH-ID terletak pada kewajiban memastikan bahwa perangkat dipasang dan digunakan tanpa menimbulkan risiko terhadap pekerja maupun lingkungan penyimpanan. Selain itu, FRESH-ID dapat menjadi alat pendukung penerapan SMK3 karena mampu memberikan informasi dini mengenai potensi bahaya terkait kualitas udara \cite{PP50Tahun2012}.
+
+    \item \textbf{\text{Permenkominfo Nomor 3 Tahun 2024}:}
+    Peraturan ini menetapkan kewajiban sertifikasi bagi perangkat yang menggunakan teknologi radio atau komunikasi nirkabel. FRESH-ID memanfaatkan modul komunikasi untuk mengirimkan data kondisi udara atau pembusukan secara real-time, sehingga perangkatnya termasuk kategori alat telekomunikasi yang wajib memenuhi persyaratan teknis tertentu. Kepatuhan terhadap regulasi ini memastikan bahwa FRESH-ID legal digunakan serta tidak mengganggu perangkat lain melalui emisi radio yang tidak sesuai standar \cite{PermenKominfo3Tahun2024}.
+
+    \item \textbf{\text{Permenkominfo Nomor 5 Tahun 2024}:}
+    Regulasi ini mengatur tentang balai uji resmi yang berwenang melakukan pengujian perangkat telekomunikasi. Hubungannya dengan FRESH-ID terletak pada proses validasi perangkat sebelum digunakan atau diproduksi secara massal. Dengan mengikuti ketentuan ini, perangkat FRESH-ID dapat dipastikan telah melalui proses pengujian yang memenuhi standar teknis nasional, sehingga keandalan komunikasi datanya lebih terjamin \cite{PermenKominfo5Tahun2024}.
+
+    \item \textbf{Standar Operasi Keselamatan (SOP) K3 Laboratorium ITERA:} Seluruh kegiatan perancangan, pengambilan data, dan pengujian FRESH-ID wajib mengikuti SOP laboratorium ITERA, termasuk tata cara penanganan bahan pangan uji, prosedur penyimpanan sampel, dan langkah mitigasi terhadap gas yang berpotensi mengiritasi. Kepatuhan terhadap SOP ini memastikan keselamatan selama proses eksperimen dan pengembangan prototipe \cite{POSK3LabFTIITERA2025}.
+\end{enumerate}
+
+\section{Referensi}
+
+\renewcommand{\refname}{}      % Hapus judul default "Pustaka"
+\bibliographystyle{IEEEtran} % Menggunakan style sitasi IEEE
+\bibliography{pustaka}    % Memanggil file pustaka.bib
+
+
+
+
+
+\section{Singkatan}
+
+% longtable tidak menggunakan lingkungan table[] di sekitarnya.
+% Perintah \begin{longtable} langsung menggantikan \begin{table}\begin{tabular}
+\begin{longtable}{|p{4cm}|p{11cm}|} % Lebar kolom ditetapkan agar teks wrap
+    \caption{Daftar Singkatan} \label{tab:abbreviations2} \\
+    \hline
+    \textbf{Singkatan} & \textbf{Definisi} \\
+    \hline
+    \endhead % Mengakhiri baris header yang akan diulang di setiap halaman
+    
+    \hline 
+    \multicolumn{2}{|r|}{Lanjutan di halaman berikutnya...} \\ 
+    \endfoot % Footer untuk semua halaman kecuali yang terakhir
+    
+    \hline
+    \endlastfoot % Footer untuk halaman terakhir (kosong)
+
+    % --- Isi Tabel ---
+IoT & Internet of Things \\
+\hline
+VOC & Volatile Organic Compounds \\
+\hline
+Wi-Fi & Wireless Fidelity Standar komunikasi IEEE 802.11 \\
+\hline
+MQTT & Message Queuing Telemetry Transport \\
+\hline
+K3 & Keselamatan dan Kesehatan Kerja \\
+\hline
+SMK3 & Sistem Manajemen Keselamatan dan Kesehatan Kerja \\
+\hline
+SNI & Standar Nasional Indonesia \\
+\hline
+ISO & International Organization for Standardization \\
+\hline
+IEEE & Institute of Electrical and Electronics Engineers \\
+\hline
+UU & Undang-Undang \\
+\hline
+PP & Peraturan Pemerintah \\
+\hline
+SOP & Standar Operasional Prosedur \\
+\hline
+
+    
+    % Tambahkan lebih banyak baris di sini untuk memicu pemisahan halaman
+    % ... (Tambahkan entri lain jika tabel perlu memanjang)
+
+\end{longtable}
+
+% Tambahkan \newpage jika Anda ingin halaman isi dimulai di halaman berikutnya
+% \newpage
+% \section*{Pendahuluan}
+% Di sinilah konten proposal Anda akan dimulai...
+
+\end{document}

@@ -1,0 +1,360 @@
+\documentclass{elsinta}
+
+
+% --- Memasukkan Data Dokumen Menggunakan ---
+\projectcode{EL1}
+\documentname{\ProjectProposalTitle} 
+\documenttitle{Teknik Elektro - Sistem Informasi Tugas Akhir}
+\capstonetitle{Real-Time Spoilage Fingerprint Sensor for Packaged Foods}
+\shortname{FRESH-ID} 
+\documentnumber{TA2526.01.099}
+\revisionnumber{01}
+\publicationdate{15 Desember 2025}
+
+\revdatefooter{15/12/2025}
+% --- Memasukkan Data Halaman Pengesahan (Halaman 2) ---
+\currentpage{2} % Halaman yang sedang dicetak
+
+% Data Tim
+\ketuatimnama{Muhammad Bintang Pamungkas }
+\ketuatimnim{122130009}
+
+\anggotanamaI{Puja Andesta}
+\anggotanimI{122130043}
+
+\anggotanamaII{Daffa Zakky Kurniawan}
+\anggotanimII{122130044}
+
+
+% Data Dosen
+\pembimbingInama{Dean Corio, S.T, M.T.}
+\pembimbingInip{19860622 201504 1 003}
+
+\pembimbingIInama{Afit Miranto, S.T, M.T.}
+\pembimbingIInip{19910512 202203 1 007}
+
+
+% Tanggal Pengesahan
+\approvaldate{15 Desember 2025}
+
+\begin{document}
+
+% Panggil perintah untuk membuat halaman sampul
+\coverpage
+% Pindah ke Halaman Baru
+\newpage
+
+% Membuat Halaman Pengesahan (Halaman 2)
+\approvalpage
+
+% Lanjut ke halaman proposal
+\newpage
+
+% ======================================
+% Bagian Konten Proposal Dimulai di Sini
+% ======================================
+
+% Mengatur ulang nomor halaman dan gaya halaman
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1} 
+\pagestyle{myfooter} % Ganti dari 'plain' ke 'myfooter'
+
+% Atur margin standar (Opsional, jika Anda ingin margin isi berbeda dari sampul)
+% \newgeometry{left=4cm, right=3cm, top=3cm, bottom=3cm} 
+% Catatan: Perintah \newgeometry memerlukan paket 'geometry' yang sudah ada di cls.
+
+\cleardoublepage % Memastikan Daftar Isi dimulai di halaman kanan (jika menggunakan two-side)
+\phantomsection % Penting untuk hyperref agar link Daftar Isi menunjuk ke halaman yang benar
+
+\tableofcontents
+\newpage
+\section*{Ringkasan Dokumen}
+
+Dokumen EL1 (Project Proposal) ini memaparkan latar belakang, tujuan, ruang lingkup, dan urgensi pengembangan FRESH-ID, yaitu prototipe sistem sensor cerdas berbasis \textit{Internet of Things} (IoT) untuk deteksi dini penurunan mutu bahan pangan. Latar belakang disusun berdasarkan tingginya risiko penurunan mutu dan kejadian keracunan makanan pada distribusi pangan skala besar, khususnya pada program Makanan Bergizi Gratis (MBG), yang hingga kini masih banyak mengandalkan pemeriksaan inderawi sehingga berpotensi terlambat mendeteksi pembusukan pada tahap awal. Dokumen ini menjelaskan tujuan utama pengembangan sistem sebagai mekanisme \textit{screening} awal yang objektif dan cepat melalui pemantauan gas indikator pembusukan (NH$_3$, H$_2$S, dan CH$_4$) serta suhu, yang diintegrasikan dengan mikrokontroler ESP32 dan disajikan melalui indikator pada unit fisik serta dashboard web secara \textit{real-time}. Selain itu, ruang lingkup dan batasan proyek dijabarkan untuk menegaskan posisi FRESH-ID sebagai prototipe pembuktian konsep, disertai analisis kebutuhan pengguna, proposisi nilai, dan pemangku kepentingan sebagai dasar perancangan dan pengembangan pada tahap selanjutnya.
+
+
+\newpage
+\section{Latar Belakang}
+\subsection{Kebutuhan}
+
+Keamanan pangan merupakan isu strategis yang sangat memengaruhi kesehatan masyarakat serta kepercayaan publik terhadap sistem distribusi makanan nasional. Dalam konteks penyediaan konsumsi bagi kelompok rentan seperti anak sekolah, kualitas makanan tidak hanya menentukan kecukupan gizi, tetapi juga menjadi faktor penting dalam menciptakan lingkungan belajar yang sehat dan produktif. Perhatian terhadap keamanan dan kualitas makanan semakin menguat seiring dimulainya implementasi program pemerintah seperti Makanan Bergizi Gratis (MBG) pada 2024 yang bertujuan memperbaiki status gizi anak sekolah di seluruh Indonesia, khususnya pada wilayah dengan tingkat ketahanan pangan yang masih rendah \cite{Setneg2024MBGSDMUnggul}. Namun, di balik tujuan tersebut, muncul berbagai insiden keracunan massal yang menimpa pelajar akibat makanan yang diduga terkontaminasi atau mengalami penurunan mutu sebelum dikonsumsi. Menurut BBC Indonesia (2025) yang merujuk pada data Kementerian Kesehatan RI, lebih dari 11.000 siswa dilaporkan mengalami keracunan makanan sejak awal tahun 2025, termasuk kejadian di SMAN 1 Yogyakarta yang menyebabkan lebih dari 426 siswa mengalami gangguan pencernaan \cite{bbc2025}. Contoh kasus ini menegaskan bahwa perluasan program pangan skala besar harus diikuti sistem pengendalian mutu yang lebih kuat, karena kegagalan pengawasan pada satu titik distribusi dapat berdampak luas dan cepat pada kelompok penerima manfaat. \vspace{1\baselineskip} %
+
+Kondisi tersebut menunjukkan bahwa tantangan utama dalam program distribusi makanan skala besar bukan hanya pada penyediaan menu bergizi, melainkan pada kemampuan menjaga mutu dan keamanan makanan secara konsisten hingga titik konsumsi. Celah pengawasan umumnya terjadi pada tahap distribusi dan penyimpanan, ketika makanan melewati rentang waktu tunggu, berada dalam wadah tertutup, serta mengalami fluktuasi suhu selama transportasi \cite{AungChang2014TemperatureManagement}. Pada fase ini, penilaian mutu di lapangan masih sering bergantung pada pemeriksaan sesaat dan indikator inderawi seperti bau, warna, dan tekstur, padahal pembusukan dapat berkembang pada tahap awal tanpa perubahan visual yang jelas \cite{Xuan2022VolatileSpoilageIndexesSalmon}. Akibatnya, sistem kontrol yang bersifat reaktif berisiko terlambat makanan dapat terlanjur didistribusikan sebelum penurunan mutu terdeteksi. Oleh karena itu, diperlukan pendekatan deteksi dini yang tidak hanya mengandalkan inspeksi inderawi, tetapi memantau indikator objektif yang dapat muncul lebih awal, seperti perubahan parameter gas hasil dekomposisi dan suhu penyimpanan.\vspace{1\baselineskip} %
+
+Pada tahap awal pembusukan, penurunan mutu makanan umumnya dipicu oleh aktivitas mikrobiologis yang memecah komponen organik pangan dan menghasilkan produk samping berupa senyawa volatil serta gas \cite{Deng2025MVOCsFoodQualitySafety}. Proses ini cenderung meningkat ketika makanan berada pada suhu penyimpanan yang tidak ideal, karena suhu memengaruhi laju pertumbuhan mikroorganisme sekaligus mempercepat reaksi degradasi kimia \cite{DeSilvestri2018TemperatureDependentGrowth}. Selain itu, karakteristik gas yang terbentuk dapat berbeda bergantung pada jenis bahan pangan dan kondisi penyimpanan, sehingga pemantauan lebih dari satu indikator diperlukan untuk mengurangi risiko salah interpretasi. Pada pangan kaya protein yang banyak dijumpai pada menu konsumsi sekolah, dekomposisi dapat memunculkan gas indikator seperti amonia (NH$_3$) dan hidrogen sulfida (H$_2$S) \cite{Preethichandra2023NH3H2SFoodSpoilageSensors}. Sedangkan pada kondisi penyimpanan tertutup yang mengarah ke lingkungan rendah oksigen dapat terbentuk gas seperti metana (CH$_4$) sebagai produk aktivitas mikroba tertentu \cite{Wang2022FoodWasteAnaerobicDigestionReview}. Gas-gas tersebut berpotensi muncul sebelum perubahan visual yang mudah dikenali, sehingga pemantauan konsentrasi gas yang dikombinasikan dengan suhu dapat digunakan untuk membangun pola penurunan mutu sebagai dasar deteksi dini selama penyimpanan dan distribusi.\vspace{1\baselineskip} %
+
+Berdasarkan kebutuhan tersebut, tugas akhir ini mengembangkan FRESH-ID, yaitu sistem sensor cerdas untuk deteksi dini pembusukan makanan berbasis pemantauan gas dan suhu. Sistem ini dirancang untuk mengukur perubahan konsentrasi gas indikator NH$_3$, H$_2$S, dan CH$_4$ serta memantau suhu penyimpanan sebagai parameter pendukung yang memengaruhi laju pembusukan. Data yang diperoleh dari sensor kemudian diproses untuk membentuk informasi kondisi mutu makanan, selanjutnya dikirimkan secara \textit{real-time} melalui konektivitas Internet of Things (IoT). Informasi tersebut ditampilkan pada \textit{dashboard} website dalam bentuk tabel, grafik tren, dan indikator status, sehingga pengguna dapat memantau kondisi selama distribusi dan penyimpanan serta mengambil tindakan korektif lebih cepat sebelum makanan didistribusikan atau dikonsumsi. \vspace{1\baselineskip} %
+
+\renewcommand{\figurename}{Gambar}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\linewidth]{image/doc/5 why fix.png}
+  \caption{5 Why Proyek FRESH-ID}
+  \label{fig:why5}
+\end{figure}
+
+Untuk menelusuri akar permasalahan secara sistematis, penelitian ini menggunakan pendekatan \textit{5 Why} guna mengurai hubungan sebab-akibat mengapa keracunan/penurunan mutu makanan pada distribusi sekolah sulit dicegah. Hasil analisis \textit{5 Why} pada \textbf{Gambar EL1.1} menunjukkan bahwa masalah inti bukan semata pada ketersediaan makanan, melainkan pada pembusukan atau kontaminasi yang tidak terdeteksi sejak tahap awal karena praktik pemeriksaan mutu masih dominan bersifat inderawi dan tidak dilakukan secara kontinu. Rantai penyebab tersebut mengarah pada kebutuhan sistem pemantauan lapangan yang objektif dan mudah dioperasikan, dengan pemantauan parameter pembusukan yang terintegrasi (gas indikator dan suhu) serta pengiriman data secara \textit{real-time} untuk mendukung peringatan dini dan tindakan korektif sebelum makanan didistribusikan atau dikonsumsi.
+
+\subsection{Kondisi Eksisting}
+
+Pada kondisi eksisting, evaluasi mutu bahan pangan pada rantai pasok umumnya dilakukan melalui inspeksi fisik dan parameter dasar seperti kondisi kemasan serta pemeriksaan organoleptik (bau, warna, tekstur), sedangkan sistem pemantauan berbasis sensor belum menjadi praktik yang merata di lapangan \cite{Biji2015SmartPackagingReview}. Keterbatasan pendekatan organoleptik adalah indikasi pembusukan pada tahap awal dapat belum terlihat jelas, sementara pembusukan pada pangan mudah rusak sering disertai pelepasan senyawa volatil dan gas yang berpotensi terdeteksi lebih dini dibanding perubahan visual \cite{Wang2022FoodWasteAnaerobicDigestionReview}. \vspace{1\baselineskip} %
+
+Berbagai solusi teknologi telah dikembangkan untuk memantau kesegaran, antara lain \textit{intelligent freshness indicator} dan \textit{smart packaging}, termasuk pemanfaatan indikator yang merespons volatil hasil pembusukan \cite{Biji2015SmartPackagingReview}. Selain itu, pendekatan \textit{electronic nose} yang dipadukan dengan sensor lingkungan dan konektivitas IoT juga banyak diteliti untuk memantau kualitas daging melalui pengukuran senyawa volatil serta pengaruh suhu penyimpanan \cite{Damdam2023IoTEnoseBeef}. Meskipun demikian, sebagian pendekatan tersebut lebih berorientasi pada pemantauan dalam kemasan atau skenario penyimpanan tertentu, serta dapat menuntut konfigurasi, kalibrasi, atau integrasi sistem yang tidak selalu sederhana ketika diterapkan sebagai pemeriksaan cepat di titik penerimaan bahan baku \cite{Shao2021FreshnessIndicatorPackaging}. \vspace{1\baselineskip} %
+
+Dalam konteks operasional dapur program MBG, pemeriksaan bahan baku sebelum diolah menuntut metode \textit{screening} yang objektif, cepat, dan mudah dipahami, khususnya untuk komoditas berisiko tinggi seperti daging ayam, daging sapi, ikan, dan susu pasteurisasi. Di sisi lain, suhu penyimpanan berperan penting terhadap laju penurunan mutu, sehingga pemantauan suhu menjadi parameter pelengkap yang krusial ketika menginterpretasikan sinyal pembusukan berbasis gas. Oleh karena itu, masih terdapat gap antara kebutuhan pemeriksaan penerimaan bahan baku yang praktis dan terukur dengan kondisi eksisting yang belum mengintegrasikan pemantauan gas indikator dan parameter suhu secara terintegrasi serta terdokumentasi. Gap ini menjadi dasar pengembangan FRESH-ID sebagai sistem pemantauan terintegrasi gas suhu dengan keluaran yang ringkas melalui indikator pada unit fisik dan \textit{dashboard} IoT untuk mendukung keputusan penerimaan bahan baku secara lebih konsisten.
+
+\subsection{Urgensi Proyek}
+
+Proyek FRESH-ID dikembangkan sebagai upaya awal untuk menjawab kebutuhan deteksi dini penurunan mutu bahan pangan pada skema distribusi makanan. Sistem ini dirancang dengan orientasi penerapan pada program MBG, khususnya di dapur, agar bahan baku dapat diperiksa terlebih dahulu sebelum diolah. Namun, penerapan sistem monitoring baru pada program skala nasional tidaklah sederhana karena harus selaras dengan prosedur operasional, standar keamanan pangan, alur pengambilan keputusan, serta aspek akuntabilitas antar pemangku kepentingan. Oleh karena itu, FRESH-ID pada tahap ini diposisikan sebagai solusi prototipe yang menargetkan pembuktian konsep, yaitu menunjukkan bahwa indikator gas dan suhu dapat diukur secara praktis di lapangan dan diubah menjadi informasi status yang mudah digunakan.
+\vspace{1\baselineskip} %
+
+Urgensi proyek ini muncul karena celah pengawasan mutu sering terjadi sebelum proses pengolahan dimulai, terutama pada komoditas berisiko tinggi seperti daging ayam, daging sapi, ikan, dan susu pasteurisasi. Komoditas tersebut dapat mengalami penurunan mutu tanpa tanda visual yang jelas pada tahap awal, sementara keputusan penerimaan bahan baku di dapur membutuhkan metode yang cepat dan objektif. Jika tidak ada mekanisme pemeriksaan yang terukur, bahan baku yang telah menurun mutunya berpotensi tetap masuk ke proses produksi, sehingga risiko gangguan kesehatan sulit dicegah sejak hulu.
+\vspace{1\baselineskip} %
+
+FRESH-ID menyediakan pemantauan melalui indikator LED dan LCD pada unit fisik serta \textit{dashboard} web berbasis IoT, dengan ambang batas konsentrasi tiap gas untuk mengelompokkan sampel ke kategori \textit{segar}, \textit{kurang segar}, dan \textit{busuk}. Akses \textit{dashboard} dibatasi untuk administrator (misalnya admin BGN) guna menjaga akuntabilitas data, sedangkan pihak dapur menerima hasil status sebagai dasar tindakan operasional. Pendekatan ini ditujukan untuk memudahkan proses adopsi bertahap, karena dapur tidak dibebani interpretasi data mentah, tetapi memperoleh keluaran yang ringkas untuk keputusan cepat. Dengan demikian, urgensi FRESH-ID bukan hanya pada aspek pencegahan risiko, tetapi juga pada kebutuhan menghadirkan solusi yang realistis untuk diintegrasikan secara bertahap melalui uji coba terbatas, evaluasi kinerja, dan penyempurnaan SOP sebelum diarahkan pada penerapan yang lebih luas apabila terbukti efektif dan andal.
+
+\section{Tujuan}
+\subsection{Tujuan Utama}
+
+Tujuan utama dari proyek ini adalah mengembangkan prototipe sistem sensor cerdas FRESH-ID berbasis \textit{Internet of Things} (IoT) untuk deteksi dini penurunan mutu bahan pangan sebelum diolah di dapur program Makanan Bergizi Gratis (MBG). Sistem ini ditujukan sebagai mekanisme \textit{screening} awal yang objektif dan cepat melalui pemantauan gas indikator pembusukan dan suhu, serta penyajian informasi yang ringkas agar dapat mendukung pengambilan keputusan penerimaan bahan baku secara lebih konsisten. Secara khusus, tujuan proyek ini meliputi:
+\begin{enumerate}
+\item Merancang dan membangun prototipe sistem monitoring berbasis IoT yang mampu mendeteksi dini tanda penurunan mutu bahan pangan melalui pengukuran parameter gas dan suhu secara otomatis, khususnya pada daging ayam, daging sapi, ikan, dan susu pasteurisasi.
+\item Mengimplementasikan pemantauan gas indikator pembusukan berupa amonia (NH$_3$), hidrogen sulfida (H$_2$S), dan metana (CH$_4$), serta memantau suhu dan kelembapan sebagai parameter lingkungan yang memengaruhi laju pembusukan.
+\item Mengintegrasikan perangkat keras sistem yang terdiri dari sensor gas TGS2602 dan TGS2611, sensor DHT22 untuk suhu dan kelembapan, serta mikrokontroler ESP32 sebagai unit pemroses dan komunikasi data.
+\item Menyusun mekanisme klasifikasi kondisi bahan pangan ke dalam kategori \textit{segar}, \textit{kurang segar}, dan \textit{busuk} berdasarkan ambang batas parameter yang ditetapkan dari hasil pengujian sampel.
+\item Menyediakan keluaran informasi yang mudah digunakan melalui indikator LED dan LCD pada unit fisik, serta \textit{dashboard} berbasis web untuk pemantauan dan pencatatan data secara \textit{real-time}.
+\item Menerapkan pengaturan akses sistem dengan membatasi akses \textit{dashboard} hanya untuk administrator (misalnya admin BGN) guna menjaga akuntabilitas, sementara pihak dapur menerima hasil status kelayakan sebagai dasar tindakan operasional.
+\item Proses perancangan, integrasi, dan pengujian sistem direncanakan berlangsung selamasatu semester capstone project.
+\end{enumerate}
+
+\subsection{Tujuan Tambahan}
+Tujuan tambahan dari proyek FRESH-ID adalah memperkuat aspek teknis dan fungsional sistem agar mampu beroperasi secara andal sebagai alat \textit{screening} bahan baku di dapur program MBG sebelum proses pengolahan. Tujuan tambahan ini difokuskan pada peningkatan stabilitas pengukuran, keandalan integrasi perangkat, efisiensi operasional, serta kesiapan sistem untuk digunakan pada skenario lapangan yang dinamis. Secara khusus, tujuan tambahan yang akan dicapai meliputi:
+
+\begin{enumerate}
+\item Melakukan kalibrasi dan uji kestabilan sensor gas TGS2602 dan TGS2611 serta sensor suhu dan kelembapan DHT22 untuk meminimalkan \textit{drift}, meningkatkan konsistensi pembacaan, dan memperoleh data yang lebih stabil pada komoditas target: daging ayam, daging sapi, ikan, dan susu pasteurisasi.
+
+\item Menyusun prosedur pengambilan data dan penetapan ambang batas parameter untuk mendukung klasifikasi kondisi bahan pangan ke dalam kategori \textit{segar}, \textit{kurang segar}, dan \textit{busuk} secara lebih terukur dan konsisten.
+
+\item Mengembangkan mekanisme pencatatan data atau \textit{data logging} dan visualisasi pada \textit{dashboard} web berbasis IoT untuk menampilkan nilai sensor, tren perubahan, dan status kategori secara \textit{real-time} sebagai dukungan pengambilan keputusan.
+
+\item Menerapkan pengaturan akses dan alur informasi sehingga hanya administrator yang dapat mengakses \textit{dashboard}, sedangkan pihak dapur menerima keluaran hasil atau status untuk tindakan operasional guna menjaga akuntabilitas dan konsistensi interpretasi.
+
+\item Mengoptimalkan aspek operasional perangkat seperti interval pembacaan, interval pengiriman data, dan manajemen konektivitas agar sistem dapat berjalan efisien dan stabil saat digunakan dalam durasi pemantauan yang diperlukan di dapur.
+
+\item Melakukan pengujian fungsional sistem yang mencakup perangkat keras, komunikasi, dan tampilan antarmuka pada skenario simulasi penyimpanan atau penanganan bahan baku untuk mengevaluasi keandalan, sensitivitas respons terhadap perubahan kondisi, serta konsistensi keluaran status.
+\end{enumerate}
+
+\subsection{Hasil yang Diharapkan}
+
+Luaran yang diharapkan dari proyek FRESH-ID meliputi:
+\begin{enumerate}
+\item Prototipe perangkat FRESH-ID berbasis mikrokontroler ESP32 yang terintegrasi dengan sensor gas TGS2602 dan TGS2611 serta sensor suhu-kelembapan DHT22, dilengkapi indikator LED dan LCD untuk menampilkan status hasil pemeriksaan bahan baku sebelum diolah di dapur program MBG.
+\item Sistem perangkat lunak berbasis \textit{Internet of Things} (IoT) yang mampu mengirim, menyimpan, dan menampilkan data hasil pembacaan sensor secara \textit{real-time} melalui \textit{dashboard} web, dengan pengaturan akses terbatas untuk administrator (misalnya admin BGN).
+\item Mekanisme penentuan ambang batas dan pengelompokan kondisi bahan pangan ke dalam kategori \textit{segar}, \textit{kurang segar}, dan \textit{busuk} berdasarkan parameter gas indikator (NH$_3$, H$_2$S, CH$_4$) serta parameter suhu/kelembapan sebagai konteks lingkungan pengukuran.
+\item Dataset hasil pengujian sistem terhadap komoditas target (daging ayam, daging sapi, ikan, dan susu pasteurisasi), yang mencakup data gas (NH$_3$, H$_2$S, CH$_4$), suhu, dan kelembapan pada beberapa skenario kondisi penyimpanan/penanganan, untuk kebutuhan analisis performa, kalibrasi, dan validasi.
+\item Laporan teknis lengkap yang memuat rancangan perangkat keras dan perangkat lunak, diagram blok/arsitektur sistem, alur kerja pemantauan, metode pengujian, hasil analisis data, serta evaluasi kinerja sistem (misalnya stabilitas pembacaan, respons terhadap perubahan kondisi, dan konsistensi klasifikasi status).
+\item Dokumentasi teknis berupa foto dan video demonstrasi sistem, yang menunjukkan alur kerja FRESH-ID mulai dari proses pengukuran di unit fisik hingga visualisasi dan pencatatan data pada \textit{dashboard} web.
+\end{enumerate}
+
+\section{Ruang Lingkup dan Batasan}
+\subsection{Ruang Lingkup}
+
+Cakupan proyek FRESH-ID pada capstone ini meliputi:
+\begin{enumerate}
+\item Sistem difokuskan untuk \textit{screening} awal bahan baku sebelum diolah di dapur program Makanan Bergizi Gratis (MBG) melalui pemantauan parameter gas indikator pembusukan dan suhu.
+\item Objek uji dibatasi pada komoditas berisiko tinggi dan umum digunakan, yaitu daging ayam, daging sapi, ikan, dan susu pasteurisasi.
+\item Perangkat yang dikembangkan mencakup integrasi sensor gas TGS2602 dan TGS2611, sensor suhu dan kelembapan DHT22, serta mikrokontroler ESP32 sebagai unit pemrosesan dan komunikasi data.
+\item Sistem menampilkan hasil pemantauan pada unit fisik melalui indikator LED dan LCD, serta mengirimkan data ke platform IoT untuk pemantauan dan pencatatan secara \textit{real-time}.
+\item \textit{Dashboard} berbasis web dikembangkan untuk menampilkan data sensor (nilai numerik dan tren) serta status kategori \textit{segar}, \textit{kurang segar}, dan \textit{busuk} berdasarkan ambang batas yang ditetapkan dari hasil pengujian sampel.
+\item Akses \textit{dashboard} dibatasi hanya untuk administrator (misalnya admin BGN) sebagai bentuk pengendalian dan akuntabilitas data, sedangkan pihak dapur menerima keluaran hasil/status sebagai dasar tindakan operasional.
+\item Pengujian dilakukan dalam skenario simulasi penanganan/penyimpanan bahan baku dalam skala kecil untuk memperoleh data performa, kalibrasi, dan validasi awal sistem, termasuk evaluasi konsistensi pembacaan sensor dan konsistensi klasifikasi status.
+\end{enumerate}
+
+\subsection{Batasan}
+
+Proyek FRESH-ID dilaksanakan dengan batasan-batasan sebagai berikut:
+\begin{enumerate}
+\item Waktu pelaksanaan proyek dibatasi dalam kurun waktu dua semester akademik yang mencakup tahap perancangan, integrasi perangkat keras dan perangkat lunak, kalibrasi sensor, pengujian sistem, serta penyusunan laporan akhir.
+\item Pengujian sistem dibatasi pada komoditas daging ayam, daging sapi, ikan, dan susu pasteurisasi, dengan parameter utama berupa perubahan pembacaan gas indikator NH$_3$, H$_2$S, dan CH$_4$, serta suhu dan kelembapan.
+\item Lingkungan pengujian dibatasi pada skenario simulasi penanganan dan penyimpanan bahan baku dalam skala kecil dengan kondisi yang relatif terkontrol untuk memperoleh data yang konsisten. Variasi kondisi lapangan seperti fluktuasi suhu ekstrem saat distribusi, getaran kendaraan, dan variasi wadah atau kemasan belum menjadi fokus pengujian utama.
+\item Perangkat sensor yang digunakan dibatasi pada TGS2602, TGS2611, dan DHT22, sehingga sistem hanya memantau parameter gas indikator serta suhu--kelembapan. Analisis mikrobiologis dan uji kimia lanjutan di laboratorium tidak menjadi fokus pada tahap ini.
+\item Sistem berfokus pada fungsi monitoring dan klasifikasi status segar, kurang segar, dan busuk berdasarkan ambang batas yang ditetapkan dari pengujian. Proyek ini tidak mencakup pengendalian otomatis seperti pendingin atau pengatur kelembapan.
+\item Ambang batas dan hasil klasifikasi yang diperoleh dibatasi pada skenario uji yang dilakukan, sehingga tidak diklaim sebagai standar universal untuk seluruh jenis pangan, seluruh variasi bahan, maupun seluruh kondisi penyimpanan dan distribusi.
+\item Integrasi langsung dengan sistem logistik, basis data pemerintah, atau prosedur operasional resmi MBG tidak termasuk dalam cakupan proyek ini. Implementasi pada dapur MBG diposisikan sebagai target lanjutan setelah prototipe dan validasi awal.
+\item Akses \textit{dashboard} dibatasi untuk administrator, sedangkan pihak dapur menerima hasil atau status. Pengelolaan akun skala besar dan penguatan keamanan siber tingkat lanjut belum menjadi fokus pada tahap ini.
+\item Dashboard web FRESH-ID dirancang untuk beroperasi pada satu lingkungan jaringan Wi-Fi lokal sehingga hanya dapat melayani pemantauan dalam satu wilayah atau server yang sama. Oleh karena itu, unit FRESH-ID yang berada di wilayah berbeda dengan infrastruktur jaringan tersendiri tidak dapat diintegrasikan secara langsung ke dalam satu dashboard terpusat yang sama.
+\end{enumerate}
+
+\section{Analisis Bisnis}
+
+\subsection{Analisis Kebutuhan Pasar / Pengguna Sasaran}
+
+\textbf{Target Pasar Utama}
+
+\begin{enumerate}
+\item \textbf{Badan Gizi Nasional:} Sebagai pengguna utama, FRESH-ID ditujukan untuk membantu administrator BGN memantau dan mendokumentasikan hasil \textit{screening} bahan baku di dapur MBG sebelum diolah. Sistem menyediakan data sensor dan status kategori kesegaran sebagai dasar pengawasan yang lebih objektif dan konsisten, sekaligus meningkatkan akuntabilitas melalui pencatatan data.
+
+\item \textbf{Instansi Pemerintah terkait Keamanan Pangan, seperti Kementerian Kesehatan dan BPOM:} FRESH-ID dapat berperan sebagai alat bantu pengawasan mutu berbasis data dengan menyediakan hasil pemantauan parameter gas indikator dan suhu, sehingga mendukung kegiatan pemantauan lapangan, penelusuran informasi saat terjadi insiden, serta penyusunan laporan pengawasan.
+
+\item \textbf{Laboratorium dan Institusi Penelitian:} FRESH-ID dapat dimanfaatkan sebagai perangkat bantu eksperimen untuk pengamatan degradasi bahan pangan dan evaluasi kesegaran berbasis sensor, terutama untuk studi yang membutuhkan pencatatan data kontinu, pengujian beberapa kondisi penyimpanan, atau pengembangan metode klasifikasi kesegaran.
+\end{enumerate}
+
+\textbf{Kebutuhan Pasar yang Belum Terpenuhi}
+
+\begin{enumerate}
+\item Dibutuhkan mekanisme \textit{screening} bahan baku yang lebih objektif dan cepat di dapur produksi, terutama untuk komoditas yang mudah rusak seperti daging ayam, daging sapi, ikan, dan susu pasteurisasi. Selama ini, pemeriksaan sering mengandalkan pengamatan inderawi sehingga hasilnya bisa berbeda antar petugas dan kondisi kerja.
+
+\item Dibutuhkan sistem pemantauan terintegrasi berbasis sensor yang tidak berhenti pada tampilan angka, tetapi langsung memberi informasi status yang mudah dipahami. Contohnya, pengelompokan bahan baku ke kategori \textit{segar}, \textit{kurang segar}, dan \textit{busuk} berdasarkan ambang batas hasil pengujian.
+
+\item Dibutuhkan pencatatan dan visualisasi data yang jelas melalui \textit{dashboard} web agar tren perubahan bisa dipantau dan riwayat pemeriksaan per batch tersimpan rapi. Pembatasan akses \textit{dashboard} untuk administrator juga penting supaya data dan keputusan tetap terkontrol serta dapat dipertanggungjawabkan.
+
+\item Dibutuhkan solusi yang realistis untuk dipakai rutin dan bisa diadopsi bertahap pada skema distribusi besar. Artinya, perangkat harus mudah dipasang di titik penerimaan bahan baku, cukup stabil untuk operasional harian, dan biaya operasionalnya masuk akal.
+\end{enumerate}
+
+\subsection{Proposisi Nilai}
+
+\begin{enumerate}
+\item \textbf{Pemantauan Kualitas Makanan Secara Real-Time:} Sistem FRESH-ID mampu
+mendeteksi perubahan gas pembusukan seperti amonia (NH$_3$), hidrogen sulfida (H$_2$S),
+dan metana (CH$_4$) secara real-time menggunakan sensor TGS2602 dan TGS2611 yang
+terintegrasi dengan mikrokontroler ESP32. Data hasil pengukuran ditransmisikan langsung
+ke platform web, memungkinkan pengguna untuk melakukan pemantauan kondisi makanan
+dari mana saja dan kapan saja.
+
+\item \textbf{Analisis Cerdas Berbasis Sensor:} Sistem ini menggunakan pendekatan berbasis
+ambang batas nilai sensor untuk mengenali pola khas pembusukan (\textit{spoilage fingerprint})
+dan menentukan tingkat kesegaran makanan secara otomatis berdasarkan data sensor.
+Pendekatan ini memberikan nilai tambah dibandingkan metode konvensional karena mampu
+mengidentifikasi anomali lebih cepat dan akurat.
+
+\item \textbf{Integrasi IoT untuk Sistem Peringatan Dini dan Manajemen Data:} FRESH-ID
+dilengkapi dengan sistem \textit{Internet of Things} yang memungkinkan pengiriman data,
+visualisasi kondisi makanan, serta notifikasi dini jika terdeteksi indikasi pembusukan.
+Dashboard web menampilkan status sensor, grafik tren perubahan gas dan suhu, serta data
+historis yang dapat digunakan untuk evaluasi kualitas makanan.
+\end{enumerate}
+
+\renewcommand{\tablename}{Tabel}
+
+% ====== TARUH DI ISI BAB/SUBBAB ======
+\subsection{Pemangku Kepentingan}
+
+Dalam konteks proyek perancangan sistem sensor cerdas pendeteksi dini pembusukan makanan berbasis \textit{Internet of Things}, keberadaan para pemangku kepentingan \textit{(stakeholders)} memiliki peran krusial dalam menjamin pelaksanaan proyek yang efektif, terarah, serta sesuai dengan standar teknis dan akademik yang berlaku. Setiap pihak yang terlibat berkontribusi dalam tahap perancangan perangkat keras dan lunak, pengujian sensor, pengolahan data, serta evaluasi performa sistem secara keseluruhan. Melalui kolaborasi yang terkoordinasi, proyek ini diharapkan dapat menghasilkan sistem yang tidak hanya andal secara teknis, tetapi juga memberikan nilai aplikatif bagi peningkatan keamanan pangan nasional. Ringkasan pemangku kepentingan dan kontribusinya ditampilkan pada \textbf{Tabel~\ref{tab:stakeholders}}.
+
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{5pt}
+
+\begin{longtable}{|m{4cm}|m{10cm}|}
+\caption{Daftar Pemangku Kepentingan dan Kontribusinya}
+\label{tab:stakeholders}\\
+\hline
+\textbf{Pemangku Kepentingan} & \textbf{Peran \& Kontribusi} \\
+\hline
+\endfirsthead
+
+\multicolumn{2}{c}{\textit{Lanjutan dari halaman sebelumnya}} \\
+\hline
+\textbf{Pemangku Kepentingan} & \textbf{Peran \& Kontribusi} \\
+\hline
+\endhead
+
+\hline \multicolumn{2}{r}{\textit{Bersambung ke halaman berikutnya}} \\
+\endfoot
+
+\hline
+\endlastfoot
+
+\textbf{Tim Mahasiswa} (Ketua, Anggota) &
+\textbf{Peran:} Bertanggung jawab sebagai pelaksana utama proyek. Tim mahasiswa melaksanakan seluruh tahapan pengembangan mulai dari perancangan sistem sensor gas, integrasi modul IoT, penerapan sistem klasifikasi berbasis ambang batas gas, uji coba sistem di lingkungan simulasi dan nyata, serta pembuatan \textit{dashboard} berbasis web.
+\newline
+\textbf{Kontribusi:} Memberikan kontribusi teknis dalam bidang elektronika, pemrograman, sistem kendali, serta analisis dan pengolahan data sensor. Selain itu, tim mahasiswa juga memiliki tanggung jawab dalam penyusunan laporan teknis, pembuatan dokumentasi proyek, serta pelaksanaan pengujian kinerja alat untuk memastikan sistem beroperasi sesuai dengan rancangan dan parameter yang telah ditetapkan. \\
+\hline
+
+\textbf{Dosen Pembimbing} &
+\textbf{Peran:} Berfungsi sebagai pembimbing akademik sekaligus pengawas teknis yang memberikan bimbingan metodologis dan pemantauan terhadap seluruh tahapan pelaksanaan proyek. Dosen pembimbing berperan memastikan bahwa kegiatan penelitian dan pengembangan alat berjalan sesuai kaidah ilmiah serta memenuhi standar akademik yang berlaku.
+\newline
+\textbf{Kontribusi:} Menyediakan arahan konseptual, koreksi ilmiah, dan validasi terhadap rancangan sistem, baik pada aspek perangkat keras maupun perangkat lunak. Selain itu, dosen pembimbing turut membantu mahasiswa dalam pengambilan keputusan teknis agar hasil akhir proyek memiliki keandalan, relevansi, serta nilai ilmiah yang tinggi. \\
+\hline
+
+\textbf{Program Studi Teknik Elektro -- ITERA} &
+\textbf{Peran:} Bertindak sebagai lembaga akademik penyelenggara yang memberikan dukungan dalam aspek akademik, administrasi, serta penyediaan fasilitas penelitian. Program Studi Teknik Elektro memiliki tanggung jawab untuk memastikan bahwa pelaksanaan proyek berjalan sesuai kurikulum, prosedur akademik, dan standar mutu pendidikan yang ditetapkan oleh Institut Teknologi Sumatera.
+\newline
+\textbf{Kontribusi:} Menyediakan berbagai fasilitas pendukung seperti laboratorium, jaringan internet, serta peralatan uji seperti osiloskop, catu daya, dan peralatan lain yang diperlukan dalam proses eksperimen. Selain itu, program studi juga memberikan pengesahan akademik terhadap hasil penelitian dan publikasi mahasiswa. \\
+\hline
+
+\textbf{Pengguna Akhir} (Administrator BGN dan Pengelola Dapur MBG) &
+\textbf{Peran:} Penerima manfaat sekaligus pengguna operasional sistem. Administrator BGN berperan sebagai pihak yang mengakses \textit{dashboard} untuk memantau, menyimpan, dan mengevaluasi hasil pemantauan kualitas bahan baku, sedangkan pengelola dapur MBG menggunakan keluaran status dari perangkat sebagai dasar keputusan penerimaan bahan baku sebelum diolah.
+\newline
+\textbf{Kontribusi:} Memberikan masukan terkait kebutuhan operasional, kemudahan penggunaan, kejelasan indikator status pada LED/LCD, serta efektivitas alur pelaporan dan tindak lanjut. Masukan pengguna akhir digunakan untuk penyempurnaan ambang batas klasifikasi, tampilan \textit{dashboard}, dan prosedur penggunaan sistem agar lebih sesuai dengan kondisi kerja di dapur MBG. \\
+\hline
+
+\end{longtable}
+
+
+\section{Referensi}
+
+\renewcommand{\refname}{}      % Hapus judul default "Pustaka"
+\bibliographystyle{IEEEtran} % Menggunakan style sitasi IEEE
+\bibliography{pustaka}    % Memanggil file pustaka.bib
+
+\section{Singkatan}
+
+% longtable tidak menggunakan lingkungan table[] di sekitarnya.
+% Perintah \begin{longtable} langsung menggantikan \begin{table}\begin{tabular}
+\begin{longtable}{|p{4cm}|p{11cm}|} % Lebar kolom ditetapkan agar teks wrap
+    \caption{Daftar Singkatan}
+    \label{tab:abbreviationsEL1} \\
+    \hline
+    \textbf{Singkatan} & \textbf{Definisi} \\
+    \hline
+    \endhead % Mengakhiri baris header yang akan diulang di setiap halaman
+    
+    \hline 
+    \multicolumn{2}{|r|}{Lanjutan di halaman berikutnya...} \\ 
+    \endfoot % Footer untuk semua halaman kecuali yang terakhir
+    
+    \hline
+    \endlastfoot % Footer untuk halaman terakhir (kosong)
+
+% --- Isi Tabel ---
+MBG & Makanan Bergizi Gratis \\
+\hline
+BGN & Badan Gizi Nasional \\
+\hline
+IoT &  \textit{Internet of Things} \\
+\hline
+ESP32 & Espressif Systems 32-bit \\
+\hline
+DHT22 & Sensor suhu dan kelembapan DHT22 \\
+\hline
+TGS2602 & Sensor gas seri TGS2602 \\
+\hline
+TGS2611 & Sensor gas seri TGS2611 \\
+\hline
+LED &  \textit{Light Emitting Diode} \\
+\hline
+LCD &  \textit {Liquid Crystal Display} \\
+\hline
+SOP &  Standar Operasional Prosedur \\
+\hline
+NH$_3$ & Amonia \\
+\hline
+H$_2$S & Hidrogen sulfida \\
+\hline
+CH$_4$ & Metana \\
+\hline
+
+    
+    % Tambahkan lebih banyak baris di sini untuk memicu pemisahan halaman
+    % ... (Tambahkan entri lain jika tabel perlu memanjang)
+
+\end{longtable}
+
+% Tambahkan \newpage jika Anda ingin halaman isi dimulai di halaman berikutnya
+% \newpage
+% \section*{Pendahuluan}
+% Di sinilah konten proposal Anda akan dimulai...
+
+\end{document}

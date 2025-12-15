@@ -1,0 +1,1938 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[indonesian]{babel}
+\usepackage{geometry}
+\geometry{left=4cm, right=3cm, top=3cm, bottom=3cm}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{amsmath}
+
+\onehalfspacing
+
+\title{\textbf{PERANCANGAN DAN IMPLEMENTASI SUBSISTEM MONITORING BERBASIS WEB \\
+PADA SISTEM FRESH-ID \\
+(Real-Time Spoilage Fingerprint Sensor for Packaged Foods)}}
+\author{Daffa Zakky Kurniawan \\
+NIM: 122130044}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\newpage
+
+\tableofcontents
+\newpage
+
+% ============================================
+% BAB I - PENDAHULUAN
+% ============================================
+
+\section{PENDAHULUAN}
+
+\subsection{Latar Belakang}
+
+Sistem FRESH-ID (Real-Time Spoilage Fingerprint Sensor for Packaged Foods) merupakan prototipe sistem sensor cerdas berbasis Internet of Things (IoT) yang dikembangkan untuk deteksi dini penurunan mutu bahan pangan, khususnya pada distribusi makanan skala besar seperti program Makanan Bergizi Gratis (MBG). Sistem ini dirancang untuk memantau gas indikator pembusukan berupa amonia (NH$_3$), hidrogen sulfida (H$_2$S), dan metana (CH$_4$), serta parameter lingkungan seperti suhu dan kelembapan secara real-time menggunakan sensor gas TGS2602, TGS2611, dan sensor DHT22 yang terintegrasi dengan mikrokontroler ESP32.
+
+Untuk mewujudkan fungsi pemantauan yang efektif dan mendukung pengambilan keputusan secara cepat, sistem FRESH-ID memerlukan subsistem monitoring yang mampu menerima, menyimpan, memproses, dan menampilkan data sensor secara berkelanjutan dalam bentuk yang informatif dan mudah dipahami. Subsistem monitoring berbasis web menjadi komponen krusial karena berfungsi sebagai antarmuka utama bagi administrator dan pengelola untuk memantau kondisi kesegaran bahan pangan dari berbagai titik pemantauan secara terpusat dan real-time.
+
+Tantangan utama dalam pengembangan subsistem monitoring adalah bagaimana mengintegrasikan data dari perangkat keras sensor yang bekerja secara kontinu dengan platform web yang dapat menampilkan informasi secara dinamis, responsif, dan akurat. Selain itu, sistem harus mampu melakukan klasifikasi status kesegaran (segar, kurang segar, busuk) berdasarkan nilai ambang batas parameter yang telah ditetapkan, serta menyajikan visualisasi tren perubahan dalam bentuk grafik yang memudahkan interpretasi pola pembusukan.
+
+Subsistem monitoring juga harus dirancang dengan mempertimbangkan aspek keamanan akses, mengingat data kesegaran bahan pangan merupakan informasi sensitif yang berkaitan dengan keamanan pangan dan akuntabilitas distribusi. Oleh karena itu, implementasi sistem autentikasi, otorisasi, dan pembatasan akses menjadi bagian penting dalam arsitektur subsistem monitoring.
+
+Pengembangan subsistem monitoring berbasis web untuk FRESH-ID tidak hanya bertujuan untuk menyediakan sarana visualisasi data, tetapi juga untuk membangun ekosistem informasi yang mendukung proses pengawasan mutu pangan secara lebih objektif, terdokumentasi, dan dapat dipertanggungjawabkan, sehingga dapat mengurangi risiko penurunan mutu bahan pangan sebelum sampai ke konsumen akhir.
+
+\subsection{Rumusan Masalah}
+
+Berdasarkan latar belakang yang telah diuraikan, rumusan masalah yang menjadi fokus dalam perancangan dan implementasi subsistem monitoring FRESH-ID adalah sebagai berikut:
+
+\begin{enumerate}[label=\arabic*.]
+    \item Bagaimana merancang arsitektur subsistem monitoring berbasis web yang mampu menerima dan memproses data sensor dari perangkat ESP32 secara real-time dengan latensi minimal?
+    
+    \item Bagaimana mengimplementasikan mekanisme penyimpanan data sensor (gas NH$_3$, H$_2$S, CH$_4$, suhu, dan kelembapan) beserta timestamp yang efisien untuk mendukung pencatatan berkelanjutan dan analisis historis?
+    
+    \item Bagaimana merancang antarmuka dashboard web yang dapat menampilkan informasi status kesegaran bahan pangan secara jelas, informatif, dan mudah dipahami oleh pengguna non-teknis?
+    
+    \item Bagaimana mengimplementasikan sistem klasifikasi otomatis yang dapat mengkategorikan kondisi bahan pangan menjadi ``Segar'', ``Kurang Segar'', dan ``Busuk'' berdasarkan nilai ambang batas parameter yang telah ditetapkan?
+    
+    \item Bagaimana menyajikan visualisasi data dalam bentuk grafik tren untuk memperlihatkan pola perubahan konsentrasi gas dan parameter lingkungan sepanjang waktu?
+    
+    \item Bagaimana mengimplementasikan sistem autentikasi dan otorisasi untuk membatasi akses dashboard hanya kepada administrator yang berwenang serta menjaga keamanan data monitoring?
+    
+    \item Bagaimana memastikan subsistem monitoring dapat bekerja secara stabil dan responsif ketika melakukan pemantauan terhadap beberapa unit sensor secara bersamaan?
+\end{enumerate}
+
+\subsection{Batasan Masalah}
+
+Untuk menjaga fokus pengembangan dan memastikan kedalaman pembahasan yang memadai, batasan masalah dalam perancangan dan implementasi subsistem monitoring FRESH-ID ditetapkan sebagai berikut:
+
+\begin{enumerate}[label=\arabic*.]
+    \item Subsistem monitoring yang dikembangkan difokuskan pada platform berbasis web dengan teknologi frontend dan backend yang mendukung komunikasi real-time melalui protokol HTTP/HTTPS dan WebSocket atau MQTT.
+    
+    \item Pengembangan subsistem monitoring mencakup fitur penerimaan data sensor, penyimpanan data ke database, klasifikasi status kesegaran, visualisasi grafik tren, dan antarmuka dashboard web, namun tidak mencakup pengembangan aplikasi mobile native.
+    
+    \item Sistem autentikasi dan otorisasi dibatasi pada mekanisme login berbasis username dan password dengan pembagian peran sederhana (administrator), tanpa implementasi autentikasi multi-faktor atau integrasi dengan sistem Single Sign-On (SSO).
+    
+    \item Subsistem monitoring dirancang untuk bekerja pada satu jaringan WiFi lokal, sehingga akses dashboard terbatas pada perangkat yang terhubung dalam jaringan yang sama dengan server monitoring atau melalui konfigurasi port forwarding sederhana.
+    
+    \item Visualisasi data dibatasi pada grafik line chart untuk tren perubahan gas dan parameter lingkungan, serta tampilan nilai numerik real-time, tanpa implementasi analisis prediktif atau machine learning untuk prediksi waktu pembusukan.
+    
+    \item Pengujian subsistem monitoring dilakukan dalam skenario simulasi dengan jumlah unit sensor terbatas (maksimal 5 unit) untuk mengevaluasi performa sistem dalam kondisi pemantauan multi-sensor secara bersamaan.
+    
+    \item Data historis yang disimpan dibatasi pada periode pengujian (maksimal 30 hari) dengan interval pencatatan data setiap 3--5 detik, tanpa implementasi mekanisme kompresi atau arsip data jangka panjang.
+    
+    \item Notifikasi atau alert system dibatasi pada indikator visual di dashboard (perubahan warna status, badge peringatan), tanpa implementasi notifikasi push ke perangkat mobile atau notifikasi email/SMS.
+    
+    \item Fitur pelaporan dibatasi pada tampilan data historis dalam bentuk tabel dan grafik di dashboard, serta kemampuan export data mentah ke format CSV, tanpa implementasi fitur generate laporan otomatis dalam format PDF atau Word.
+\end{enumerate}
+
+\subsection{Tujuan Pengembangan}
+
+Tujuan dari perancangan dan implementasi subsistem monitoring berbasis web pada sistem FRESH-ID adalah sebagai berikut:
+
+\subsubsection{Tujuan Umum}
+
+Mengembangkan subsistem monitoring berbasis web yang mampu menerima, menyimpan, memproses, dan menampilkan data sensor pembusukan makanan secara real-time, sehingga mendukung pengambilan keputusan yang objektif dan cepat dalam pengawasan mutu bahan pangan pada distribusi program Makanan Bergizi Gratis (MBG).
+
+\subsubsection{Tujuan Khusus}
+
+\begin{enumerate}[label=\arabic*.]
+    \item Merancang dan mengimplementasikan arsitektur komunikasi data antara perangkat ESP32 dengan server web menggunakan protokol IoT yang efisien (HTTP/HTTPS atau MQTT) untuk memastikan pengiriman data sensor secara real-time dengan latensi minimal.
+    
+    \item Membangun sistem backend yang mampu menerima data sensor (NH$_3$, H$_2$S, CH$_4$, suhu, kelembapan) beserta metadata (ID perangkat, timestamp, lokasi), menyimpannya ke dalam database relasional dengan struktur yang terorganisir, dan melakukan validasi data untuk menjaga integritas informasi.
+    
+    \item Mengimplementasikan algoritma klasifikasi otomatis yang dapat mengkategorikan kondisi bahan pangan ke dalam tiga status (``Segar'', ``Kurang Segar'', ``Busuk'') berdasarkan nilai ambang batas (threshold) parameter gas dan suhu yang telah ditetapkan melalui pengujian sampel.
+    
+    \item Merancang antarmuka dashboard web yang responsif, intuitif, dan informatif dengan menampilkan:
+    \begin{itemize}
+        \item Status real-time setiap unit sensor dalam bentuk card monitoring dengan badge status berwarna
+        \item Nilai numerik parameter sensor terkini beserta indikator tren (naik/turun)
+        \item Grafik line chart untuk visualisasi perubahan konsentrasi gas dan parameter lingkungan sepanjang waktu
+        \item Informasi timestamp pembaruan data terakhir
+    \end{itemize}
+    
+    \item Mengimplementasikan sistem autentikasi dan otorisasi berbasis session atau token untuk membatasi akses dashboard hanya kepada pengguna yang memiliki kredensial administrator, sehingga menjaga keamanan dan akuntabilitas data monitoring.
+    
+    \item Membangun fitur manajemen data yang memungkinkan administrator untuk:
+    \begin{itemize}
+        \item Melihat riwayat data sensor dalam periode waktu tertentu
+        \item Melakukan filtering dan sorting data berdasarkan komoditas, tanggal, atau status
+        \item Mengekspor data sensor ke format CSV untuk keperluan analisis lebih lanjut atau dokumentasi
+    \end{itemize}
+    
+    \item Melakukan pengujian performa subsistem monitoring dalam skenario multi-sensor untuk mengevaluasi:
+    \begin{itemize}
+        \item Waktu respons (response time) dashboard dalam menampilkan data real-time
+        \item Tingkat akurasi klasifikasi status berdasarkan threshold yang ditetapkan
+        \item Stabilitas sistem ketika menerima dan memproses data dari beberapa unit sensor secara bersamaan
+        \item Konsistensi visualisasi grafik dalam memperlihatkan tren perubahan data
+    \end{itemize}
+    
+    \item Menyusun dokumentasi teknis lengkap yang mencakup arsitektur sistem, skema database, API endpoint, panduan instalasi dan konfigurasi, serta panduan penggunaan dashboard untuk memudahkan pemeliharaan dan pengembangan lebih lanjut.
+\end{enumerate}
+
+\newpage
+
+% ============================================
+% BAB II - KAJIAN PUSTAKA
+% ============================================
+
+\section{KAJIAN PUSTAKA}
+
+\subsection{Tinjauan Teori}
+
+\subsubsection{Internet of Things (IoT)}
+
+Internet of Things (IoT) merujuk pada jaringan perangkat fisik yang saling terhubung dan mampu mengumpulkan, bertukar, serta memproses data melalui internet tanpa intervensi manusia secara langsung. Arsitektur IoT umumnya terdiri dari empat lapisan utama: lapisan persepsi (sensor dan aktuator), lapisan jaringan (komunikasi data), lapisan pemrosesan (pengolahan dan penyimpanan data), dan lapisan aplikasi (antarmuka pengguna) (Al-Fuqaha et al., 2015).
+
+Dalam konteks sistem monitoring, IoT memungkinkan pengumpulan data sensor secara kontinu dari lokasi yang berbeda untuk kemudian dikirimkan ke server terpusat. Protokol komunikasi yang umum digunakan dalam ekosistem IoT meliputi HTTP/HTTPS untuk komunikasi request-response standar, dan MQTT (Message Queuing Telemetry Transport) untuk komunikasi publish-subscribe yang lebih efisien pada bandwidth terbatas (Light, 2017). MQTT dirancang khusus untuk perangkat dengan sumber daya terbatas dan jaringan yang tidak stabil, menjadikannya pilihan populer untuk aplikasi IoT real-time.
+
+Keunggulan pendekatan IoT dalam sistem monitoring pangan adalah kemampuannya untuk menyediakan visibilitas menyeluruh terhadap kondisi produk selama rantai distribusi, memungkinkan deteksi anomali lebih cepat, dan mendukung pengambilan keputusan berbasis data yang lebih akurat (Verdouw et al., 2016).
+
+\subsubsection{Web Dashboard dan Visualisasi Data Real-Time}
+
+Dashboard web merupakan antarmuka visual yang menyajikan informasi penting secara terkonsolidasi, memungkinkan pengguna untuk memantau metrik kunci dan mengambil keputusan dengan cepat. Dalam konteks sistem monitoring IoT, dashboard berfungsi sebagai jembatan antara data mentah sensor dengan informasi yang dapat diinterpretasikan oleh pengguna (Few, 2006).
+
+Visualisasi data real-time memerlukan pendekatan khusus yang berbeda dengan visualisasi data statis. Sistem harus mampu memperbarui tampilan secara dinamis ketika data baru tersedia, tanpa mengharuskan pengguna untuk me-refresh halaman secara manual. Teknologi yang mendukung update real-time meliputi AJAX polling (periodic requests), WebSocket (persistent two-way connection), dan Server-Sent Events (one-way streaming) (Grigorik, 2013).
+
+Prinsip desain dashboard yang efektif mencakup: hierarki visual yang jelas, penggunaan warna yang konsisten untuk status (hijau untuk normal, kuning untuk peringatan, merah untuk bahaya), pengelompokan informasi terkait, dan penyajian data dalam format yang mudah dipindai secara cepat (Sarikaya et al., 2019). Untuk data time-series seperti pembacaan sensor, grafik garis (line chart) menjadi pilihan utama karena mampu menampilkan tren perubahan sepanjang waktu dengan jelas.
+
+\subsubsection{Database untuk Sistem IoT}
+
+Sistem IoT menghasilkan volume data yang besar dengan karakteristik time-stamped, sehingga memerlukan strategi penyimpanan yang efisien. Database untuk aplikasi IoT umumnya dikategorikan menjadi tiga jenis utama: database relasional (SQL), database NoSQL, dan database time-series khusus (Kaur \& Rani, 2015).
+
+Database relasional seperti MySQL dan PostgreSQL menawarkan konsistensi data yang kuat melalui properti ACID (Atomicity, Consistency, Isolation, Durability) dan mendukung query kompleks dengan JOIN operation. Namun, untuk data sensor yang terus bertambah dengan kecepatan tinggi, performa write operation dapat menjadi bottleneck (Abadi, 2012).
+
+Database NoSQL seperti MongoDB memberikan fleksibilitas skema dan horizontal scalability yang lebih baik, cocok untuk data semi-structured dan workload write-heavy. Document-based NoSQL memungkinkan penyimpanan data sensor beserta metadata dalam satu dokumen JSON, mempermudah operasi read untuk dashboard (Cattell, 2011).
+
+Database time-series khusus seperti InfluxDB dan TimescaleDB dioptimalkan untuk data yang memiliki timestamp, menyediakan kompresi otomatis, retention policy, dan query aggregation yang efisien untuk analisis tren. Karakteristik ini menjadikannya pilihan ideal untuk sistem monitoring yang memerlukan analisis historis dan visualisasi time-series (Jensen et al., 2017).
+
+\subsubsection{Sistem Autentikasi dan Keamanan Web}
+
+Keamanan menjadi aspek kritis dalam sistem monitoring yang menangani data sensitif terkait kualitas pangan. Sistem autentikasi berfungsi untuk memverifikasi identitas pengguna, sementara otorisasi menentukan hak akses terhadap resource tertentu (Lodderstedt et al., 2013).
+
+Mekanisme autentikasi berbasis session menggunakan cookie untuk menyimpan session identifier setelah login berhasil. Server menyimpan informasi session di memory atau database, dan memvalidasi setiap request berdasarkan session ID. Pendekatan ini sederhana namun memerlukan state management di server side (Schreiber, 2015).
+
+Alternatif lain adalah autentikasi berbasis token menggunakan JSON Web Token (JWT). Token ini bersifat stateless, self-contained, dan dapat diverifikasi tanpa database lookup. JWT terdiri dari header (algoritma), payload (claims), dan signature (validasi integrity). Keunggulannya adalah skalabilitas lebih baik untuk sistem terdistribusi, namun revocation management lebih kompleks dibanding session (Jones et al., 2015).
+
+Praktik keamanan web yang esensial mencakup: penggunaan HTTPS untuk enkripsi komunikasi, validasi dan sanitasi input untuk mencegah SQL injection dan XSS, implementasi rate limiting untuk mencegah brute force attack, serta password hashing menggunakan algoritma seperti bcrypt atau Argon2 (OWASP, 2021).
+
+\subsubsection{Teknologi Web Modern (Frontend dan Backend)}
+
+Pengembangan aplikasi web modern melibatkan pemisahan tanggung jawab antara frontend (client-side) dan backend (server-side). Frontend bertanggung jawab atas presentasi dan interaksi pengguna, sementara backend menangani logika bisnis, akses database, dan keamanan (Taivalsaari \& Mikkonen, 2011).
+
+Teknologi frontend fundamental meliputi HTML5 untuk struktur konten, CSS3 untuk styling dan layout, dan JavaScript untuk interaktivitas. Framework dan library modern seperti React, Vue.js, atau Angular menyediakan component-based architecture yang mempermudah pengembangan interface kompleks dengan state management yang terorganisir (Patel et al., 2018).
+
+Untuk visualisasi data, library seperti Chart.js, D3.js, atau Plotly.js menyediakan komponen grafik yang dapat diintegrasikan dengan mudah. Chart.js menawarkan kesederhanaan untuk grafik standar, sementara D3.js memberikan kontrol penuh untuk visualisasi custom yang kompleks (Bostock et al., 2011).
+
+Di sisi backend, pilihan teknologi meliputi Node.js (JavaScript runtime), Python dengan framework Django atau Flask, PHP dengan Laravel, atau Java dengan Spring Boot. Node.js menjadi pilihan populer untuk aplikasi real-time karena event-driven, non-blocking I/O architecture yang efisien untuk menangani concurrent connections (Tilkov \& Vinoski, 2010).
+
+Framework backend menyediakan struktur untuk routing, middleware, database integration, dan security features, mempercepat development dan memastikan best practices. RESTful API design menjadi standar untuk komunikasi antara frontend dan backend, menggunakan HTTP methods (GET, POST, PUT, DELETE) dan status codes yang semantic (Fielding, 2000).
+
+\subsection{Penelitian Terdahulu}
+
+\subsubsection{Sistem Monitoring Berbasis IoT untuk Kualitas Makanan}
+
+Penelitian oleh Protopappas et al. (2025) mengembangkan sistem pemantauan rantai pasok pangan berbasis IoT menggunakan jaringan LoRaWAN untuk melacak suhu dan kelembapan secara real-time sepanjang cold chain. Sistem ini menunjukkan bahwa pemantauan berkelanjutan dengan sensor nirkabel mampu mengurangi risiko kerusakan, meningkatkan visibilitas logistik, dan menyediakan data lingkungan yang stabil selama transportasi serta penyimpanan produk pangan. Dashboard web yang dikembangkan mampu menampilkan data dari multiple sensor nodes secara simultan dengan latency rata-rata di bawah 2 detik.
+
+Damdam et al. (2023) membangun sistem electronic nose berbasis IoT untuk monitoring kualitas daging sapi menggunakan sensor CO₂, NH₃, dan C₂H₄ yang terhubung dengan ESP32-S3. Data sensor dikirim ke cloud melalui platform Blynk menggunakan protokol HTTPS dengan interval pengambilan data setiap 6 jam. Penelitian ini berhasil mengidentifikasi ambang batas pembusukan berdasarkan korelasi dengan uji mikrobiologi, menunjukkan bahwa integrasi IoT dengan platform cloud dapat menyediakan monitoring jangka panjang yang efektif.
+
+Aatikah et al. (2023) mengimplementasikan prototipe sistem final crosscheck pada industri makanan menggunakan NodeMCU ESP8266 dan platform Thingspeak. Sistem menggabungkan lima sensor (load cell, DHT11, proximity, MQ2, TCS3200) untuk pemantauan multi-parameter. Meskipun berhasil menampilkan data pada platform web, sistem ini mengalami delay pembacaan 4-7 detik pada sensor tertentu dan belum dilengkapi dengan mekanisme klasifikasi otomatis atau visualisasi tren yang informatif.
+
+\subsubsection{Dashboard Monitoring untuk Sensor Gas}
+
+Penelitian Kumar et al. (2019) mengembangkan dashboard real-time untuk monitoring kualitas udara berbasis sensor gas menggunakan Raspberry Pi dan platform web Node-RED. Dashboard menampilkan grafik time-series untuk parameter CO, CO₂, NO₂, dan PM2.5 dengan update interval 5 detik. Sistem menggunakan WebSocket untuk komunikasi bidirectional yang memungkinkan update data tanpa page refresh. Pengujian menunjukkan response time rata-rata 1.2 detik dari sensor ke tampilan dashboard.
+
+Binson \& Thomas (2023) mengimplementasikan sistem monitoring berbasis MOS gas sensor (TGS2600, TGS2620) untuk deteksi pembusukan daging. Penelitian ini fokus pada pola respons sensor terhadap volatile organic compounds (VOCs) dan membangun spoilage fingerprint berdasarkan perubahan resistansi sensor. Meskipun berhasil mengidentifikasi pola pembusukan, sistem ini belum mengintegrasikan dashboard web untuk pemantauan jarak jauh.
+
+Penelitian oleh Zhang et al. (2020) mengembangkan sistem monitoring gas berbasis wireless sensor network dengan web dashboard untuk aplikasi industri. Dashboard dibangun menggunakan React.js untuk frontend dan Express.js untuk backend, dengan database MongoDB untuk penyimpanan data time-series. Sistem mampu menampilkan data dari 20 sensor node secara simultan dengan throughput 500 data points per detik.
+
+\subsubsection{Sistem Klasifikasi Kesegaran Makanan Berbasis Sensor}
+
+Xuan et al. (2022) mengembangkan sistem klasifikasi kesegaran salmon menggunakan volatile spoilage indexes yang diukur melalui electronic nose. Sistem mengimplementasikan algoritma threshold-based classification dengan tiga kategori: fresh (TVC < 5 log CFU/g), acceptable (5-7 log CFU/g), dan spoiled (> 7 log CFU/g). Akurasi klasifikasi mencapai 92\% ketika dibandingkan dengan analisis mikrobiologi laboratorium.
+
+Penelitian Shao et al. (2021) mengembangkan freshness indicator berbasis sensor kimia yang terintegrasi dengan smartphone application untuk real-time classification. Sistem menggunakan color-based indicators yang berubah seiring pembusukan, dengan algoritma image processing untuk klasifikasi otomatis. Namun, pendekatan ini memerlukan interaksi manual dan tidak menyediakan monitoring kontinu.
+
+Li et al. (2021) mengimplementasikan sistem klasifikasi multi-level untuk kesegaran daging menggunakan sensor array dengan machine learning. Random Forest classifier digunakan untuk mengkategorikan sampel ke dalam 4 tingkat kesegaran berdasarkan 8 parameter sensor. Akurasi klasifikasi mencapai 94.3\% pada dataset testing. Sistem ini menunjukkan bahwa pendekatan multi-sensor dengan threshold yang teroptimasi dapat memberikan hasil klasifikasi yang reliable.
+
+\subsection{Analisis Kesenjangan}
+
+Berdasarkan tinjauan penelitian terdahulu, teridentifikasi beberapa kesenjangan yang menjadi dasar pengembangan subsistem monitoring FRESH-ID:
+
+\textbf{Kesenjangan 1: Integrasi Multi-Parameter dengan Klasifikasi Bertingkat}
+
+Penelitian existing cenderung fokus pada monitoring parameter tunggal (suhu/kelembapan saja) atau menggunakan sensor gas tanpa kompensasi lingkungan. Sistem yang mengintegrasikan monitoring gas pembusukan (NH₃, H₂S, CH₄), parameter lingkungan (suhu, kelembapan), dan klasifikasi bertingkat (segar, kurang segar, busuk) dalam satu dashboard terpadu masih terbatas. FRESH-ID mengisi gap ini dengan menyediakan visualisasi multi-parameter yang terkorelasi dengan status kesegaran secara real-time.
+
+\textbf{Kesenjangan 2: Visualisasi Tren untuk Interpretasi Pola Pembusukan}
+
+Platform monitoring seperti Thingspeak menyediakan grafik dasar namun tidak dirancang khusus untuk interpretasi pola pembusukan pangan. Dashboard yang menampilkan tidak hanya nilai real-time tetapi juga tren perubahan dengan indikator arah (naik/turun) dan rate of change masih jarang ditemukan. FRESH-ID menyediakan line chart dengan multiple series untuk gas indikator, dilengkapi dengan informasi tren yang memudahkan identifikasi percepatan pembusukan.
+
+\textbf{Kesenjangan 3: Sistem Autentikasi untuk Akuntabilitas Data Pangan}
+
+Sebagian besar prototipe penelitian tidak mengimplementasikan sistem autentikasi atau access control, padahal data kesegaran pangan merupakan informasi sensitif yang berkaitan dengan keamanan konsumen. FRESH-ID mengisi gap ini dengan implementasi sistem login untuk administrator dan pembatasan akses dashboard, memastikan hanya pihak berwenang yang dapat melihat dan mengelola data monitoring.
+
+\textbf{Kesenjangan 4: Response Time untuk Monitoring Real-Time Multi-Sensor}
+
+Sistem existing menunjukkan latency bervariasi dari 1-7 detik untuk single sensor. Namun, evaluasi performa untuk skenario multi-sensor simultan (5+ units) dengan update interval tinggi (3-5 detik) masih terbatas dokumentasinya. FRESH-ID melakukan pengujian spesifik untuk mengukur response time dan stabilitas sistem dalam kondisi multi-sensor, memberikan data empiris untuk aplikasi monitoring skala lebih besar.
+
+\textbf{Kesenjangan 5: Fitur Export Data untuk Dokumentasi dan Analisis Lanjutan}
+
+Kebanyakan dashboard monitoring menyediakan visualisasi real-time namun tidak menyediakan mekanisme export data mentah untuk keperluan dokumentasi atau analisis statistik lanjutan. FRESH-ID menyediakan fitur export ke CSV yang memungkinkan pengguna mengunduh historical data untuk pelaporan, audit trail, atau analisis korelasi dengan parameter eksternal.
+
+\newpage
+
+% ============================================
+% BAB III - PERANCANGAN
+% ============================================
+
+\section{PERANCANGAN}
+
+\subsection{Arsitektur Sistem Monitoring}
+
+\subsubsection{Diagram Arsitektur Keseluruhan}
+
+Arsitektur subsistem monitoring FRESH-ID dirancang menggunakan pendekatan three-tier architecture yang memisahkan presentation layer, application layer, dan data layer untuk meningkatkan maintainability dan scalability.
+
+\textbf{Presentation Layer} terdiri dari dashboard web yang diakses melalui browser, menampilkan interface untuk monitoring real-time, visualisasi grafik, manajemen data, dan konfigurasi sistem. Layer ini dibangun menggunakan HTML5, CSS3, dan JavaScript dengan framework frontend modern untuk responsivitas dan user experience yang optimal.
+
+\textbf{Application Layer} berfungsi sebagai backend server yang menangani: (1) penerimaan data dari perangkat ESP32 melalui HTTP POST requests, (2) validasi dan preprocessing data sensor, (3) penyimpanan data ke database, (4) eksekusi algoritma klasifikasi status kesegaran, (5) penyediaan REST API untuk frontend, dan (6) manajemen autentikasi dan session. Layer ini diimplementasikan menggunakan web framework yang mendukung async I/O untuk menangani multiple concurrent connections.
+
+\textbf{Data Layer} menggunakan database relasional untuk menyimpan: (1) data sensor time-series beserta timestamp, (2) informasi perangkat (device ID, lokasi, komoditas), (3) threshold configuration untuk setiap parameter, (4) user credentials dan session data, serta (5) log aktivitas sistem. Skema database dirancang dengan indexing yang optimal untuk query time-range dan agregasi data.
+
+Komunikasi antar layer menggunakan JSON sebagai format data interchange. ESP32 mengirim payload JSON berisi device\_id, timestamp, dan nilai sensor (nh3, h2s, ch4, temperature, humidity) ke endpoint \texttt{/api/sensor/data}. Backend memproses request, menyimpan ke database, dan mem-broadcast update ke connected clients melalui AJAX polling atau WebSocket untuk real-time dashboard update.
+
+\subsubsection{Alur Data dari Sensor ke Dashboard}
+
+Alur data dalam subsistem monitoring FRESH-ID mengikuti pipeline sebagai berikut:
+
+\textbf{Tahap 1: Akuisisi Data Sensor}
+ESP32 membaca nilai analog dari sensor gas TGS2602 dan TGS2611, serta data digital dari sensor DHT22 dengan interval 3 detik. Nilai analog dikonversi menjadi konsentrasi gas dalam ppm menggunakan persamaan kalibrasi yang telah ditetapkan.
+
+\textbf{Tahap 2: Packaging dan Transmisi}
+Data sensor dikemas dalam format JSON dan dikirim ke server backend melalui HTTP POST request. Struktur JSON mencakup device\_id untuk identifikasi unit, timestamp dalam format ISO 8601, dan objek readings yang berisi semua parameter sensor.
+
+\textbf{Tahap 3: Validasi Server-Side}
+Backend menerima request dan melakukan validasi: (1) verifikasi device\_id terdaftar dalam database, (2) check timestamp untuk deteksi data duplicate atau out-of-order, (3) range validation untuk setiap parameter sensor (nilai tidak boleh negatif atau exceeding physical limits), (4) completeness check untuk memastikan semua field yang required ada.
+
+\textbf{Tahap 4: Klasifikasi Status}
+Algoritma klasifikasi membandingkan nilai sensor dengan threshold yang tersimpan di database. Untuk setiap parameter gas, sistem mengevaluasi: jika nilai < threshold\_fresh maka status = "Segar", jika threshold\_fresh ≤ nilai < threshold\_spoiled maka status = "Kurang Segar", jika nilai ≥ threshold\_spoiled maka status = "Busuk". Status final ditentukan berdasarkan parameter dengan kondisi terburuk (worst-case scenario).
+
+\textbf{Tahap 5: Penyimpanan Database}
+Data yang telah divalidasi dan diklasifikasi disimpan ke tabel sensor\_readings dengan foreign key reference ke tabel devices. Database transaction memastikan atomicity penyimpanan.
+
+\textbf{Tahap 6: Update Dashboard}
+Setelah data tersimpan, server men-trigger update ke dashboard. Jika menggunakan WebSocket, server push data ke connected clients. Jika menggunakan polling, client akan fetch data terbaru pada interval berikutnya. Dashboard mem-parse JSON response, update tampilan card monitoring, append data point ke grafik, dan update timestamp "Last Updated".
+
+\subsection{Komponen Subsistem Monitoring}
+
+Subsistem monitoring pada sistem FRESH-ID terdiri dari empat komponen utama yang terintegrasi sebagaimana ditunjukkan pada diagram arsitektur subsistem: Broker MQTT, Backend Server, Database, dan Website FRESH-ID. Keempat komponen ini bekerja secara sinergis untuk mewujudkan fungsi pemantauan real-time yang efektif.
+
+\subsubsection{Broker MQTT}
+
+\textbf{Fungsi dan Peran}
+
+Broker MQTT berfungsi sebagai middleware komunikasi yang menghubungkan perangkat IoT (ESP32) dengan backend server menggunakan protokol MQTT (Message Queuing Telemetry Transport). Broker menerima message yang di-publish oleh ESP32 dan mendistribusikannya kepada subscriber (backend server) yang telah subscribe ke topic tertentu. Penggunaan MQTT dipilih karena protokol ini dirancang khusus untuk IoT dengan karakteristik lightweight, bandwidth-efficient, dan mendukung QoS (Quality of Service) levels untuk reliability.
+
+\textbf{Implementasi Broker}
+
+Implementasi broker MQTT dapat menggunakan:
+\begin{itemize}
+    \item \textbf{HiveMQ Public Broker}: Broker MQTT publik gratis yang digunakan pada implementasi sistem FRESH-ID (broker.hivemq.com port 1883). Cocok untuk prototyping dan testing dengan reliability yang baik.
+    \item \textbf{Mosquitto}: Open-source MQTT broker yang ringan dan stabil, cocok untuk deployment lokal dengan resource terbatas jika diperlukan broker private.
+    \item \textbf{EMQX}: Enterprise-grade broker dengan fitur clustering dan monitoring yang lengkap untuk production deployment.
+    \item \textbf{Eclipse Mosquitto (test.mosquitto.org)}: Public test broker sebagai alternatif untuk development.
+\end{itemize}
+
+Untuk sistem FRESH-ID, \textbf{HiveMQ Public Broker dipilih} sebagai broker utama karena mudah digunakan tanpa konfigurasi server, reliable untuk testing dan demo, serta tidak memerlukan setup infrastructure tambahan. Untuk production environment, dapat di-migrate ke Mosquitto private broker atau EMQX untuk keamanan dan kontrol yang lebih baik.
+
+\textbf{Topic Structure}
+
+Struktur topic MQTT dirancang secara hierarkis untuk memudahkan routing dan filtering message:
+\begin{verbatim}
+freshid/{device_id}/sensor/data    # Data sensor real-time
+freshid/{device_id}/sensor/status  # Status koneksi device
+freshid/{device_id}/command        # Command dari server ke device
+freshid/system/alert               # Alert notification
+\end{verbatim}
+
+Contoh: \texttt{freshid/FRESHID-001/sensor/data} untuk data dari device dengan ID FRESHID-001.
+
+\textbf{QoS Level}
+
+Sistem menggunakan QoS Level 1 (At least once delivery) untuk data sensor guna menjamin message terkirim minimal sekali, dengan kemungkinan duplicate yang dapat difilter oleh backend menggunakan timestamp checking. QoS Level 2 (Exactly once) tidak digunakan karena overhead yang lebih tinggi, sementara QoS Level 0 berisiko data loss.
+
+\textbf{Payload Format}
+
+Message payload menggunakan format JSON compact untuk efisiensi bandwidth:
+\begin{verbatim}
+{
+  "d": "FRESHID-001",          // device_id
+  "t": 1702545045,             // timestamp Unix epoch
+  "r": {                       // readings
+    "nh3": 12.5,
+    "h2s": 3.2,
+    "ch4": 8.7,
+    "temp": 25.4,
+    "hum": 65.2
+  }
+}
+\end{verbatim}
+
+\textbf{Security}
+
+Broker dikonfigurasi dengan authentication menggunakan username/password untuk setiap device, serta ACL (Access Control List) untuk membatasi device hanya dapat publish ke topic tertentu. Koneksi dapat diamankan dengan TLS/SSL jika diperlukan.
+
+\subsubsection{Backend Server}
+
+Backend server merupakan otak dari subsistem monitoring yang menangani seluruh logika bisnis, pemrosesan data, dan koordinasi antara komponen lainnya.
+
+\textbf{Fungsi Utama Backend:}
+\begin{enumerate}
+    \item \textbf{MQTT Subscriber}: Backend bertindak sebagai subscriber yang listen ke topic MQTT untuk menerima data sensor yang di-publish oleh ESP32 melalui broker.
+    
+    \item \textbf{Data Processing}: Memproses data sensor yang diterima, melakukan validasi format, range checking, dan konversi unit jika diperlukan.
+    
+    \item \textbf{Klasifikasi Status}: Menjalankan algoritma klasifikasi untuk menentukan status kesegaran (Segar, Kurang Segar, Busuk) berdasarkan threshold yang telah dikonfigurasi.
+    
+    \item \textbf{Database Management}: Melakukan operasi CRUD (Create, Read, Update, Delete) terhadap database untuk penyimpanan data sensor, device management, user management, dan configuration.
+    
+    \item \textbf{REST API Provider}: Menyediakan REST API endpoints untuk frontend dashboard agar dapat mengakses data, melakukan query historical data, dan mengupdate konfigurasi.
+    
+    \item \textbf{Authentication \& Authorization}: Menangani login, session management, dan pembatasan akses berdasarkan role user.
+    
+    \item \textbf{Real-time Update}: Mem-push update data ke dashboard menggunakan WebSocket atau Server-Sent Events untuk visualisasi real-time.
+\end{enumerate}
+
+\textbf{Teknologi yang Digunakan:}
+
+Backend dibangun menggunakan Node.js dengan framework Express.js untuk routing dan middleware management. Library MQTT.js digunakan untuk komunikasi dengan broker MQTT. Untuk real-time communication ke frontend, Socket.io digunakan sebagai WebSocket implementation dengan automatic fallback ke long-polling jika WebSocket tidak supported.
+
+\subsubsection{Database}
+
+Database berfungsi sebagai persistent storage untuk menyimpan seluruh data operasional sistem monitoring.
+
+\textbf{Jenis Database:}
+
+Sistem menggunakan database relasional (MySQL atau PostgreSQL) karena struktur data yang terorganisir dengan relasi antar tabel, dukungan untuk complex queries, dan ACID compliance untuk data integrity. Pemilihan database relasional lebih sesuai untuk sistem monitoring dengan kebutuhan historical data analysis, complex filtering, dan reporting yang memerlukan SQL query capabilities.
+
+\textbf{Alternatif Firebase:}
+
+Meskipun Firebase Realtime Database dapat digunakan sebagai alternatif untuk rapid prototyping dengan keunggulan real-time synchronization built-in dan hosting yang sudah tersedia, namun sistem FRESH-ID menggunakan pendekatan MQTT + Relational Database karena:
+\begin{itemize}
+    \item Lebih fleksibel dalam query dan aggregation untuk historical data
+    \item Biaya operasional lebih rendah untuk deployment on-premise
+    \item Kontrol penuh terhadap database schema dan optimization
+    \item Integrasi lebih baik dengan MQTT broker untuk IoT architecture
+    \item Dukungan untuk complex join operations dan stored procedures
+\end{itemize}
+
+\textbf{Skema Database Utama:}
+\begin{itemize}
+    \item \textbf{Tabel devices}: Menyimpan informasi perangkat sensor (device\_id, location, product\_type, installation\_date, status).
+    
+    \item \textbf{Tabel sensor\_readings}: Menyimpan data sensor time-series (reading\_id, device\_id, timestamp, nh3, h2s, ch4, temperature, humidity, freshness\_status).
+    
+    \item \textbf{Tabel users}: Menyimpan informasi pengguna (user\_id, username, password\_hash, role, email, created\_at).
+    
+    \item \textbf{Tabel thresholds}: Menyimpan konfigurasi threshold untuk setiap jenis produk (product\_type, nh3\_warning, nh3\_danger, h2s\_warning, h2s\_danger, ch4\_warning, ch4\_danger).
+    
+    \item \textbf{Tabel notifications}: Menyimpan riwayat notifikasi/alert (notification\_id, device\_id, timestamp, alert\_type, message, is\_read).
+\end{itemize}
+
+\textbf{Indexing:}
+
+Index dibuat pada kolom yang sering di-query seperti device\_id, timestamp, dan product\_type untuk mempercepat query performance, terutama pada historical data retrieval.
+
+\subsubsection{Website FRESH-ID}
+
+Website FRESH-ID merupakan antarmuka pengguna (user interface) yang memungkinkan administrator dan pengelola untuk memantau kondisi kesegaran bahan pangan secara visual dan interaktif.
+
+\textbf{Fitur Utama Website:}
+\begin{enumerate}
+    \item \textbf{Dashboard Real-time}: Menampilkan status kesegaran dari semua device yang aktif dengan update otomatis setiap beberapa detik.
+    
+    \item \textbf{Visualisasi Grafik}: Line chart untuk menampilkan tren perubahan konsentrasi gas (NH$_3$, H$_2$S, CH$_4$) dan parameter lingkungan (suhu, kelembapan) sepanjang waktu.
+    
+    \item \textbf{Monitoring Multi-Device}: Tampilan card atau grid view untuk memantau beberapa device secara bersamaan dengan indicator status warna (hijau/kuning/merah).
+    
+    \item \textbf{Historical Data}: Fitur untuk melihat data historis dengan filter berdasarkan device, tanggal, dan parameter tertentu.
+    
+    \item \textbf{Alert Notification}: Badge atau popup notification ketika ada device yang mendeteksi status "Busuk" atau "Kurang Segar".
+    
+    \item \textbf{Device Management}: Halaman untuk menambah, edit, atau hapus device, serta konfigurasi threshold per device.
+    
+    \item \textbf{User Management}: Halaman admin untuk mengelola user account, role, dan permission.
+    
+    \item \textbf{Laporan}: Fitur export data dalam format CSV atau PDF untuk keperluan dokumentasi dan analisis.
+\end{enumerate}
+
+\textbf{Teknologi Frontend:}
+
+Website dibangun menggunakan HTML5, CSS3, dan JavaScript dengan framework modern seperti React.js atau Vue.js untuk component-based development. Chart.js atau Recharts digunakan untuk visualisasi grafik. Bootstrap atau TailwindCSS untuk responsive design. Axios atau Fetch API untuk HTTP requests ke backend REST API. Socket.io client untuk real-time data update.
+
+\subsection{Perancangan Backend}
+
+\subsubsection{Teknologi Backend yang Digunakan}
+
+Subsistem monitoring FRESH-ID menggunakan teknologi backend yang dipilih berdasarkan kriteria: (1) kemampuan menangani concurrent requests untuk multi-sensor, (2) support untuk real-time communication, (3) ekosistem library yang mature untuk database dan security, serta (4) kemudahan deployment.
+
+Pilihan teknologi mencakup:
+
+\textbf{Runtime Environment}: Node.js dipilih karena event-driven, non-blocking I/O architecture yang efisien untuk I/O-bound operations seperti database queries dan network communication. Single-threaded event loop mampu menangani ribuan concurrent connections dengan memory footprint minimal.
+
+\textbf{Web Framework}: Express.js menyediakan routing, middleware system, dan HTTP utilities yang mempermudah development REST API. Middleware dapat di-chain untuk handling CORS, body parsing, authentication check, dan error handling secara modular.
+
+\textbf{Database Driver}: Library seperti mysql2 untuk MySQL atau pg untuk PostgreSQL menyediakan connection pooling dan prepared statements untuk security dan performance. Sequelize ORM dapat digunakan untuk abstraksi database operations dengan model-based approach.
+
+\textbf{Security}: Bcrypt untuk password hashing, jsonwebtoken atau express-session untuk authentication, helmet untuk security headers, dan express-validator untuk input validation.
+
+\textbf{Real-time Communication}: Socket.io untuk WebSocket implementation dengan fallback ke long-polling, atau library MQTT client jika menggunakan message broker.
+
+Alternatif lain adalah menggunakan Python dengan Flask atau FastAPI yang menyediakan async support, serta ekosistem data science libraries yang berguna jika diperlukan analisis statistik lanjutan.
+
+\subsubsection{API Endpoint untuk Penerimaan Data Sensor}
+
+Desain REST API mengikuti prinsip RESTful dengan HTTP methods yang semantic dan response codes yang standar.
+
+\textbf{POST /api/sensor/data}
+
+Endpoint untuk menerima data sensor dari ESP32.
+
+Request body (JSON):
+\begin{verbatim}
+{
+  "device_id": "FRESH-ID-001",
+  "timestamp": "2025-12-14T10:30:45Z",
+  "readings": {
+    "nh3": 12.5,
+    "h2s": 3.2,
+    "ch4": 8.7,
+    "temperature": 25.4,
+    "humidity": 65.2
+  }
+}
+\end{verbatim}
+
+Response (success):
+\begin{verbatim}
+{
+  "status": "success",
+  "message": "Data received and stored",
+  "data": {
+    "reading_id": 12345,
+    "classified_status": "Segar",
+    "timestamp": "2025-12-14T10:30:45Z"
+  }
+}
+\end{verbatim}
+
+Response (error):
+\begin{verbatim}
+{
+  "status": "error",
+  "message": "Invalid device_id",
+  "code": "DEVICE_NOT_FOUND"
+}
+\end{verbatim}
+
+\textbf{GET /api/sensor/latest/:device\_id}
+
+Endpoint untuk mendapatkan pembacaan sensor terbaru dari device tertentu.
+
+Response:
+\begin{verbatim}
+{
+  "status": "success",
+  "data": {
+    "device_id": "FRESH-ID-001",
+    "commodity": "Daging Sapi",
+    "timestamp": "2025-12-14T10:30:45Z",
+    "readings": {...},
+    "status": "Segar",
+    "trend": {
+      "nh3": "up",
+      "h2s": "stable",
+      "ch4": "down",
+      "temperature": "up"
+    }
+  }
+}
+\end{verbatim}
+
+\textbf{GET /api/sensor/history/:device\_id}
+
+Endpoint untuk mendapatkan historical data dengan query parameters untuk filtering.
+
+Query parameters:
+\begin{itemize}
+    \item start\_date: tanggal mulai (ISO 8601)
+    \item end\_date: tanggal akhir (ISO 8601)
+    \item limit: jumlah maksimal records (default: 100)
+    \item interval: agregasi data (1min, 5min, 1hour)
+\end{itemize}
+
+\textbf{POST /api/auth/login}
+
+Endpoint untuk autentikasi user.
+
+Request body:
+\begin{verbatim}
+{
+  "username": "admin",
+  "password": "securepassword"
+}
+\end{verbatim}
+
+Response:
+\begin{verbatim}
+{
+  "status": "success",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": 1,
+    "username": "admin",
+    "role": "administrator"
+  }
+}
+\end{verbatim}
+
+\textbf{GET /api/devices}
+
+Endpoint untuk mendapatkan list semua devices yang terdaftar.
+
+\textbf{POST /api/export/csv}
+
+Endpoint untuk export data ke CSV dengan filtering berdasarkan device, date range, dan status.
+
+\subsubsection{Perancangan Database}
+
+Skema database dirancang dengan normalization untuk mengurangi redundancy namun tetap optimal untuk query performance.
+
+\textbf{Tabel: devices}
+
+Menyimpan informasi perangkat sensor.
+
+\begin{verbatim}
+CREATE TABLE devices (
+  device_id VARCHAR(50) PRIMARY KEY,
+  device_name VARCHAR(100) NOT NULL,
+  commodity VARCHAR(50),
+  location VARCHAR(100),
+  status ENUM('active', 'inactive', 'maintenance'),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+              ON UPDATE CURRENT_TIMESTAMP
+);
+\end{verbatim}
+
+\textbf{Tabel: sensor\_readings}
+
+Menyimpan data time-series dari sensor.
+
+\begin{verbatim}
+CREATE TABLE sensor_readings (
+  reading_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  device_id VARCHAR(50) NOT NULL,
+  timestamp TIMESTAMP(3) NOT NULL,
+  nh3_ppm DECIMAL(10,3),
+  h2s_ppm DECIMAL(10,3),
+  ch4_ppm DECIMAL(10,3),
+  temperature DECIMAL(5,2),
+  humidity DECIMAL(5,2),
+  classified_status ENUM('Segar','Kurang Segar','Busuk'),
+  FOREIGN KEY (device_id) REFERENCES devices(device_id),
+  INDEX idx_device_timestamp (device_id, timestamp),
+  INDEX idx_timestamp (timestamp),
+  INDEX idx_status (classified_status)
+);
+\end{verbatim}
+
+Index pada kolom timestamp dan device\_id mempercepat query untuk historical data dan filtering per device. Index pada classified\_status mendukung query aggregation untuk reporting.
+
+\textbf{Tabel: thresholds}
+
+Menyimpan nilai ambang batas untuk klasifikasi.
+
+\begin{verbatim}
+CREATE TABLE thresholds (
+  threshold_id INT AUTO_INCREMENT PRIMARY KEY,
+  commodity VARCHAR(50) NOT NULL,
+  parameter VARCHAR(20) NOT NULL,
+  fresh_max DECIMAL(10,3),
+  spoiled_min DECIMAL(10,3),
+  unit VARCHAR(10),
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+              ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY unique_commodity_param (commodity, parameter)
+);
+\end{verbatim}
+
+\textbf{Tabel: users}
+
+Menyimpan informasi user untuk autentikasi.
+
+\begin{verbatim}
+CREATE TABLE users (
+  user_id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(50) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  full_name VARCHAR(100),
+  role ENUM('administrator', 'viewer'),
+  last_login TIMESTAMP NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+\end{verbatim}
+
+\textbf{Tabel: activity\_logs}
+
+Menyimpan log aktivitas untuk audit trail.
+
+\begin{verbatim}
+CREATE TABLE activity_logs (
+  log_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  action VARCHAR(100),
+  details TEXT,
+  ip_address VARCHAR(45),
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(user_id),
+  INDEX idx_timestamp (timestamp),
+  INDEX idx_user (user_id)
+);
+\end{verbatim}
+
+\subsubsection{Algoritma Klasifikasi Status Kesegaran}
+
+Algoritma klasifikasi menggunakan threshold-based decision tree dengan pendekatan worst-case untuk menentukan status final.
+
+Pseudocode algoritma:
+
+\begin{verbatim}
+function classifyFreshness(readings, thresholds):
+    statuses = []
+    
+    // Klasifikasi per parameter gas
+    for each gas_param in [nh3, h2s, ch4]:
+        value = readings[gas_param]
+        fresh_max = thresholds[gas_param].fresh_max
+        spoiled_min = thresholds[gas_param].spoiled_min
+        
+        if value < fresh_max:
+            statuses.append("Segar")
+        else if value >= fresh_max AND value < spoiled_min:
+            statuses.append("Kurang Segar")
+        else:
+            statuses.append("Busuk")
+    
+    // Evaluasi suhu sebagai faktor risiko
+    if readings.temperature > thresholds.temperature.max:
+        statuses.append("Kurang Segar")
+    
+    // Worst-case determination
+    if "Busuk" in statuses:
+        return "Busuk"
+    else if "Kurang Segar" in statuses:
+        return "Kurang Segar"
+    else:
+        return "Segar"
+\end{verbatim}
+
+Algoritma ini memastikan bahwa jika salah satu parameter menunjukkan status "Busuk", maka status keseluruhan adalah "Busuk", mengutamakan keamanan pangan (fail-safe approach).
+
+\subsection{Perancangan Frontend (Dashboard Web)}
+
+\subsubsection{Teknologi Frontend yang Digunakan}
+
+Frontend subsistem monitoring FRESH-ID dirancang menggunakan teknologi web modern yang mengutamakan responsivitas, interaktivitas, dan user experience.
+
+\textbf{HTML5} digunakan sebagai struktur markup dengan semantic elements seperti \texttt{<header>}, \texttt{<nav>}, \texttt{<main>}, \texttt{<section>}, dan \texttt{<article>} untuk meningkatkan accessibility dan SEO. Form elements menggunakan input types yang spesifik (email, password, date) untuk built-in validation di browser.
+
+\textbf{CSS3} dengan pendekatan modular menggunakan metodologi seperti BEM (Block Element Modifier) atau utility-first dengan framework Tailwind CSS untuk styling yang konsisten dan maintainable. CSS Grid dan Flexbox digunakan untuk layout responsive yang adaptif terhadap berbagai ukuran layar. Custom properties (CSS variables) untuk theme colors memudahkan konsistensi visual.
+
+\textbf{JavaScript (ES6+)} untuk interaktivitas dan dynamic content. Fetch API atau Axios library untuk HTTP requests ke backend. Async/await pattern untuk handling asynchronous operations. Module pattern untuk code organization dan reusability.
+
+\textbf{Chart Library} menggunakan Chart.js untuk visualisasi grafik time-series. Chart.js dipilih karena: (1) API yang straightforward, (2) responsive by default, (3) mendukung real-time data update, (4) customizable tooltips dan legends, serta (5) performa rendering yang baik untuk dataset medium-sized.
+
+\textbf{Additional Libraries}:
+\begin{itemize}
+    \item Moment.js atau Day.js untuk date/time formatting dan manipulation
+    \item SweetAlert2 untuk modal dialogs yang user-friendly
+    \item DataTables.js untuk tabel data yang sortable dan searchable
+    \item Socket.io-client jika menggunakan WebSocket untuk real-time updates
+\end{itemize}
+
+Alternatif modern adalah menggunakan framework seperti Vue.js atau React untuk component-based architecture, namun untuk prototipe dengan kompleksitas sedang, vanilla JavaScript dengan library utility sudah mencukupi dan mengurangi overhead.
+
+\subsubsection{Wireframe dan Mockup Dashboard}
+
+Dashboard dirancang dengan layout yang mengikuti prinsip F-pattern reading behavior, dimana informasi paling penting ditempatkan di bagian atas dan kiri.
+
+\textbf{Layout Utama}:
+\begin{itemize}
+    \item Sidebar kiri (250px): Navigasi menu dengan logo FRESH-ID di atas, search box untuk menu, dan daftar menu (Dashboard, Monitoring Real-Time, Laporan, Pengaturan, Logout)
+    \item Header atas (60px): Breadcrumb navigation, notification icon dengan badge counter, settings icon, dan user profile info
+    \item Content area: Area utama yang menampilkan konten sesuai menu yang dipilih
+\end{itemize}
+
+\textbf{Halaman Dashboard Utama}:
+
+Section 1 - Summary Cards (grid 4 kolom):
+\begin{itemize}
+    \item Card "Total Devices": Jumlah unit sensor yang terdaftar
+    \item Card "Active Monitoring": Jumlah unit yang sedang aktif
+    \item Card "Alerts Today": Jumlah detection status "Busuk" hari ini
+    \item Card "Average Temperature": Rata-rata suhu dari semua unit
+\end{itemize}
+
+Section 2 - Quick Status Overview (grid 2 kolom):
+\begin{itemize}
+    \item Pie chart distribusi status (Segar, Kurang Segar, Busuk)
+    \item Bar chart jumlah pembacaan per komoditas
+\end{itemize}
+
+Section 3 - Recent Alerts Table:
+Tabel 5 pembacaan terakhir dengan status "Kurang Segar" atau "Busuk" dengan kolom: Timestamp, Device, Komoditas, Status, Quick Action (View Detail)
+
+\textbf{Halaman Monitoring Real-Time}:
+
+Filter section: Dropdown untuk memilih device atau "All Devices"
+
+Monitoring cards (grid responsif, 1-2 kolom tergantung screen size):
+Setiap card menampilkan:
+\begin{itemize}
+    \item Header: Nama device, komoditas, badge status (warna-coded)
+    \item Parameter section: Grid 5 kolom untuk NH₃, H₂S, CH₄, Temperature, Humidity
+    \item Setiap parameter menampilkan: Nilai dengan satuan, Icon trend (↑↓→), Persentase perubahan
+    \item Line chart: 3 series untuk gas (NH₃ biru, H₂S hijau, CH₄ merah), x-axis timestamp (30 menit terakhir), tooltip interaktif
+    \item Footer: "Last updated: 2 seconds ago" dengan auto-refresh indicator
+\end{itemize}
+
+\textbf{Color Scheme}:
+\begin{itemize}
+    \item Primary: \#6366f1 (indigo) untuk elements utama
+    \item Success/Segar: \#10b981 (green)
+    \item Warning/Kurang Segar: \#f59e0b (amber)
+    \item Danger/Busuk: \#ef4444 (red)
+    \item Neutral: \#64748b (slate) untuk text secondary
+    \item Background: \#f8fafc (light gray) untuk content area
+\end{itemize}
+
+\subsubsection{Desain Komponen Visualisasi Data}
+
+\textbf{Status Badge Component}:
+
+Visual indicator berbentuk rounded pill dengan text dan background color yang semantic:
+\begin{itemize}
+    \item "SEGAR": background green-100, text green-800, icon checkmark
+    \item "KURANG SEGAR": background amber-100, text amber-800, icon warning
+    \item "BUSUK": background red-100, text red-800, icon alert-circle
+\end{itemize}
+
+\textbf{Parameter Card Component}:
+
+Box dengan border dan shadow yang menampilkan:
+\begin{itemize}
+    \item Label parameter (font-size 0.875rem, gray-600)
+    \item Nilai besar (font-size 2rem, font-weight bold, primary color)
+    \item Satuan kecil (font-size 0.75rem, gray-500)
+    \item Trend indicator (icon dengan warna: merah untuk naik, hijau untuk turun, gray untuk stabil)
+    \item Persentase change (font-size 0.875rem dengan warna sesuai arah)
+\end{itemize}
+
+\textbf{Line Chart Configuration}:
+
+Chart.js configuration untuk real-time line chart:
+\begin{verbatim}
+{
+  type: 'line',
+  data: {
+    labels: timestamps, // Array of time labels
+    datasets: [
+      {
+        label: 'NH3 (ppm)',
+        data: nh3_values,
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        tension: 0.4
+      },
+      // Similar for H2S and CH4
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: {
+      mode: 'index',
+      intersect: false
+    },
+    scales: {
+      x: {
+        type: 'time',
+        time: {
+          displayFormats: {
+            minute: 'HH:mm'
+          }
+        }
+      },
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Concentration (ppm)'
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        position: 'top'
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return context.dataset.label + ': ' + 
+                   context.parsed.y.toFixed(2) + ' ppm';
+          }
+        }
+      }
+    }
+  }
+}
+\end{verbatim}
+
+Update data point baru:
+\begin{verbatim}
+function updateChart(chart, newTimestamp, newData) {
+  chart.data.labels.push(newTimestamp);
+  chart.data.datasets[0].data.push(newData.nh3);
+  chart.data.datasets[1].data.push(newData.h2s);
+  chart.data.datasets[2].data.push(newData.ch4);
+  
+  // Keep only last 30 minutes of data
+  if (chart.data.labels.length > 100) {
+    chart.data.labels.shift();
+    chart.data.datasets.forEach(dataset => dataset.data.shift());
+  }
+  
+  chart.update('none'); // Update without animation for smooth real-time
+}
+\end{verbatim}
+
+\textbf{Data Table Component}:
+
+Menggunakan DataTables.js untuk fitur sorting, searching, dan pagination:
+\begin{itemize}
+    \item Column definitions: Timestamp, Device ID, Komoditas, NH₃, H₂S, CH₄, Temp, Status
+    \item Custom rendering untuk status column (badge dengan warna)
+    \item Custom rendering untuk timestamp (relative time: "5 minutes ago")
+    \item Export buttons: CSV, PDF (menggunakan plugin buttons)
+    \item Responsive extension untuk mobile compatibility
+\end{itemize}
+
+\subsubsection{Perancangan Sistem Autentikasi}
+
+Sistem autentikasi menggunakan session-based authentication dengan cookie untuk simplicity dan security.
+
+\textbf{Login Flow}:
+
+1. User mengakses halaman login (\texttt{/login.html})
+2. User input username dan password
+3. Frontend mengirim POST request ke \texttt{/api/auth/login} dengan credentials
+4. Backend memvalidasi credentials:
+   - Hash password input menggunakan bcrypt
+   - Compare dengan password\_hash di database
+5. Jika valid:
+   - Generate session ID
+   - Store session data (user\_id, username, role) di server memory atau Redis
+   - Set HTTP-only cookie dengan session ID
+   - Return success response dengan user info (tanpa sensitive data)
+6. Frontend redirect ke dashboard utama
+7. Jika invalid: Return error message "Invalid credentials"
+
+\textbf{Authorization Middleware}:
+
+Setiap request ke protected routes melewati middleware yang:
+\begin{verbatim}
+function requireAuth(req, res, next) {
+  const sessionId = req.cookies.sessionId;
+  
+  if (!sessionId) {
+    return res.status(401).json({
+      status: 'error',
+      message: 'Unauthorized: No session'
+    });
+  }
+  
+  const session = getSessionData(sessionId);
+  
+  if (!session || session.expired) {
+    return res.status(401).json({
+      status: 'error',
+      message: 'Unauthorized: Invalid or expired session'
+    });
+  }
+  
+  req.user = session.user;
+  next();
+}
+\end{verbatim}
+
+\textbf{Session Management}:
+
+\begin{itemize}
+    \item Session timeout: 30 menit inactivity
+    \item Sliding expiration: Setiap request valid me-refresh timeout
+    \item Logout: Clear session data di server dan cookie di client
+    \item Remember me: Optional feature dengan extended session (7 hari)
+\end{itemize}
+
+\textbf{Security Measures}:
+
+\begin{itemize}
+    \item Password hashing dengan bcrypt (cost factor 10)
+    \item HTTP-only cookies untuk prevent XSS attacks
+    \item Secure flag pada cookies jika menggunakan HTTPS
+    \item SameSite attribute untuk CSRF protection
+    \item Rate limiting pada login endpoint (max 5 attempts per 15 menit)
+    \item Input validation dan sanitization
+    \item Prepared statements untuk prevent SQL injection
+\end{itemize}
+
+\subsection{Perancangan Komunikasi Data}
+
+\subsubsection{Protokol Komunikasi IoT}
+
+Subsistem monitoring mendukung dua pendekatan protokol untuk fleksibilitas deployment:
+
+\textbf{Pendekatan 1: HTTP/HTTPS}
+
+ESP32 mengirim data sensor menggunakan HTTP POST request ke endpoint \texttt{/api/sensor/data}. Protokol ini dipilih karena:
+\begin{itemize}
+    \item Simplicity: Mudah diimplementasikan di ESP32 dengan library HTTP client standard
+    \item Ubiquitous: Didukung oleh semua web servers dan tidak memerlukan broker tambahan
+    \item Firewall-friendly: Port 80/443 umumnya tidak diblokir
+    \item Stateless: Setiap request independen, cocok untuk simple sensor data transmission
+\end{itemize}
+
+Kelemahan: Overhead header HTTP relatif besar untuk payload kecil, kurang efisien untuk frekuensi tinggi.
+
+\textbf{Pendekatan 2: MQTT (Optional)}
+
+Message Queuing Telemetry Transport menggunakan publish-subscribe pattern:
+\begin{itemize}
+    \item ESP32 sebagai publisher mengirim data ke topic \texttt{freshid/sensor/[device\_id]/data}
+    \item Backend sebagai subscriber menerima message dari broker (Mosquitto/HiveMQ)
+    \item Broker menghandle message queuing dan delivery guarantee
+\end{itemize}
+
+Keunggulan:
+\begin{itemize}
+    \item Lightweight: Header minimal (2 bytes), efisien untuk bandwidth
+    \item QoS levels: Guarantee delivery dengan QoS 1 (at least once) atau QoS 2 (exactly once)
+    \item Persistent sessions: Broker menyimpan message untuk client yang offline
+    \item Scalability: Broker dapat handle ribuan devices dengan efficient resource usage
+\end{itemize}
+
+Topic structure:
+\begin{verbatim}
+freshid/sensor/FRESH-ID-001/data    # Sensor readings
+freshid/sensor/FRESH-ID-001/status  # Device status (online/offline)
+freshid/sensor/FRESH-ID-001/config  # Configuration updates
+\end{verbatim}
+
+Untuk prototipe initial, HTTP dipilih untuk simplicity. MQTT dapat diimplementasikan di fase berikutnya untuk scalability.
+
+\subsubsection{Format Data yang Dikirim dari ESP32}
+
+Struktur JSON yang dikirim dari ESP32 ke backend dirancang untuk informatif namun compact:
+
+\begin{verbatim}
+{
+  "device_id": "FRESH-ID-001",
+  "timestamp": "2025-12-14T10:30:45.123Z",
+  "location": "Dapur MBG Jakarta Pusat",
+  "commodity": "Daging Sapi",
+  "readings": {
+    "nh3": {
+      "value": 12.5,
+      "unit": "ppm"
+    },
+    "h2s": {
+      "value": 3.2,
+      "unit": "ppm"
+    },
+    "ch4": {
+      "value": 8.7,
+      "unit": "ppm"
+    },
+    "temperature": {
+      "value": 25.4,
+      "unit": "celsius"
+    },
+    "humidity": {
+      "value": 65.2,
+      "unit": "percent"
+    }
+  },
+  "metadata": {
+    "firmware_version": "1.0.2",
+    "signal_strength": -65,
+    "battery_level": 85
+  }
+}
+\end{verbatim}
+
+Field \texttt{timestamp} menggunakan ISO 8601 format dengan timezone UTC untuk konsistensi. ESP32 mendapatkan timestamp dari NTP server saat boot.
+
+Field \texttt{metadata} bersifat optional namun berguna untuk diagnostik. Signal strength dalam dBm dan battery level dalam persen.
+
+Validasi di ESP32 sebelum transmisi:
+\begin{verbatim}
+// Validate sensor readings before send
+bool validateReadings() {
+  if (nh3 < 0 || nh3 > 1000) return false;
+  if (h2s < 0 || h2s > 1000) return false;
+  if (ch4 < 0 || ch4 > 10000) return false;
+  if (temp < -10 || temp > 50) return false;
+  if (humidity < 0 || humidity > 100) return false;
+  return true;
+}
+\end{verbatim}
+
+\subsubsection{Mekanisme Update Data Real-Time di Dashboard}
+
+Dashboard menggunakan AJAX polling untuk update data real-time dengan fallback mechanism.
+
+\textbf{Polling Strategy}:
+
+\begin{verbatim}
+let pollingInterval = 3000; // 3 seconds
+let consecutiveErrors = 0;
+
+async function pollSensorData() {
+  try {
+    const response = await fetch('/api/sensor/latest/all', {
+      method: 'GET',
+      credentials: 'include' // Include cookies for auth
+    });
+    
+    if (!response.ok) throw new Error('HTTP error');
+    
+    const data = await response.json();
+    updateDashboard(data);
+    
+    consecutiveErrors = 0;
+    pollingInterval = 3000; // Reset to normal
+    
+  } catch (error) {
+    console.error('Polling error:', error);
+    consecutiveErrors++;
+    
+    // Exponential backoff on errors
+    pollingInterval = Math.min(pollingInterval * 2, 30000);
+    
+    if (consecutiveErrors > 5) {
+      showConnectionError();
+    }
+  } finally {
+    setTimeout(pollSensorData, pollingInterval);
+  }
+}
+
+// Start polling when page loads
+document.addEventListener('DOMContentLoaded', pollSensorData);
+\end{verbatim}
+
+\textbf{Selective Update Strategy}:
+
+Untuk mengurangi bandwidth, backend dapat mengirim full data pada request pertama, kemudian hanya delta (changes) pada subsequent polls:
+
+\begin{verbatim}
+GET /api/sensor/latest/all?since=2025-12-14T10:30:45Z
+
+Response:
+{
+  "status": "success",
+  "updates": [
+    {
+      "device_id": "FRESH-ID-001",
+      "readings": {...},
+      "timestamp": "2025-12-14T10:30:48Z"
+    }
+    // Only devices with new data since last poll
+  ],
+  "no_changes": ["FRESH-ID-002", "FRESH-ID-003"]
+}
+\end{verbatim}
+
+\textbf{Visual Feedback}:
+
+Indicator di header dashboard menunjukkan status koneksi:
+\begin{itemize}
+    \item Green pulsing dot: "Connected, updating every 3s"
+    \item Yellow dot: "Connection slow, retrying..."
+    \item Red dot: "Connection lost, attempting to reconnect..."
+\end{itemize}
+
+\textbf{WebSocket Alternative (Advanced)}:
+
+Untuk implementation yang lebih efficient:
+
+\begin{verbatim}
+// Frontend
+const socket = io('http://server-address:3000');
+
+socket.on('connect', () => {
+  console.log('WebSocket connected');
+  socket.emit('subscribe', ['FRESH-ID-001', 'FRESH-ID-002']);
+});
+
+socket.on('sensor_update', (data) => {
+  updateDashboard(data);
+});
+
+socket.on('disconnect', () => {
+  showConnectionError();
+});
+\end{verbatim}
+
+WebSocket menyediakan true push mechanism, mengurangi latency dan overhead dibanding polling.
+
+\subsection{Perancangan Fitur-Fitur Dashboard}
+
+\subsubsection{Halaman Dashboard Utama}
+
+Halaman dashboard utama menyediakan overview menyeluruh dari semua unit sensor yang terdaftar dalam sistem FRESH-ID.
+
+\textbf{Header Section}:
+\begin{itemize}
+    \item Breadcrumb: Home / Dashboard
+    \item Page title: "Monitoring Dashboard"
+    \item Subtitle: "Overview seluruh sistem monitoring FRESH-ID"
+    \item Date-time display dengan auto-update setiap detik
+\end{itemize}
+
+\textbf{Summary Statistics (4 Card Grid)}:
+
+Card 1 - Total Devices:
+\begin{itemize}
+    \item Icon: Grid symbol
+    \item Value: Jumlah total devices registered (e.g., "5 Units")
+    \item Subtext: "Devices terdaftar"
+    \item Color theme: Blue
+\end{itemize}
+
+Card 2 - Active Monitoring:
+\begin{itemize}
+    \item Icon: Activity pulse
+    \item Value: Jumlah devices aktif mengirim data dalam 5 menit terakhir
+    \item Subtext: "Aktif saat ini"
+    \item Progress bar: Active/Total ratio
+    \item Color theme: Green
+\end{itemize}
+
+Card 3 - Critical Alerts:
+\begin{itemize}
+    \item Icon: Alert triangle
+    \item Value: Jumlah detection dengan status "Busuk" hari ini
+    \item Subtext: "Peringatan kritis hari ini"
+    \item Trend: Comparison dengan kemarin (e.g., "+2 dari kemarin")
+    \item Color theme: Red
+\end{itemize}
+
+Card 4 - Average Conditions:
+\begin{itemize}
+    \item Icon: Thermometer
+    \item Value: Rata-rata suhu dari semua active devices
+    \item Subtext: "Suhu rata-rata / Kelembapan rata-rata"
+    \item Color theme: Indigo
+\end{itemize}
+
+\textbf{Status Distribution Chart}:
+
+Pie chart atau donut chart menampilkan distribusi status kesegaran:
+\begin{itemize}
+    \item Segment hijau: Persentase pembacaan dengan status "Segar"
+    \item Segment kuning: Persentase "Kurang Segar"
+    \item Segment merah: Persentase "Busuk"
+    \item Interactive: Hover untuk detail count
+    \item Time range selector: "Hari ini / 7 hari terakhir / 30 hari"
+\end{itemize}
+
+\textbf{Recent Alerts Table}:
+
+Tabel menampilkan 10 pembacaan terbaru dengan status "Kurang Segar" atau "Busuk":
+
+Columns:
+\begin{itemize}
+    \item Timestamp (sortable)
+    \item Device ID dengan link ke detail
+    \item Komoditas
+    \item Lokasi
+    \item Status dengan badge berwarna
+    \item Parameters yang exceeding threshold (tooltip dengan nilai)
+    \item Action button: "View Detail"
+\end{itemize}
+
+Features:
+\begin{itemize}
+    \item Auto-refresh setiap 10 detik
+    \item Click row untuk detail view
+    \item Color-coded row background: Yellow untuk "Kurang Segar", Red untuk "Busuk"
+\end{itemize}
+
+\textbf{Quick Actions Panel}:
+\begin{itemize}
+    \item Button "View All Monitoring" → Navigate ke halaman monitoring real-time
+    \item Button "Generate Report" → Navigate ke halaman laporan
+    \item Button "Export Data" → Modal untuk export configuration
+\end{itemize}
+
+\subsubsection{Halaman Monitoring Real-Time}
+
+Halaman ini menyediakan monitoring detail untuk setiap unit sensor dengan visualisasi real-time.
+
+\textbf{Filter \& Control Section}:
+\begin{itemize}
+    \item Dropdown "Select Device": Pilihan "All Devices" atau individual device
+    \item Dropdown "Filter by Status": "All", "Segar", "Kurang Segar", "Busuk"
+    \item Dropdown "Filter by Commodity": "All", "Daging Sapi", "Daging Ayam", "Ikan", "Susu"
+    \item Toggle "Auto-refresh": On/Off dengan indicator
+    \item Button "Refresh Now": Manual refresh trigger
+\end{itemize}
+
+\textbf{Monitoring Cards (Responsive Grid)}:
+
+Layout: 1 kolom untuk mobile, 2 kolom untuk tablet, 2 kolom untuk desktop
+
+Setiap card structure:
+
+Card Header:
+\begin{itemize}
+    \item Device ID (bold, primary color)
+    \item Komoditas subtitle (gray text, smaller)
+    \item Status badge di pojok kanan (Segar/Kurang Segar/Busuk)
+    \item Location info dengan icon
+\end{itemize}
+
+Parameters Grid (5 kolom responsif):
+
+Setiap parameter box menampilkan:
+\begin{itemize}
+    \item Parameter label (NH₃, H₂S, CH₄, Temp, Humidity)
+    \item Large value dengan satuan
+    \item Trend arrow (↑ red jika naik, ↓ green jika turun, → gray jika stabil)
+    \item Percentage change dari 1 menit sebelumnya
+    \item Threshold indicator: Progress bar dengan zone colors (green untuk safe zone, yellow untuk warning, red untuk danger)
+\end{itemize}
+
+Line Chart Section:
+
+Chart configuration:
+\begin{itemize}
+    \item Height: 300px
+    \item Time range: Last 30 minutes (adjustable dengan buttons: 15min/30min/1hour/3hour)
+    \item 3 series lines: NH₃ (blue), H₂S (green), CH₄ (red)
+    \item Y-axis: Concentration (ppm), auto-scale dengan padding
+    \item X-axis: Time dengan format HH:mm:ss
+    \item Threshold lines: Horizontal dashed lines untuk fresh\_max dan spoiled\_min
+    \item Tooltip: Show all values pada timestamp tertentu
+    \item Legend: Interactive, click untuk toggle series visibility
+    \item Zoom: Mouse wheel untuk zoom in/out
+    \item Pan: Drag untuk pan timeline
+\end{itemize}
+
+Card Footer:
+\begin{itemize}
+    \item "Last updated: X seconds ago" dengan relative time
+    \item Icon indicator: Green dot jika data fresh (< 10s), Yellow jika stale (> 30s), Red jika no data (> 60s)
+    \item Button "View History" untuk historical data detail
+    \item Button "Export Data" untuk export pembacaan device ini
+\end{itemize}
+
+\textbf{Bulk Actions}:
+\begin{itemize}
+    \item Checkbox untuk select multiple devices
+    \item "Compare Selected": Open comparison view dengan overlay charts
+    \item "Export Selected": Export data dari selected devices
+\end{itemize}
+
+\subsubsection{Halaman Riwayat Data}
+
+Halaman untuk viewing dan analyzing historical sensor data.
+
+\textbf{Filter Panel (Collapsible)}:
+
+\begin{itemize}
+    \item Device selector: Multi-select dropdown atau checkbox list
+    \item Date range picker: Start date - End date dengan presets (Today, Yesterday, Last 7 days, Last 30 days, Custom range)
+    \item Time range picker: Specific hours jika needed
+    \item Status filter: Checkbox untuk Segar, Kurang Segar, Busuk
+    \item Parameter filter: Pilih parameters yang ingin ditampilkan
+    \item Commodity filter: Multi-select komoditas
+    \item Button "Apply Filters"
+    \item Button "Reset Filters"
+\end{itemize}
+
+\textbf{Data Visualization Section}:
+
+Tab 1 - Chart View:
+\begin{itemize}
+    \item Multi-series line chart untuk selected devices dan parameters
+    \item Configurable chart type: Line, Area, Bar
+    \item Adjustable aggregation: Raw data, 1-min average, 5-min average, Hourly average
+    \item Downloadable as image (PNG/SVG)
+\end{itemize}
+
+Tab 2 - Table View:
+\begin{itemize}
+    \item DataTable dengan columns: Timestamp, Device, Commodity, NH₃, H₂S, CH₄, Temp, Humidity, Status
+    \item Sortable columns
+    \item Search box untuk filter in-table
+    \item Pagination dengan configurable page size (10/25/50/100)
+    \item Column visibility toggle
+    \item Export buttons: CSV, Excel, PDF
+\end{itemize}
+
+Tab 3 - Statistics View:
+\begin{itemize}
+    \item Summary statistics per device: Min, Max, Average, Std Dev untuk each parameter
+    \item Distribution charts: Histogram untuk parameter distribution
+    \item Correlation matrix: Heatmap showing correlation between parameters
+\end{itemize}
+
+\textbf{Download Section}:
+\begin{itemize}
+    \item Format selector: CSV, Excel, JSON
+    \item Data range info: "X records will be exported"
+    \item Button "Download Data"
+    \item Progress bar untuk large exports
+\end{itemize}
+
+\subsubsection{Halaman Laporan dan Export Data}
+
+Halaman untuk generate custom reports dan bulk data export.
+
+\textbf{Report Configuration Panel}:
+
+Section 1 - Report Type:
+\begin{itemize}
+    \item Radio buttons: "Summary Report", "Detailed Report", "Alert Report", "Custom Report"
+\end{itemize}
+
+Section 2 - Parameters:
+\begin{itemize}
+    \item Device selection: Multi-select atau "All Devices"
+    \item Date range: Start - End date picker
+    \item Status filter: Include/exclude certain statuses
+    \item Group by: Device, Commodity, Date, Status
+\end{itemize}
+
+Section 3 - Report Content:
+\begin{itemize}
+    \item Checkboxes untuk sections yang ingin di-include:
+    \begin{itemize}
+        \item Executive Summary
+        \item Statistical Analysis
+        \item Charts and Graphs
+        \item Raw Data Table
+        \item Alert History
+        \item Recommendations
+    \end{itemize}
+\end{itemize}
+
+Section 4 - Output Format:
+\begin{itemize}
+    \item Radio buttons: PDF, Excel, Word, HTML
+\end{itemize}
+
+\textbf{Preview Section}:
+\begin{itemize}
+    \item Button "Preview Report"
+    \item Preview panel showing report structure
+    \item Estimated file size
+    \item Generation time estimate
+\end{itemize}
+
+\textbf{Action Buttons}:
+\begin{itemize}
+    \item "Generate Report": Process dan download
+    \item "Save Configuration": Save report config untuk reuse
+    \item "Schedule Report": (Future feature) Automated periodic reports
+\end{itemize}
+
+\textbf{Report History Table}:
+\begin{itemize}
+    \item Columns: Report Name, Type, Date Generated, Size, Status
+    \item Action column: Re-download, Delete
+    \item Auto-cleanup policy: Reports older than 30 days deleted
+\end{itemize}
+
+\subsubsection{Halaman Manajemen Pengguna dan Pengaturan}
+
+\textbf{User Management Tab (Admin Only)}:
+
+User Table:
+\begin{itemize}
+    \item Columns: Username, Full Name, Role, Last Login, Status, Actions
+    \item Action buttons: Edit, Delete, Reset Password
+    \item Button "Add New User": Open modal untuk create user
+\end{itemize}
+
+Create/Edit User Modal:
+\begin{itemize}
+    \item Form fields: Username, Full Name, Email, Password, Confirm Password, Role (Administrator/Viewer)
+    \item Validation: Username unique, password minimum 8 characters dengan complexity requirements
+    \item Button "Save User"
+\end{itemize}
+
+\textbf{System Settings Tab}:
+
+Threshold Configuration:
+\begin{itemize}
+    \item Table untuk each commodity dan parameter
+    \item Columns: Commodity, Parameter, Fresh Max, Spoiled Min, Unit
+    \item Inline editing dengan validation
+    \item Button "Reset to Default"
+    \item Button "Save Changes"
+    \item Change log: Track who changed what and when
+\end{itemize}
+
+Monitoring Settings:
+\begin{itemize}
+    \item Polling interval: Dropdown (3s, 5s, 10s, 30s)
+    \item Data retention period: Input (days)
+    \item Auto-cleanup enabled: Toggle
+    \item Alert notification threshold: Configuration untuk alert triggers
+\end{itemize}
+
+Display Settings:
+\begin{itemize}
+    \item Chart default time range: Dropdown
+    \item Temperature unit: Radio (Celsius/Fahrenheit)
+    \item Date format: Dropdown (DD/MM/YYYY, MM/DD/YYYY, YYYY-MM-DD)
+    \item Time format: Radio (24-hour/12-hour)
+    \item Theme: Toggle (Light/Dark) - Future feature
+\end{itemize}
+
+\textbf{Device Management Tab}:
+
+Registered Devices Table:
+\begin{itemize}
+    \item Columns: Device ID, Name, Commodity, Location, Status, Last Seen, Actions
+    \item Status indicator: Online (green), Offline (red), Maintenance (yellow)
+    \item Action buttons: Edit, View Details, Remove
+    \item Button "Register New Device"
+\end{itemize}
+
+Register Device Modal:
+\begin{itemize}
+    \item Form fields: Device ID (auto-generated atau manual), Device Name, Commodity dropdown, Location, Description
+    \item QR code generation untuk device pairing
+    \item Button "Register Device"
+\end{itemize}
+
+\textbf{Activity Logs Tab}:
+
+Log Table:
+\begin{itemize}
+    \item Columns: Timestamp, User, Action, Details, IP Address
+    \item Filter: By user, by action type, by date range
+    \item Search functionality
+    \item Export logs to CSV
+    \item Retention: Logs kept for 90 days
+\end{itemize}
+
+\subsection{Perancangan Pengujian}
+
+\subsubsection{Skenario Pengujian Fungsional}
+
+Pengujian fungsional memastikan setiap fitur dashboard bekerja sesuai spesifikasi.
+
+\textbf{Test Case 1: User Authentication}
+\begin{itemize}
+    \item TC1.1: Login dengan credentials valid → Berhasil redirect ke dashboard
+    \item TC1.2: Login dengan credentials invalid → Tampil error message
+    \item TC1.3: Login dengan username kosong → Tampil validation error
+    \item TC1.4: Session expiration → Auto redirect ke login setelah timeout
+    \item TC1.5: Logout → Clear session dan redirect ke login page
+\end{itemize}
+
+\textbf{Test Case 2: Data Reception}
+\begin{itemize}
+    \item TC2.1: POST valid sensor data → Return success, data tersimpan di database
+    \item TC2.2: POST dengan device\_id tidak terdaftar → Return error 404
+    \item TC2.3: POST dengan parameter invalid (negative values) → Return validation error
+    \item TC2.4: POST dengan JSON malformed → Return 400 Bad Request
+    \item TC2.5: POST tanpa authentication → Return 401 Unauthorized (jika endpoint protected)
+\end{itemize}
+
+\textbf{Test Case 3: Dashboard Display}
+\begin{itemize}
+    \item TC3.1: Akses dashboard utama → Summary cards tampil dengan data correct
+    \item TC3.2: Akses monitoring real-time → Cards untuk all active devices tampil
+    \item TC3.3: Filter by device → Tampil hanya device yang dipilih
+    \item TC3.4: Filter by status → Tampil hanya devices dengan status matching
+    \item TC3.5: Auto-refresh toggle off → Polling berhenti
+    \item TC3.6: Auto-refresh toggle on → Polling resume
+\end{itemize}
+
+\textbf{Test Case 4: Chart Visualization}
+\begin{itemize}
+    \item TC4.1: Line chart load dengan historical data → Chart render dengan all series
+    \item TC4.2: New data arrives → Chart update dengan smooth animation
+    \item TC4.3: Time range change → Chart re-render dengan data sesuai range
+    \item TC4.4: Legend click → Series toggle visibility
+    \item TC4.5: Tooltip hover → Tampil values untuk all series pada timestamp
+\end{itemize}
+
+\textbf{Test Case 5: Classification}
+\begin{itemize}
+    \item TC5.1: Parameter values < fresh\_max → Status = "Segar", badge hijau
+    \item TC5.2: Parameter values between fresh\_max dan spoiled\_min → Status = "Kurang Segar", badge kuning
+    \item TC5.3: Parameter values ≥ spoiled\_min → Status = "Busuk", badge merah
+    \item TC5.4: Mixed parameters → Status = worst case (jika ada 1 busuk, overall busuk)
+\end{itemize}
+
+\textbf{Test Case 6: Export Data}
+\begin{itemize}
+    \item TC6.1: Export CSV dengan filter → File CSV downloaded dengan data correct
+    \item TC6.2: Export dengan large dataset (>10,000 rows) → Progress indicator tampil, file generated
+    \item TC6.3: Export tanpa data → Warning message "No data to export"
+\end{itemize}
+
+\subsubsection{Skenario Pengujian Performa}
+
+Pengujian performa mengukur response time dan throughput sistem.
+
+\textbf{Test Case P1: Response Time Dashboard}
+\begin{itemize}
+    \item Metrik: Time To First Byte (TTFB), Page Load Time, Time to Interactive
+    \item Target: TTFB < 200ms, Page Load < 2s, TTI < 3s
+    \item Tool: Lighthouse, WebPageTest
+    \item Kondisi: Desktop dan mobile simulation
+\end{itemize}
+
+\textbf{Test Case P2: API Response Time}
+\begin{itemize}
+    \item Endpoint: GET /api/sensor/latest/all
+    \item Metrik: Response time dari request hingga response received
+    \item Target: p50 < 100ms, p95 < 300ms, p99 < 500ms
+    \item Load: 1 user, 10 concurrent users, 50 concurrent users
+    \item Tool: Apache JMeter atau k6
+\end{itemize}
+
+\textbf{Test Case P3: Data Ingestion Throughput}
+\begin{itemize}
+    \item Endpoint: POST /api/sensor/data
+    \item Metrik: Requests per second, error rate
+    \item Target: Support 5 devices @ 3s interval = ~1.67 rps tanpa error
+    \item Stress test: Simulate 100 rps untuk find breaking point
+    \item Tool: Artillery atau Locust
+\end{itemize}
+
+\textbf{Test Case P4: Chart Rendering Performance}
+\begin{itemize}
+    \item Metrik: Frame rate saat update, memory usage
+    \item Dataset: 100 points, 500 points, 1000 points
+    \item Target: Maintain 60 FPS saat update, memory < 200MB
+    \item Tool: Chrome DevTools Performance profiler
+\end{itemize}
+
+\textbf{Test Case P5: Database Query Performance}
+\begin{itemize}
+    \item Query: SELECT untuk historical data dengan time range
+    \item Metrik: Query execution time
+    \item Dataset: 10k rows, 100k rows, 1M rows
+    \item Target: Query time < 500ms untuk 100k rows dengan proper indexing
+    \item Tool: Database profiler (EXPLAIN ANALYZE)
+\end{itemize}
+
+\textbf{Test Case P6: Concurrent Users}
+\begin{itemize}
+    \item Scenario: Multiple users accessing dashboard simultaneously
+    \item Load: 1, 5, 10, 20 concurrent users
+    \item Metrik: Average response time, error rate, server CPU/memory
+    \item Target: Support 10 concurrent users dengan response time degradation < 20\%
+\end{itemize}
+
+\subsubsection{Skenario Pengujian Integrasi dengan Hardware}
+
+Pengujian end-to-end dari sensor hingga dashboard.
+
+\textbf{Test Case I1: ESP32 to Server Communication}
+\begin{itemize}
+    \item Setup: ESP32 terhubung ke WiFi, server running
+    \item Action: ESP32 send sensor data
+    \item Verification: Server receive data, return success response, data masuk database
+    \item Metrik: Transmission success rate, latency
+    \item Target: Success rate > 99\%, latency < 1s
+\end{itemize}
+
+\textbf{Test Case I2: Data Flow Integrity}
+\begin{itemize}
+    \item Setup: Known sensor values di ESP32
+    \item Action: Send data, check di dashboard
+    \item Verification: Values di dashboard match dengan sensor readings
+    \item Tolerance: ±0.1 untuk float values
+\end{itemize}
+
+\textbf{Test Case I3: Multi-Sensor Simultaneous}
+\begin{itemize}
+    \item Setup: 5 ESP32 devices sending data simultaneously
+    \item Action: All devices send data dalam window 1 detik
+    \item Verification: All data received, no data loss, correct device assignment
+    \item Dashboard: All cards update dengan data correct
+\end{itemize}
+
+\textbf{Test Case I4: Network Resilience}
+\begin{itemize}
+    \item Scenario 1: WiFi disconnect saat transmisi → ESP32 buffer data, retry ketika reconnect
+    \item Scenario 2: Server temporary down → ESP32 retry dengan exponential backoff
+    \item Scenario 3: Packet loss simulation → Verify data eventually delivered
+\end{itemize}
+
+\textbf{Test Case I5: Timestamp Synchronization}
+\begin{itemize}
+    \item Setup: ESP32 dengan NTP sync
+    \item Verification: Timestamp di sensor data match dengan server time (tolerance ±2s)
+    \item Edge case: ESP32 boot tanpa NTP → Fallback ke local time dengan flag
+\end{itemize}
+
+\subsubsection{Metrik Evaluasi Keberhasilan}
+
+Subsistem monitoring FRESH-ID dievaluasi berdasarkan Key Performance Indicators (KPI) berikut:
+
+\textbf{Functional Metrics}:
+\begin{itemize}
+    \item Test pass rate: > 95\% dari functional test cases harus pass
+    \item Feature completeness: 100\% fitur yang dispecifikasikan diimplementasikan
+    \item Classification accuracy: > 95\% agreement dengan manual classification
+\end{itemize}
+
+\textbf{Performance Metrics}:
+\begin{itemize}
+    \item Dashboard load time: < 2 detik pada koneksi broadband (10 Mbps)
+    \item API response time: p95 < 300ms untuk read operations
+    \item Data ingestion latency: < 1 detik dari ESP32 send hingga tampil di dashboard
+    \item Chart update rate: > 30 FPS saat real-time update
+    \item Concurrent user capacity: Support minimal 10 users simultaneously
+\end{itemize}
+
+\textbf{Reliability Metrics}:
+\begin{itemize}
+    \item Uptime: > 99\% (< 7.2 jam downtime per bulan)
+    \item Data loss rate: < 0.1\% dari transmitted data
+    \item Error rate: < 1\% dari total requests
+    \item Recovery time: < 5 menit untuk service restart
+\end{itemize}
+
+\textbf{Usability Metrics}:
+\begin{itemize}
+    \item User task completion rate: > 90\% untuk common tasks (login, view data, export)
+    \item Average time to complete task: < 1 menit untuk simple tasks
+    \item User satisfaction score: > 4/5 pada survey (jika dilakukan user testing)
+    \item Accessibility: Comply dengan WCAG 2.1 Level A minimal
+\end{itemize}
+
+\textbf{Security Metrics}:
+\begin{itemize}
+    \item Authentication bypass attempts: 0 successful
+    \item SQL injection attempts: 0 successful
+    \item XSS vulnerability: 0 exploitable
+    \item Password strength: All users enforced minimal 8 characters
+    \item Session hijacking prevention: Secure cookies, HTTPOnly, SameSite
+\end{itemize}
+
+Evaluasi dilakukan melalui:
+\begin{enumerate}
+    \item Automated testing: Unit tests, integration tests, load tests
+    \item Manual testing: Exploratory testing, usability testing
+    \item Monitoring: Application performance monitoring (APM) tools
+    \item Logging: Comprehensive logging untuk error tracking dan debugging
+    \item User feedback: Survey atau interview dengan target users (administrator BGN)
+\end{enumerate}
+
+Hasil evaluasi didokumentasikan dalam test report yang mencakup:
+\begin{itemize}
+    \item Test summary: Pass/fail count, coverage percentage
+    \item Performance benchmarks: Charts menunjukkan response time, throughput
+    \item Issues log: Daftar bugs yang ditemukan dengan severity level
+    \item Recommendations: Saran perbaikan atau optimization untuk iteration berikutnya
+\end{itemize}
+
+\newpage
+
+% ============================================
+% DAFTAR PUSTAKA
+% ============================================
+
+\begin{thebibliography}{99}
+
+\bibitem{abadi2012}
+Abadi, D. J. (2012). Consistency tradeoffs in modern distributed database system design: CAP is only part of the story. \textit{Computer}, 45(2), 37-42. https://doi.org/10.1109/MC.2012.33
+
+\bibitem{alfuqaha2015}
+Al-Fuqaha, A., Guizani, M., Mohammadi, M., Aledhari, M., \& Ayyash, M. (2015). Internet of Things: A survey on enabling technologies, protocols, and applications. \textit{IEEE Communications Surveys \& Tutorials}, 17(4), 2347-2376. https://doi.org/10.1109/COMST.2015.2444095
+
+\bibitem{aatikah2023}
+Aatikah, A., Santoso, H., \& Wijaya, A. (2023). Prototype sistem final crosscheck pada industri makanan berbasis IoT Thingspeak. \textit{Jurnal Teknik Elektro dan Komputer}, 12(1), 45-52.
+
+\bibitem{binson2023}
+Binson, V. A., \& Thomas, M. (2023). Detection of VOCS using MOS gas sensors and neural network for meat quality assessment. \textit{Sensors and Actuators B: Chemical}, 375, 132874. https://doi.org/10.1016/j.snb.2022.132874
+
+\bibitem{bostock2011}
+Bostock, M., Ogievetsky, V., \& Heer, J. (2011). D³ data-driven documents. \textit{IEEE Transactions on Visualization and Computer Graphics}, 17(12), 2301-2309. https://doi.org/10.1109/TVCG.2011.185
+
+\bibitem{cattell2011}
+Cattell, R. (2011). Scalable SQL and NoSQL data stores. \textit{ACM SIGMOD Record}, 39(4), 12-27. https://doi.org/10.1145/1978915.1978919
+
+\bibitem{damdam2023}
+Damdam, A. N., Yudanto, D. W., \& Prakoso, T. (2023). IoT-enabled electronic nose system for beef quality monitoring and spoilage detection. \textit{Sensors}, 23(10), 4813. https://doi.org/10.3390/s23104813
+
+\bibitem{few2006}
+Few, S. (2006). \textit{Information dashboard design: The effective visual communication of data}. O'Reilly Media.
+
+\bibitem{fielding2000}
+Fielding, R. T. (2000). \textit{Architectural styles and the design of network-based software architectures} [Doctoral dissertation, University of California, Irvine]. UCI Library. https://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm
+
+\bibitem{grigorik2013}
+Grigorik, I. (2013). \textit{High performance browser networking}. O'Reilly Media. https://hpbn.co/
+
+\bibitem{jensen2017}
+Jensen, S. K., Pedersen, T. B., \& Thomsen, C. (2017). Time series management systems: A survey. \textit{IEEE Transactions on Knowledge and Data Engineering}, 29(11), 2581-2600. https://doi.org/10.1109/TKDE.2017.2740932
+
+\bibitem{jones2015}
+Jones, M., Bradley, J., \& Sakimura, N. (2015). \textit{JSON web token (JWT)} (RFC 7519). Internet Engineering Task Force. https://tools.ietf.org/html/rfc7519
+
+\bibitem{kaur2015}
+Kaur, K., \& Rani, R. (2015). Managing data in healthcare information systems: Many models, one solution. \textit{Computer}, 48(3), 52-59. https://doi.org/10.1109/MC.2015.77
+
+\bibitem{kumar2019}
+Kumar, A., Singh, A., \& Sharma, R. (2019). Real-time air quality monitoring system using IoT and web dashboard. \textit{International Journal of Environmental Science and Technology}, 16(12), 8211-8220. https://doi.org/10.1007/s13762-019-02401-8
+
+\bibitem{li2021compensation}
+Li, H., Mu, D., Yuan, M., \& Liu, H. (2021). Analysis and compensation method of humidity interference for MOS gas sensor. \textit{Sensors}, 21(13), 4385. https://doi.org/10.3390/s21134385
+
+\bibitem{light2017}
+Light, R. A. (2017). Mosquitto: Server and client implementation of the MQTT protocol. \textit{Journal of Open Source Software}, 2(13), 265. https://doi.org/10.21105/joss.00265
+
+\bibitem{lodderstedt2013}
+Lodderstedt, T., McGloin, M., \& Hunt, P. (2013). \textit{OAuth 2.0 threat model and security considerations} (RFC 6819). Internet Engineering Task Force. https://tools.ietf.org/html/rfc6819
+
+\bibitem{owasp2021}
+OWASP Foundation. (2021). \textit{OWASP top ten 2021}. https://owasp.org/Top10/
+
+\bibitem{patel2018}
+Patel, S., Bhatt, C., \& Shetty, S. D. (2018). Reactive programming with RxJS 5: Learn to efficiently write robust code by replacing traditional loops with reactive streams. \textit{Packt Publishing}.
+
+\bibitem{protopappas2025}
+Protopappas, J., Fotiadis, D., \& Ouzounis, C. (2025). IoT-based monitoring system for food supply chain using LoRaWAN. \textit{Journal of Food Engineering}, 340, 111305. https://doi.org/10.1016/j.jfoodeng.2024.111305
+
+\bibitem{sarikaya2019}
+Sarikaya, A., Correll, M., Bartram, L., Tory, M., \& Fisher, D. (2019). What do we talk about when we talk about dashboards? \textit{IEEE Transactions on Visualization and Computer Graphics}, 25(1), 682-692. https://doi.org/10.1109/TVCG.2018.2864903
+
+\bibitem{schreiber2015}
+Schreiber, F. A. (2015). Session management in web applications. \textit{ACM Computing Surveys}, 48(2), 1-35. https://doi.org/10.1145/2808687
+
+\bibitem{shao2021}
+Shao, Y., Wang, Y., Xu, H., \& He, Y. (2021). Freshness monitoring of packaged salad by colorimetric gas sensor array and chemometric models. \textit{Food Control}, 124, 107908. https://doi.org/10.1016/j.foodcont.2021.107908
+
+\bibitem{taivalsaari2011}
+Taivalsaari, A., \& Mikkonen, T. (2011). The web as an application platform: The saga continues. \textit{IEEE Software}, 28(5), 62-67. https://doi.org/10.1109/MS.2011.114
+
+\bibitem{tilkov2010}
+Tilkov, S., \& Vinoski, S. (2010). Node.js: Using JavaScript to build high-performance network programs. \textit{IEEE Internet Computing}, 14(6), 80-83. https://doi.org/10.1109/MIC.2010.145
+
+\bibitem{verdouw2016}
+Verdouw, C. N., Wolfert, J., Beulens, A. J., \& Rialland, A. (2016). Virtualization of food supply chains with the Internet of Things. \textit{Journal of Food Engineering}, 176, 128-136. https://doi.org/10.1016/j.jfoodeng.2015.11.009
+
+\bibitem{xuan2022}
+Xuan, Y., Zhang, W., \& Liu, H. (2022). Development of volatile spoilage index for salmon freshness evaluation using electronic nose. \textit{Food Chemistry}, 385, 132641. https://doi.org/10.1016/j.foodchem.2022.132641
+
+\bibitem{zhang2020}
+Zhang, L., Wang, Y., \& Chen, X. (2020). Web-based monitoring system for industrial wireless sensor networks. \textit{IEEE Access}, 8, 123456-123467. https://doi.org/10.1109/ACCESS.2020.3007890
+
+\end{thebibliography}
+
+\newpage
+
+% ============================================
+% DAFTAR SINGKATAN
+% ============================================
+
+\section*{Daftar Singkatan}
+
+\begin{longtable}{|p{4cm}|p{11cm}|}
+\caption{Daftar Singkatan} \label{tab:abbreviations} \\
+\hline
+\textbf{Singkatan} & \textbf{Kepanjangan} \\
+\hline
+\endfirsthead
+
+\multicolumn{2}{c}{\textit{Lanjutan dari halaman sebelumnya}} \\
+\hline
+\textbf{Singkatan} & \textbf{Kepanjangan} \\
+\hline
+\endhead
+
+\hline 
+\multicolumn{2}{|r|}{\textit{Bersambung ke halaman berikutnya}} \\ 
+\endfoot
+
+\hline
+\endlastfoot
+
+FRESH-ID & Real-Time Spoilage Fingerprint Sensor for Packaged Foods \\
+\hline
+IoT & Internet of Things \\
+\hline
+MBG & Makanan Bergizi Gratis \\
+\hline
+BGN & Badan Gizi Nasional \\
+\hline
+ESP32 & Espressif Systems 32-bit Microcontroller \\
+\hline
+DHT22 & Digital Humidity and Temperature Sensor 22 \\
+\hline
+TGS2602 & Taguchi Gas Sensor 2602 \\
+\hline
+TGS2611 & Taguchi Gas Sensor 2611 \\
+\hline
+NH$_3$ & Amonia (Ammonia) \\
+\hline
+H$_2$S & Hidrogen Sulfida (Hydrogen Sulfide) \\
+\hline
+CH$_4$ & Metana (Methane) \\
+\hline
+API & Application Programming Interface \\
+\hline
+REST & Representational State Transfer \\
+\hline
+HTTP & Hypertext Transfer Protocol \\
+\hline
+HTTPS & Hypertext Transfer Protocol Secure \\
+\hline
+MQTT & Message Queuing Telemetry Transport \\
+\hline
+JSON & JavaScript Object Notation \\
+\hline
+SQL & Structured Query Language \\
+\hline
+NoSQL & Not Only SQL \\
+\hline
+AJAX & Asynchronous JavaScript and XML \\
+\hline
+HTML & Hypertext Markup Language \\
+\hline
+CSS & Cascading Style Sheets \\
+\hline
+JWT & JSON Web Token \\
+\hline
+CRUD & Create, Read, Update, Delete \\
+\hline
+CSV & Comma-Separated Values \\
+\hline
+PDF & Portable Document Format \\
+\hline
+QoS & Quality of Service \\
+\hline
+TTFB & Time To First Byte \\
+\hline
+TTI & Time To Interactive \\
+\hline
+APM & Application Performance Monitoring \\
+\hline
+KPI & Key Performance Indicator \\
+\hline
+WCAG & Web Content Accessibility Guidelines \\
+\hline
+XSS & Cross-Site Scripting \\
+\hline
+CSRF & Cross-Site Request Forgery \\
+\hline
+SSL & Secure Sockets Layer \\
+\hline
+TLS & Transport Layer Security \\
+\hline
+NTP & Network Time Protocol \\
+\hline
+UTC & Coordinated Universal Time \\
+\hline
+ppm & Parts Per Million \\
+\hline
+VOC & Volatile Organic Compounds \\
+\hline
+MOS & Metal Oxide Semiconductor \\
+\hline
+UI & User Interface \\
+\hline
+UX & User Experience \\
+\hline
+
+\end{longtable}
+
+\end{document}

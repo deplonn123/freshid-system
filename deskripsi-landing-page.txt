@@ -1,0 +1,45 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[indonesian]{babel}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{setspace}
+\onehalfspacing
+
+\title{Deskripsi Tampilan Landing Page FRESH-ID}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Deskripsi Antarmuka Pengguna}
+
+Halaman utama website menampilkan desain modern dengan dominasi warna biru ungu yang profesional. Bagian navigasi atas memuat logo FRESH-ID di kiri dan tombol ``Masuk'' serta ``Daftar'' di kanan. Hero section menggunakan latar gradasi ungu dengan judul besar ``Smart Food Freshness Monitoring System'' yang langsung menjelaskan fungsi utama sebagai sistem monitoring kesegaran makanan berbasis gas sensor dan teknologi IoT secara \textit{real-time}. Terdapat dua tombol \textit{call-to-action} yaitu ``Mulai Sekarang'' dan ``Login'' yang kontras dengan \textit{background} sehingga mudah terlihat.
+
+Bagian ``Fitur Unggulan'' menampilkan 6 fitur utama dalam bentuk \textit{card grid} yang rapi. Fitur-fitur tersebut meliputi \textit{Real-Time Monitoring} dengan update data setiap 3 detik, \textit{Data Analytics} untuk visualisasi grafik informatif, \textit{Smart Alerts} dengan sistem notifikasi otomatis ketika terdeteksi kondisi abnormal, \textit{Multi-Sensor Detection} yang dapat mendeteksi parameter NH$_3$, H$_2$S, CH$_4$, suhu dan kelembaban, Laporan Lengkap dengan fitur \textit{export} ke CSV, serta \textit{Data Security} untuk menjamin keamanan informasi pengguna.
+
+Secara keseluruhan, landing page ini dirancang dengan baik menggunakan warna konsisten, ikon relevan, dan \textit{copywriting} yang \textit{straight to the point}. \textit{Layout} yang \textit{clean} membuat pengunjung mudah memahami \textit{value proposition} dari FRESH-ID, cukup profesional untuk sebuah sistem monitoring IoT.
+
+\section*{Halaman Registrasi}
+
+Halaman pendaftaran menampilkan desain minimalis dengan latar belakang gradasi biru ungu yang konsisten dengan tema utama website. Di tengah layar terdapat \textit{card} putih berbentuk persegi panjang dengan sudut melengkung yang memuat seluruh elemen registrasi. Bagian atas card menampilkan logo FRESH-ID dengan ikon kotak ungu, diikuti judul tebal ``FRESH-ID'' dan teks pendukung ``Buat akun baru untuk memulai'' yang memberikan arahan jelas kepada pengguna. Form registrasi terdiri dari empat kolom input yaitu Nama Lengkap dengan ikon user, Email dengan ikon amplop, Password dan Konfirmasi Password yang keduanya menggunakan ikon gembok untuk indikasi keamanan. Setiap input field memiliki \textit{placeholder} berwarna abu-abu muda dengan desain yang konsisten. Tombol ``DAFTAR'' diletakkan dengan warna biru ungu solid yang menonjol dan mudah dikenali sebagai aksi utama. Di bagian bawah terdapat teks ``Sudah punya akun?'' dengan warna biru sebagai link yang mengarahkan ke halaman login, memudahkan pengguna yang sudah terdaftar untuk beralih halaman dengan cepat.
+
+\section*{Halaman Login}
+
+Halaman login menampilkan antarmuka yang lebih sederhana namun tetap konsisten dengan desain keseluruhan website menggunakan latar gradasi biru ungu yang sama. \textit{Card} putih di tengah layar memuat elemen-elemen login dengan layout yang rapi dan minimalis. Logo FRESH-ID dengan ikon kotak ungu ditempatkan di bagian atas, diikuti judul tebal ``FRESH-ID'' dan teks instruksi ``Silakan masuk untuk melanjutkan'' yang memberikan konteks jelas tentang fungsi halaman ini. Form login hanya terdiri dari dua kolom input yaitu Email dengan ikon amplop dan Password dengan ikon gembok, membuat proses login menjadi cepat dan tidak rumit. Tombol ``MASUK'' menggunakan warna biru ungu solid yang sama dengan halaman registrasi untuk konsistensi visual. Di bagian bawah form terdapat dua link tambahan yaitu ``Lupa password?'' untuk pemulihan akun dan ``Belum punya akun?'' yang mengarah ke halaman registrasi, keduanya menggunakan warna biru yang mudah dikenali sebagai elemen interaktif dan memberikan opsi navigasi yang lengkap bagi pengguna.
+
+\section*{Halaman Dashboard}
+
+Halaman dashboard menampilkan antarmuka monitoring utama dengan latar belakang gradasi biru ungu yang konsisten. Di bagian tengah atas terdapat logo FRESH-ID berbentuk lingkaran dengan ikon kotak putih, diikuti judul besar ``FRESH-ID'' dan subtitle ``Smart Food Freshness Monitoring System'' yang memberikan identitas jelas sistem ini. Area utama dashboard menampilkan empat \textit{card} monitoring yang tersusun horizontal dengan desain putih bersudut melengkung dan border berwarna berbeda untuk setiap jenis sampel. Setiap card memuat label ``MONITORING'' dengan badge hijau ``ACTIVE'' di pojok kanan atas, nama produk yang dimonitor seperti Sapi, Ayam, Ikan, dan Susu beserta deskripsi singkatnya, serta dua informasi penting yaitu suhu dalam derajat Celcius dan status kesegaran yang ditampilkan dengan label ``Fresh''. Di bawah deretan card monitoring terdapat tombol ``View All Monitoring'' dengan warna putih dan teks biru yang mengajak pengguna untuk melihat detail lengkap. Di sisi kanan layar tersedia \textit{floating button} media sosial berwarna hijau, biru, dan biru muda untuk WhatsApp, Telegram, Facebook, dan Twitter yang memudahkan pengguna untuk berbagi informasi atau menghubungi support.
+
+\section*{Halaman Monitoring Real-Time}
+
+Halaman monitoring \textit{real-time} menampilkan antarmuka yang lebih komprehensif dengan latar putih bersih untuk memaksimalkan keterbacaan data. Di bagian kiri terdapat sidebar navigasi dengan logo FRESH-ID di atas dan kolom pencarian menu, diikuti daftar menu lengkap seperti Dashboard, Monitoring dengan submenu, Laporan, Notifikasi, Pengaturan, Manajemen Pengguna, Dokumentasi, Referensi, Tentang, dan Keluar. Header atas memuat judul halaman ``Monitoring Real-Time'', ikon notifikasi dengan badge merah, ikon pengaturan, serta informasi user Admin di pojok kanan. Area konten utama menampilkan judul ``Monitoring Real-Time'' dengan subtitle ``Pantau kondisi kesegaran produk secara real-time'' yang memberikan konteks jelas. Terdapat dua \textit{card} besar untuk Kotak Daging Sapi dengan badge ``NORMAL'' berwarna hijau dan Kotak Daging Ayam dengan badge ``BAHAYA'' berwarna merah, masing-masing dilengkapi ID box. Setiap card menampilkan tiga parameter gas utama NH$_3$, H$_2$S, dan CH$_4$ dengan nilai dalam ppm beserta indikator tren naik atau turun dalam persentase, parameter TEMPERATURE dalam derajat Celcius dengan tren warna merah atau hijau, dan HUMIDITY dalam persentase dengan tren. Di bagian bawah setiap card terdapat grafik \textit{line chart} yang menampilkan tiga garis berwarna biru, hijau, dan merah untuk memvisualisasikan perubahan NH$_3$, H$_2$S, dan CH$_4$ sepanjang waktu dengan label timestamp di sumbu horizontal, serta informasi terakhir diperbarui di bawah grafik.
+
+\section*{Halaman Laporan}
+
+Halaman laporan menampilkan antarmuka dengan struktur yang konsisten menggunakan sidebar navigasi di sebelah kiri dengan menu Laporan ditandai warna ungu sebagai menu aktif. Header atas memuat judul halaman ``Laporan'', ikon notifikasi dengan badge merah, ikon pengaturan, dan informasi user Admin di pojok kanan. Area konten utama menampilkan judul ``Laporan'' dengan subtitle ``Generate dan lihat laporan monitoring'' yang menjelaskan fungsi halaman. Terdapat section ``Parameter Laporan'' dengan ikon filter yang memuat empat kolom \textit{dropdown} dan \textit{date picker} untuk kustomisasi laporan, yaitu Jenis Laporan dengan pilihan seperti ``Laporan Harian'', Produk dengan pilihan ``Semua Produk'', Tanggal Mulai dan Tanggal Akhir dengan format 12/10/2025 dan 12/11/2025. Di bawah parameter terdapat tiga tombol aksi dengan warna berbeda yaitu ``Generate Laporan'' berwarna biru ungu, ``Export PDF'' berwarna hijau, dan ``Export Excel'' berwarna hijau tosca yang memberikan opsi output beragam. Section berikutnya adalah ``Riwayat Laporan'' dengan ikon riwayat yang menampilkan tabel data laporan yang pernah dibuat dengan kolom TANGGAL, JENIS, PRODUK, PERIODE, STATUS, dan AKSI. Tabel memuat dua baris data contoh dengan tanggal 11 Des 2025 untuk Laporan Harian semua produk dan 10 Des 2025 untuk Laporan Mingguan Daging Sapi, keduanya memiliki badge status ``SELESAI'' berwarna hijau muda dan tombol ``Download'' berwarna biru ungu di kolom aksi untuk mengunduh laporan yang sudah tersimpan.
+
+\end{document}
